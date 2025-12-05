@@ -100,12 +100,6 @@
                 ]
               },
               {
-                "group": "Webhooks",
-                "pages": [
-                  "en/api-references/development/event-type-and-data"
-                ]
-              },
-              {
                 "group": "Merchants",
                 "pages": [
                   "en/api-references/payment/create-merchant",
@@ -200,9 +194,7 @@
               {
                 "group": "Developer Console",
                 "pages": [
-                  "en/api-references/developers/get-api-key-information",
-                  "en/api-references/developers/list-all-callback-messages",
-                  "en/api-references/developers/retry-callback-message"
+                  "en/api-references/developers/get-api-key-information"
                 ]
               }
             ]
