@@ -8,7 +8,7 @@ lang: "zh-hans"
 
 ## 开始之前
 
-如果您选择使用 Payments API SDK 而不是手动编写 API 请求，则需要先安装相应编程语言的正确版本。例如，如果您想使用 [Python SDK](/v2_cn/developer-tools/quickstart-python)，则需要安装 Python 3.7 或更新版本。
+如果您选择使用 Payments API SDK 而不是手动编写 API 请求，则需要先安装相应编程语言的正确版本。例如，如果您想使用 [Python SDK](/payments/cn/developer-tools/quickstart-python)，则需要安装 Python 3.7 或更新版本。
 
 ## 设置账户
 
@@ -18,7 +18,7 @@ lang: "zh-hans"
 
 ## 生成 API Key 和 API Secret
 
-生成一对 Ed25519 密钥对作为 API Key 和 API Secret。本指南以 OpenSSL 为例。要了解有关生成密钥对的其他方法，请参阅[生成 API Key 和 API Secret](/payments/cn/developer-tools/cobo-auth#generate-an-api-key-and-an-api-secret)。
+生成一对 Ed25519 密钥对作为 API Key 和 API Secret。本指南以 OpenSSL 为例。要了解有关生成密钥对的其他方法，请参阅[生成 API Key 和 API Secret](/payments/cn/developer-tools//cobo-auth#generate-an-api-key-and-an-api-secret)。
 
 1. 在终端窗口中，运行以下 OpenSSL 命令：
 
@@ -62,9 +62,9 @@ openssl pkey -pubin -in public_key.pem -text | grep 'pub:' -A 3 | tail -n +2 | t
 
 ## 为您的请求添加身份认证信息
 
-<Note>如果您选择[使用 Payments API SDK](/v2_cn/developer-tools/quickstart-python)，则可以跳过此步骤，因为 SDK 封装了认证机制。</Note>
+<Note>如果您选择[使用 Payments API SDK](/payments/cn/developer-tools/quickstart-python)，则可以跳过此步骤，因为 SDK 封装了认证机制。</Note>
 
-在发送 API 请求时，您需要在请求头中包含 API Key、随机数和 API 签名，以作为身份认证信息。有关更多信息，请参阅 [Cobo Auth](/payments/cn/developer-tools/cobo-auth)。
+在发送 API 请求时，您需要在请求头中包含 API Key、随机数和 API 签名，以作为身份认证信息。有关更多信息，请参阅 [Cobo Auth](/payments/cn/developer-tools//cobo-auth)。
 
 ```
 headers = {
@@ -74,13 +74,13 @@ headers = {
 }
 ```
 
-- Biz-Api-Key：API Key。要了解如何生成 API Key，请参阅[生成 API Key 和 API Secret](/payments/cn/developer-tools/cobo-auth#generate-an-api-key-and-an-api-secret)。
+- Biz-Api-Key：API Key。要了解如何生成 API Key，请参阅[生成 API Key 和 API Secret](/payments/cn/developer-tools//cobo-auth#generate-an-api-key-and-an-api-secret)。
 - Biz-Api-Nonce：随机数是 Unix 时间戳格式的当前时间，以毫秒为单位。
-- Biz-Api-Signature：API 签名。要了解如何计算 API 签名，请参阅[计算 API 签名](/payments/cn/developer-tools/cobo-auth#calculate-the-api-signature)。
+- Biz-Api-Signature：API 签名。要了解如何计算 API 签名，请参阅[计算 API 签名](/payments/cn/developer-tools//cobo-auth#calculate-the-api-signature)。
 
 ## 发送请求
 
-<Note>如果您选择[使用 Payments API SDK](/v2_cn/developer-tools/quickstart-python)，则可以跳过此步骤，因为 SDK 已经包含了处理该逻辑的现成函数。</Note>
+<Note>如果您选择[使用 Payments API SDK](/payments/cn/developer-tools/quickstart-python)，则可以跳过此步骤，因为 SDK 已经包含了处理该逻辑的现成函数。</Note>
 
 本指南使用 [List supported chains](/v2/api-references/wallets/list-supported-chains) 操作作为示例来演示如何发送 API 请求。此操作检索特定钱包类型或子类型支持的所有链。在以下示例中，我们检索[全托管钱包](https://manuals.cobo.com/cn/portal/custodial-wallets/introduction)支持的所有链。
 
@@ -129,7 +129,7 @@ curl --location --request GET 'https://api.dev.cobo.com/v2/wallets/chains?wallet
 
 本节介绍如何使用 Python SDK 调用一个 API 操作。
 
-要了解如何安装 Python SDK 并完成初始设置，请参阅 [Python SDK 入门](/v2_cn/developer-tools/quickstart-python)。
+要了解如何安装 Python SDK 并完成初始设置，请参阅 [Python SDK 入门](/payments/cn/developer-tools/quickstart-python)。
 
 以下是调用 [List supported chains](/v2/api-references/wallets/list-supported-chains) 操作的示例代码。在配置 HTTP host 字段时，请使用开发环境的 URL，因为您在上一步已在开发环境中注册了 API Key。
 
@@ -163,7 +163,7 @@ with cobo_waas2.ApiClient(configuration) as api_client:
 您已成功发送 API 请求并接收响应。但是，在您创建钱包、进行交易或实现其他功能之前，还有一些事情要做。
 
 - 要开始使用钱包，您必须购买付费套餐或激活免费版套餐（如有）。要了解定价计划、账单与付款的详细信息，请参阅[账单与支付简介](https://manuals.cobo.com/cn/portal/bills-and-payments/introduction)。
-- 要从您的钱包中提取代币，您必须首先设置 Callback Endpoint 以接收和批准提币请求。强烈建议您同时设置 Webhook Endpoint 以接收有关交易状态更新和其他重要事件的实时通知。要了解如何设置和注册 Webhook 和 Callback Endpoint，请参阅 [Webhook 和 Callback 介绍](/payments/cn/developer-tools/introduction)。
+- 要从您的钱包中提取代币，您必须首先设置 Callback Endpoint 以接收和批准提币请求。强烈建议您同时设置 Webhook Endpoint 以接收有关交易状态更新和其他重要事件的实时通知。要了解如何设置和注册 Webhook 和 Callback Endpoint，请参阅 [Webhook 和 Callback 介绍](/payments/cn/developer-tools//introduction)。
 
 ## 另请参阅
 

@@ -53,7 +53,7 @@ Checkout SDK 界面展示（以移动端为例）：
 3. Access Token 有效期为 1 小时。在 Access Token 过期前，服务端需调用 [Refresh Access Token](/v2/api-references/oauth/refresh-access-token) 并传入上述步骤中获取的 Refresh Token，以获取新的 Access Token 和 Refresh Token。如遇 Token 过期，iFrame 会发送 `TOKEN_EXPIRED` 事件到父页面。
 
 
-以下代码片段展示了使用 [Python SDK](/v2_cn/developer-tools/quickstart-python) 获取 Access Token 和 Refresh Token 的示例：
+以下代码片段展示了使用 [Python SDK](/payments/cn/developer-tools/quickstart-python) 获取 Access Token 和 Refresh Token 的示例：
 
 ```py
 from cobo_waas2 import Configuration, ApiClient, OAuthApi, ExchangePermissionTokenRequest, RefreshPermissionTokenRequest
