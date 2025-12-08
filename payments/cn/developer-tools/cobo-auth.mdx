@@ -4,7 +4,7 @@ sidebarTitle: "身份验证"
 lang: "zh-hans"
 ---
 
-本文介绍如何使用 Cobo Auth 对 Cobo 支付服务的 API 请求进行身份验证。
+本文介绍如何对 Cobo 支付服务的 API 请求进行身份验证。
 
 为确保您加密资产的安全访问，Cobo 支付服务要求您使用 EdDSA 签名对每个 API 请求进行签名（可公开访问的 API 操作除外）。
 
@@ -32,8 +32,7 @@ headers = {
 
 API Key 是加密密钥对中的公钥。它用于识别发起 API 请求的客户端。
 
-API Key 与权限和钱包范围相关联，这些权限和范围定义了客户端可以执行的操作和可以访问的钱包。不同的 API Key 可以分配不同的权限和钱包范围，从而对客户端功能进行精细控制。
-<Info>有关权限和钱包范围的更多详情，请参阅[权限和钱包范围](/payments/cn/developer-tools//permissions-and-scopes)。</Info>
+
 
 ### API Secret
 
@@ -41,7 +40,7 @@ API Secret 是密钥对中的私钥。它用于签署 API 请求，保证其真�
 
 API Key 和 API Secret 共同确保了客户端与 Cobo 支付服务端的通信安全：
 
-- API Key 包含在 API 请求中，使 Cobo 支付服务能够识别客户端。使用前您需要在 Cobo Portal 上注册 API Key。更多信息，请参阅[注册 API Key](https://manuals.cobo.com/cn/portal/developer-console/create-api-key)。
+- API Key 包含在 API 请求中，使 Cobo 支付服务能够识别客户端。使用前您需要在 Cobo Portal 上注册 API Key。
 - API Secret 用于生成每个 API 请求的签名。Cobo 支付服务验证签名以确认请求的真实性和防止篡改。
 
 ### 生成 API Key 和 API Secret
@@ -50,31 +49,6 @@ API Key 和 API Secret 共同确保了客户端与 Cobo 支付服务端的通信
 
 公钥将用作 API Key，私钥将用作 API Secret。
 
-#### 使用 Cobo CLI
-
-Cobo 命令行界面（CLI）是一种强大的开发者工具，旨在帮助您在集成 Payments API 时直接从命令行进行构建、测试和管理。
-
-1. 使用以下命令安装 Cobo CLI：
-
-    ```shell
-    # 使用 pip 安装 Cobo CLI（需要 Python 3.9 或更高版本）。
-    pip install cobo-cli
-    # 或者，您可以使用 Homebrew 安装 Cobo CLI。
-    brew install cobo-cli
-    # 测试安装是否成功
-    cobo version
-    ```
-
-    有关 Cobo CLI 的系统要求，请参阅[安装 Cobo CLI](/payments/cn/developer-tools/cobo-cli/quick-start-guide#system-requirements)。
-
-2. 使用 `keys generate` 命令生成 Ed25519 算法的密钥对，如下所示：
-
-    ```shell
-    # 生成 API Key 和 API Secret
-    cobo keys generate --key-type API
-    ```
-
-    生成的密钥将安全存储在您的配置文件中（默认：`~/.cobo/config.toml`）。有关此命令的更多信息，请参阅[密钥管理](/payments/cn/developer-tools/cobo-cli/key-management)。
 
 #### 使用 OpenSSL
 
@@ -126,7 +100,7 @@ Public Key (Hex):
 
 ### 注册 API Key
 
-生成 API Key 后，您需要在 Cobo Portal 上注册密钥并配置相关权限。要了解如何注册 API Key，请参阅[注册 API Key](https://manuals.cobo.com/cn/portal/developer-console/create-api-key)。
+生成 API Key 后，您需要在 Cobo Portal 上注册密钥。要了解如何注册 API Key，请参阅[发送您的第一个 API 请求](/payments/cn/developer-tools/get-started-with-api#注册-api-key)。
 
 ## 随机数
 
@@ -144,7 +118,7 @@ Public Key (Hex):
     | **字段** | **描述**                                              | **示例**                                                  |
     | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
     | METHOD    | HTTP 方法。                                             | `GET`                                                          |
-    | PATH      | API 端点。                                            | `/v2/transactions/transfer`                                    |
+    | PATH      | API 端点。                                            | `/v2/payments/topup/address`                                    |
     | TIMESTAMP | 以毫秒为单位的当前 Unix 时间戳。该值必须与请求头中的随机数相同。 | `1718587017026`                                                |
     | PARAMS    | （如有）查询参数。                        | `chain_id=ETH&limit=10  `                                      |
     | BODY      | （如有）原始请求包体的字符串格式。       | `{"name":"Default","wallet_subtype":"Asset","wallet_type":"Custodial"}` |

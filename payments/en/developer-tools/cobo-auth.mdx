@@ -3,7 +3,7 @@ title: "Authentication"
 lang: "en"
 ---
 
-This article explains how to authenticate your API requests to the Cobo payments service using Cobo Auth. 
+This article explains how to authenticate your API requests to the Cobo payments service.
 
 To ensure secure access to your crypto assets, the Cobo payments service requires you to use an EdDSA signature to sign each of your API requests, except for publicly accessible API operations.
 
@@ -31,8 +31,7 @@ To enable secure and authenticated communication between clients and the Cobo pa
 
 The API key is the public key in the cryptographic key pair. It is used to identify the client making the API request. 
 
-The API key is associated with permissions and wallet scopes, which define the actions the client can perform and the wallets they can access. Different API keys can be assigned with varying permissions and wallet scopes, providing granular control over client capabilities. 
-<Info>For more details about permissions and wallet scopes, see [Permissions and wallet scopes](/payments/en/developer-tools/permissions-and-scopes).</Info>
+
 
 ### API secret
 
@@ -40,7 +39,7 @@ The API secret is the private key in the key pair. It is used to sign API reques
 
 The API key and API secret work as a pair to secure communication with the Cobo payments service:
 
-- The API key is included in API requests to identify the client to the Cobo payments service. It is required to be registered on Cobo Portal. For more information, refer to [Register an API key](https://manuals.cobo.com/en/portal/developer-console/create-api-key).
+- The API key is included in API requests to identify the client to the Cobo payments service. It is required to be registered on Cobo Portal.
 - The API secret is used to generate a signature for each API request. The Cobo payments service validates the signature to confirm the request's authenticity and prevent tampering.
 
 ### Generate an API key and an API secret
@@ -49,31 +48,6 @@ This section introduces three ways to generate an API key and an API secret usin
 
 The public key will be used as an API key, and the private key will be used as an API secret.
 
-#### Use Cobo CLI
-
-Cobo Command Line Interface (CLI) is a powerful developer tool designed to help you build, test, and manage your integration with Cobo Payments API directly from the command line.
-
-1. Install Cobo CLI using the following command:
-
-    ```shell
-    # Install Cobo CLI using pip (Python 3.9 or newer is required).
-    pip install cobo-cli
-    # Alternatively, you can install Cobo CLI using Homebrew.
-    brew install cobo-cli
-    # Test if the installation is successful
-    cobo version
-    ```
-
-    For more details about the system requirements for Cobo CLI, please refer to [Install Cobo CLI](/payments/en/developer-tools/cobo-cli/quick-start-guide#system-requirements).
-
-2. Use the `keys generate` command to generate a key pair using the Ed25519 algorithm as follows:
-
-    ```shell
-    # Generate an API key and an API secret
-    cobo keys generate --key-type API
-    ```
-
-    Generated keys are securely stored in your configuration file (default: `~/.cobo/config.toml`). For more information about this command, refer to [Key management](/payments/en/developer-tools/cobo-cli/key-management).
 
 #### Use OpenSSL
 
@@ -124,7 +98,7 @@ Use the `Private Key (Hex)` as your API secret and the `Public Key (Hex)` as you
 
 ### Register the API key
 
-After generating an API key, you need to register the key and configure related permissions on Cobo Portal. To learn how to register an API key, see [Register an API key](https://manuals.cobo.com/en/portal/developer-console/create-api-key). 
+After generating an API key, you need to register the key on Cobo Portal. To learn how to register an API key, see [Send your first request](/payments/en/developer-tools/get-started-with-api#register-the-api-key). 
 
 ## Nonce
 
@@ -141,7 +115,7 @@ The following steps introduce how to calculate an API signature.
     | **Field** | **Description**                                              | **Example**                                                  |
     | --------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
     | METHOD    | The HTTP method.                                             | `GET`                                                          |
-    | PATH      | The API endpoint.                                            | `/v2/transactions/transfer`                                    |
+    | PATH      | The API endpoint.                                            | `/v2/payments/topup/address`                                    |
     | TIMESTAMP | The current time in Unix timestamp format, measured in milliseconds. This value must be the same as the nonce in the request header. | `1718587017026`                                                |
     | PARAMS    | (If applicable) The query parameters.                        | `chain_id=ETH&limit=10  `                                      |
     | BODY      | (If applicable) The raw request body in string format.       | `{"name":"Default","wallet_subtype":"Asset","wallet_type":"Custodial"}` |

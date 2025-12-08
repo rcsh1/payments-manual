@@ -213,11 +213,10 @@
                 ]
               },
               {
-                "group": "Webhooks and Callbacks",
+                "group": "Webhooks",
                 "pages": [
                   "payments/en/developer-tools/webhook",
-                  "payments/en/developer-tools/set-up-endpoint",
-                  "payments/en/developer-tools/webhook-event-type"
+                  "payments/en/developer-tools/set-up-endpoint"
                 ]
               }
             ]
@@ -332,11 +331,10 @@
                 ]
               },
               {
-                "group": "Webhooks 和 Callbacks",
+                "group": "Webhooks",
                 "pages": [
                   "payments/cn/developer-tools/webhook",
-                  "payments/cn/developer-tools/set-up-endpoint",
-                  "payments/cn/developer-tools/webhook-event-type"
+                  "payments/cn/developer-tools/set-up-endpoint"
                 ]
               }
             ]
