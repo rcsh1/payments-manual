@@ -1,16 +1,16 @@
 ---
 title: "Send your first request"
 lang: "en"
-description: "Use the WaaS 2.0 API: set up account, generate API key, authenticate requests, and send API requests."
+description: "Use the Payments API: set up account, generate API key, authenticate requests, and send API requests."
 ---
 
 ## Overview
 
-This guide explains how to get started with using the Wallet-as-a-Service (WaaS) 2.0 API. By the end of this guide, you will be able to successfully call an API operation and receive a response.
+This guide explains how to get started with using the Payments API. By the end of this guide, you will be able to successfully call an API operation and receive a response.
 
 ## Before you begin
 
-If you choose to use a WaaS SDK instead of manually writing the API requests, you need to first install the right version of the corresponding programming language. For example, if you want to use the [Python SDK](/v2/developer-tools/quickstart-python), you need to have Python 3.7 or a newer version installed.
+If you choose to use a Payments API SDK instead of manually writing the API requests, you need to first install the right version of the corresponding programming language. For example, if you want to use the [Python SDK](/v2/developer-tools/quickstart-python), you need to have Python 3.7 or a newer version installed.
 
 ## Set up an account
 
@@ -67,7 +67,7 @@ You can only start using an API key after its status becomes **Active**.
 
 ## Authenticate your requests
 
-<Note>You can skip this step if you choose to [use a WaaS SDK](/v2/developer-tools/quickstart-python), which encapsulates the authentication mechanism.</Note>
+<Note>You can skip this step if you choose to [use a Payments API SDK](/v2/developer-tools/quickstart-python), which encapsulates the authentication mechanism.</Note>
 
 To authenticate your API request, you need to provide your API key, a nonce, and the API signature as request headers. For more information, see [Cobo Auth](/v2/guides/overview/cobo-auth).
 
@@ -85,7 +85,7 @@ headers = {
 
 ## Send a request
 
-<Note>You can skip this step if you choose to [use a WaaS SDK](/v2/developer-tools/quickstart-python), which offers ready-to-use functions that handle the API integration using the programming language of your project.</Note>
+<Note>You can skip this step if you choose to [use a Payments API SDK](/v2/developer-tools/quickstart-python), which offers ready-to-use functions that handle the API integration using the programming language of your project.</Note>
 
 This guide uses the [List supported chains](/v2/api-references/wallets/list-supported-chains) operation as an example to demonstrate how to send an API request. This operation retrieves all chains supported by a specific wallet type or subtype. In the following example, we retrieve all chains supported by [Custodial Wallets](https://manuals.cobo.com/en/portal/custodial-wallets/introduction).
 
@@ -129,7 +129,7 @@ If the request is successful, you should receive the following response:
 }
 ```
 
-## Use a WaaS SDK
+## Use a Payments API SDK
 
 This section introduces how to use the Python SDK to call an API operation instead of manually writing the request. 
 
@@ -173,7 +173,7 @@ You have successfully sent an API request and received a response. However, ther
 
 - To learn what Cobo Portal has to offer, including how to choose from the four wallet technologies, refer to [Introduction](https://manuals.cobo.com/en/portal/introduction).
 
-- To learn the specifics of the WaaS 2.0 API, see [API References](/v2/api-references) or download the WaaS 2.0 API specification from [GitHub](https://github.com/CoboGlobal/developer-site/blob/master/v2/cobo_waas2_openapi_spec/dev_openapi.yaml).
+- To learn the specifics of the Payments API, see [API References](/v2/api-references) or download the Payments API specification from [GitHub](https://github.com/CoboGlobal/developer-site/blob/master/v2/cobo_waas2_openapi_spec/dev_openapi.yaml).
 
 - To learn the complete process of creating and interacting with Custodial Wallets (Asset Wallets), see [Get started with Custodial Wallets (Asset Wallets)](/v2/guides/custodial-wallets/get-started-asset-wallets).
 

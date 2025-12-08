@@ -93,7 +93,7 @@
                 "group": "Get Started",
                 "pages": [
                   "en/api-references/playground",
-                  "en/api-references/use-postman-to-call-waas-api",
+                  "en/api-references/use-postman-to-call-api",
                   "en/api-references/pagination",
                   "en/api-references/error-codes"
                 ]
@@ -198,13 +198,13 @@
               {
                 "group": "Get Started",
                 "pages": [
-                  "en/developer-tools/get-started-with-waas",
+                  "en/developer-tools/get-started-with-api",
                   "en/developer-tools/environments",
                   "en/developer-tools/cobo-auth"
                 ]
               },
               {
-                "group": "WaaS SDKs",
+                "group": "Payments API SDKs",
                 "pages": [
                   "en/developer-tools/quickstart-python",
                   "en/developer-tools/quickstart-java",
@@ -215,7 +215,7 @@
               {
                 "group": "Webhooks and Callbacks",
                 "pages": [
-                  "en/developer-tools/introduction",
+                  "en/developer-tools/webhook",
                   "en/developer-tools/set-up-endpoint",
                   "en/developer-tools/webhook-event-type"
                 ]
@@ -317,13 +317,13 @@
               {
                 "group": "入门",
                 "pages": [
-                  "cn/developer-tools/get-started-with-waas",
+                  "cn/developer-tools/get-started-with-api",
                   "cn/developer-tools/environments",
                   "cn/developer-tools/cobo-auth"
                 ]
               },
               {
-                "group": "WaaS SDKs",
+                "group": "Payments API SDKs",
                 "pages": [
                   "cn/developer-tools/quickstart-python",
                   "cn/developer-tools/quickstart-java",
@@ -334,7 +334,7 @@
               {
                 "group": "Webhooks 和 Callbacks",
                 "pages": [
-                  "cn/developer-tools/introduction",
+                  "cn/developer-tools/webhook",
                   "cn/developer-tools/set-up-endpoint",
                   "cn/developer-tools/webhook-event-type"
                 ]

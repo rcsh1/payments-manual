@@ -1,11 +1,11 @@
 ---
 title: "Set up a callback or webhook endpoint"
 lang: "en"
-description: "Step-by-step guide to setting up a webhook endpoint in WaaS 2.0 for real-time event notifications."
+description: "Step-by-step guide to setting up a webhook endpoint for real-time event notifications."
 sidebarTitle: "Set up a callback or webhook endpoint"
 ---
 
-Webhook events and callback messages are crucial for ensuring seamless data integration and communication between the WaaS service and your application. This guide provides an overview of how to create and manage an endpoint for receiving and processing webhook events and callback messages.
+Webhook events and callback messages are crucial for ensuring seamless data integration and communication between the Cobo payments service and your application. This guide provides an overview of how to create and manage an endpoint for receiving and processing webhook events and callback messages.
 
 ## Create an endpoint
 
@@ -74,9 +74,9 @@ Properly responding to webhook events and callback messages is crucial for ensur
 
 #### Webhook events
 
-When your webhook endpoint receives a webhook event, it should respond with a status code of `200` or `201` to indicate that the event has been successfully received and processed. Once this response is sent, the WaaS service will stop retrying to send the event and the event status will become `Delivered` on Cobo Portal.
+When your webhook endpoint receives a webhook event, it should respond with a status code of `200` or `201` to indicate that the event has been successfully received and processed. Once this response is sent, the Cobo payments service will stop retrying to send the event and the event status will become `Delivered` on Cobo Portal.
 
-The default timeout for each webhook event is 2 seconds. If the webhook endpoint does not respond or responds with a status code other than `200` or `201`, the WaaS service will continue to retry sending the event. If the number of retry attempts reaches 10 , the WaaS service will stop sending the event and the event status will become `Failed`· You can resend the event by clicking **Retry** on **Cobo Portal** > **Developer** > **WaaS 2.0** > **Webhook Events**.
+The default timeout for each webhook event is 2 seconds. If the webhook endpoint does not respond or responds with a status code other than `200` or `201`, the Cobo payments service will continue to retry sending the event. If the number of retry attempts reaches 10 , the Cobo payments service will stop sending the event and the event status will become `Failed`· You can resend the event by clicking **Retry** on **Cobo Portal** > **Developer** > **WaaS 2.0** > **Webhook Events**.
 
 Cobo does not guarantee that events will be delivered in the order they are generated. For example, creating a transfer will generate the following events:
 
@@ -88,13 +88,13 @@ Your endpoint should not assume that events will arrive in this sequence and mus
 
 #### Callback messages
 
-When your callback endpoint receives a callback message, it should respond with a status code of `200` or `201` and a response body of `ok` or `deny` to indicate transaction approval or rejection. Once this response is sent, the WaaS service will stop retrying to send the message and the callback message status will become `Delivered`on Cobo Portal.
+When your callback endpoint receives a callback message, it should respond with a status code of `200` or `201` and a response body of `ok` or `deny` to indicate transaction approval or rejection. Once this response is sent, the Cobo payments service will stop retrying to send the message and the callback message status will become `Delivered`on Cobo Portal.
 
-If the callback endpoint does not respond, responds with a status code other than `200` or `201`,  or the response body does not contain `ok` or `deny`, the WaaS service will continue to retry sending the message.  If the number of retry attempts reaches 30, the WaaS service will stop sending the message and the callback message status will become `Failed`. You can resend the message by using the [Retry callback message](/v2/api-references/developers/retry-callback-message) operation.
+If the callback endpoint does not respond, responds with a status code other than `200` or `201`,  or the response body does not contain `ok` or `deny`, the Cobo payments service will continue to retry sending the message.  If the number of retry attempts reaches 30, the Cobo payments service will stop sending the message and the callback message status will become `Failed`. You can resend the message by using the [Retry callback message](/v2/api-references/developers/retry-callback-message) operation.
 
 ### Code samples
 
-To see examples of how to implement the handling logic, refer to the following files in the WaaS SDK GitHub repository:
+To see examples of how to implement the handling logic, refer to the following files in the GitHub repository:
 - Python: [server_demo.py](https://github.com/CoboGlobal/cobo-waas2-python-sdk/blob/master/cobo_waas2/server_demo.py) (implemented based on the FastAPI framework)
 - Java: [DemoController.java](https://github.com/CoboGlobal/cobo-waas2-java-sdk/blob/master/src/main/java/com/cobo/waas2/demo/DemoController.java) (implemented based on the SpringBoot framework)
 - JavaScript: [ServerDemo.js](https://github.com/CoboGlobal/cobo-waas2-js-sdk/blob/master/src/ServerDemo.js)

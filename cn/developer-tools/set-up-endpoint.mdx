@@ -2,11 +2,11 @@
 title: "设置 Callback 或 Webhook Endpoint"
 lang: "zh-hans"
 sidebarTitle: "设置 Callback 或 Webhook Endpoint"
-description: "在 WaaS 2.0 中设置 Callback 或 Webhook Endpoint 的分步指南，用于处理实时事件通知。"
+description: "设置 Callback 或 Webhook Endpoint 的分步指南，用于处理实时事件通知。"
 ---
 <Note>本文档由 AI 辅助翻译。如需确认内容准确性，请参考[英文官方文档](https://www.cobo.com/developers/v2/guides/overview/introduction)。</Note>
 
-Webhook 事件和 Callback 消息对于确保 WaaS 服务与您的 App 之间的无缝数据集成和通信至关重要。本指南介绍如何搭建一个用于接收和处理 Webhook 事件和 Callback 消息的 Endpoint。
+Webhook 事件和 Callback 消息对于确保 Cobo 支付服务与您的 App 之间的无缝数据集成和通信至关重要。本指南介绍如何搭建一个用于接收和处理 Webhook 事件和 Callback 消息的 Endpoint。
 
 ## 创建 Endpoint
 
@@ -75,9 +75,9 @@ Webhook 事件和 Callback 消息对于确保 WaaS 服务与您的 App 之间的
 
 #### Webhook 事件
 
-当您的 Webhook Endpoint 收到 Webhook 事件时，它应该响应状态码 `200` 或 `201` 以指示事件已成功接收和处理。一旦发送此响应，WaaS 服务将停止重试发送事件，事件状态将变为**已送达**。
+当您的 Webhook Endpoint 收到 Webhook 事件时，它应该响应状态码 `200` 或 `201` 以指示事件已成功接收和处理。一旦发送此响应，Cobo 支付服务将停止重试发送事件，事件状态将变为**已送达**。
 
-默认情况下，每个 Webhook 事件的超时时间为 2 秒。如果 Webhook Endpoint 没有响应或响应状态码不是 `200` 或 `201`，WaaS 服务将继续重试发送事件。如果重试次数达到 10 次，WaaS 服务将停止发送事件，事件状态将变为**发送失败**。您可以通过单击 Cobo Portal > 开发者 > WaaS 2.0 > Webhook 事件上的**重新发送**来重新发送事件。
+默认情况下，每个 Webhook 事件的超时时间为 2 秒。如果 Webhook Endpoint 没有响应或响应状态码不是 `200` 或 `201`，Cobo 支付服务将继续重试发送事件。如果重试次数达到 10 次，Cobo 支付服务将停止发送事件，事件状态将变为**发送失败**。您可以通过单击 Cobo Portal > 开发者 > WaaS 2.0 > Webhook 事件上的**重新发送**来重新发送事件。
 
 Cobo 不保证事件将按生成顺序交付。例如，创建转账将生成以下事件：
 
@@ -89,13 +89,13 @@ Cobo 不保证事件将按生成顺序交付。例如，创建转账将生成以
 
 #### Callback 消息
 
-当您的 Callback Endpoint 收到 Callback 消息时，它应该响应状态码 `200` 或 `201` 和响应包体 `ok` 或 `deny` 以指示交易批准或拒绝。一旦发送此响应，WaaS 服务将停止重试发送消息，Callback 消息状态将变为**已送达**。
+当您的 Callback Endpoint 收到 Callback 消息时，它应该响应状态码 `200` 或 `201` 和响应包体 `ok` 或 `deny` 以指示交易批准或拒绝。一旦发送此响应，Cobo 支付服务将停止重试发送消息，Callback 消息状态将变为**已送达**。
 
-如果 Callback Endpoint 没有响应，响应状态码不是 `200` 或 `201`，或响应包体不包含 `ok` 或 `deny`，WaaS 服务将继续重试发送消息。如果重试次数达到 30 次，WaaS 服务将停止发送消息，Callback 消息状态将变为**发送失败**。您可以使用 [Retry callback message](/v2/api-references/developers/retry-callback-message) 来重新发送消息。
+如果 Callback Endpoint 没有响应，响应状态码不是 `200` 或 `201`，或响应包体不包含 `ok` 或 `deny`，Cobo 支付服务将继续重试发送消息。如果重试次数达到 30 次，Cobo 支付服务将停止发送消息，Callback 消息状态将变为**发送失败**。您可以使用 [Retry callback message](/v2/api-references/developers/retry-callback-message) 来重新发送消息。
 
 ### 代码示例
 
-要查看如何实现处理逻辑的示例，请参阅 WaaS SDK GitHub 库中的如下文件：
+要查看如何实现处理逻辑的示例，请参阅 GitHub 库中的如下文件：
 - Python：[server_demo.py](https://github.com/CoboGlobal/cobo-waas2-python-sdk/blob/master/cobo_waas2/server_demo.py)（基于 FastAPI 框架实现）
 - Java：[DemoController.java](https://github.com/CoboGlobal/cobo-waas2-java-sdk/blob/master/src/main/java/com/cobo/waas2/demo/DemoController.java)（基于 SpringBoot 框架实现）
 - JavaScript：[ServerDemo.js](https://github.com/CoboGlobal/cobo-waas2-js-sdk/blob/master/src/ServerDemo.js)

@@ -1,17 +1,17 @@
 ---
 title: "发送您的第一个 API 请求"
 lang: "zh-hans"
-description: "使用 WaaS 2.0 API 的入门指南，包括帐户设置、API Key 生成、请求认证和发送 API 请求。"
+description: "使用 Payments API 的入门指南，包括帐户设置、API Key 生成、请求认证和发送 API 请求。"
 ---
 <Note>本文档由 AI 辅助翻译。如需确认内容准确性，请参考[英文官方文档](https://www.cobo.com/developers/v2/guides/overview/introduction)。</Note>
 
 ## 概述
 
-本指南介绍如何使用钱包即服务 (WaaS) 2.0 API。阅读本指南后，您将能够成功调用一个 API 操作，并接收响应。
+本指南介绍如何使用 Payments API。阅读本指南后，您将能够成功调用一个 API 操作，并接收响应。
 
 ## 开始之前
 
-如果您选择使用 WaaS SDK 而不是手动编写 API 请求，则需要先安装相应编程语言的正确版本。例如，如果您想使用 [Python SDK](/v2_cn/developer-tools/quickstart-python)，则需要安装 Python 3.7 或更新版本。
+如果您选择使用 Payments API SDK 而不是手动编写 API 请求，则需要先安装相应编程语言的正确版本。例如，如果您想使用 [Python SDK](/v2_cn/developer-tools/quickstart-python)，则需要安装 Python 3.7 或更新版本。
 
 ## 设置账户
 
@@ -65,7 +65,7 @@ openssl pkey -pubin -in public_key.pem -text | grep 'pub:' -A 3 | tail -n +2 | t
 
 ## 为您的请求添加身份认证信息
 
-<Note>如果您选择[使用 WaaS SDK](/v2_cn/developer-tools/quickstart-python)，则可以跳过此步骤，因为 SDK 封装了认证机制。</Note>
+<Note>如果您选择[使用 Payments API SDK](/v2_cn/developer-tools/quickstart-python)，则可以跳过此步骤，因为 SDK 封装了认证机制。</Note>
 
 在发送 API 请求时，您需要在请求头中包含 API Key、随机数和 API 签名，以作为身份认证信息。有关更多信息，请参阅 [Cobo Auth](/v2_cn/guides/overview/cobo-auth)。
 
@@ -83,7 +83,7 @@ headers = {
 
 ## 发送请求
 
-<Note>如果您选择[使用 WaaS SDK](/v2_cn/developer-tools/quickstart-python)，则可以跳过此步骤，因为 SDK 已经包含了处理该逻辑的现成函数。</Note>
+<Note>如果您选择[使用 Payments API SDK](/v2_cn/developer-tools/quickstart-python)，则可以跳过此步骤，因为 SDK 已经包含了处理该逻辑的现成函数。</Note>
 
 本指南使用 [List supported chains](/v2/api-references/wallets/list-supported-chains) 操作作为示例来演示如何发送 API 请求。此操作检索特定钱包类型或子类型支持的所有链。在以下示例中，我们检索[全托管钱包](https://manuals.cobo.com/cn/portal/custodial-wallets/introduction)支持的所有链。
 
@@ -128,7 +128,7 @@ curl --location --request GET 'https://api.dev.cobo.com/v2/wallets/chains?wallet
 }
 ```
 
-## 使用 WaaS SDK
+## 使用 Payments API SDK
 
 本节介绍如何使用 Python SDK 调用一个 API 操作。
 
@@ -172,9 +172,7 @@ with cobo_waas2.ApiClient(configuration) as api_client:
 
 - 要了解 Cobo Portal 提供的功能，包括如何选择钱包类型，请参阅 [Cobo Portal 简介](https://manuals.cobo.com/cn/portal/introduction)。
 
-- 要了解 WaaS 2.0 API 的具体内容，请参阅 [API 参考](/v2/api-references)或从 [GitHub](https://github.com/CoboGlobal/developer-site/blob/master/v2/cobo_waas2_openapi_spec/dev_openapi.yaml) 下载 WaaS 2.0 API 规范。
-
-- 要了解如何通过 WaaS API 使用全托管钱包（资产钱包），请参阅[全托管钱包（资产钱包）入门](/v2_cn/guides/custodial-wallets/get-started-asset-wallets)。
+- 要了解 Payments API 的具体内容，请参阅 [API 参考](/v2/api-references)或从 [GitHub](https://github.com/CoboGlobal/developer-site/blob/master/v2/cobo_waas2_openapi_spec/dev_openapi.yaml) 下载 Payments API 规范。
 
 - 要了解如何查看 API 相关数据和日志，请参阅[开发者控制台简介](https://manuals.cobo.com/cn/portal/developer-console/introduction)。
 
