@@ -25,9 +25,9 @@ You can create crypto payout requests through Payments App or Payments API.
 
   <Tab title="Payments API" icon="code">
 
-  1. Before creating a transfer request, you can call [List merchant balances](/v2/api-references/payment/list-merchant-balances) or [Get developer balance](/v2/api-references/payment/get-developer-balance) to query merchant and developer balances respectively, to determine the maximum transferable amount.
-  2. Call [Create crypto address](/v2/api-references/payment/create-crypto-address) to register the cryptocurrency address for transfer. Record the `crypto_address_id` field for later use in specifying the transfer destination address.
-  3. Call [Create settlement request](/v2/api-references/payment/create-settlement-request) to create a transfer request.
+  1. Before creating a transfer request, you can call [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) or [Get developer balance](/payments/en/api-references/payment/get-developer-balance) to query merchant and developer balances respectively, to determine the maximum transferable amount.
+  2. Call [Create crypto address](/payments/en/api-references/payment/create-crypto-address) to register the cryptocurrency address for transfer. Record the `crypto_address_id` field for later use in specifying the transfer destination address.
+  3. Call [Create settlement request](/payments/en/api-references/payment/create-settlement-request) to create a transfer request.
 
 **Basic parameters**
 * `request_id`: The unique request ID you provide to track the transfer request
@@ -50,8 +50,8 @@ Depending on the source of funds, you need to specify different parameter combin
 - `amount`: Cryptocurrency amount
 - `token_id`: Cryptocurrency ID (such as `ETH_USDT`, `TRON_USDT`)
 - `crypto_address_id`: Unique identifier for the destination cryptocurrency address. You can obtain this ID in the following ways:
-  - Call [Create crypto address](/v2/api-references/payment/create-crypto-address) to register a new transfer address
-  - Call [List crypto addresses](/v2/api-references/payment/list-crypto-addresses) to query the list of registered addresses
+  - Call [Create crypto address](/payments/en/api-references/payment/create-crypto-address) to register a new transfer address
+  - Call [List crypto addresses](/payments/en/api-references/payment/list-crypto-addresses) to query the list of registered addresses
 </Tab>
 </Tabs>
 
@@ -80,8 +80,8 @@ You can also actively query transfer request status through Payments App or Paym
 
   <Tab title="Payments API" icon="code">
 You can call the following API operations to query transfer request status:
-  - [Get settlement request information](/v2/api-references/payment/get-settlement-request-information) - Query detailed information about a single transfer request
-  - [List all settlement requests](/v2/api-references/payment/list-all-settlement-requests) - Query detailed information about all transfer requests
+  - [Get settlement request information](/payments/en/api-references/payment/get-settlement-request-information) - Query detailed information about a single transfer request
+  - [List all settlement requests](/payments/en/api-references/payment/list-all-settlement-requests) - Query detailed information about all transfer requests
   </Tab>
 </Tabs>
 

@@ -42,8 +42,8 @@ sequenceDiagram
 
 You can create an order in two ways:
 
-- Call [Create pay-in order](/v2/api-references/payment/create-pay-in-order) to directly create a payment order. After a successful call, you will receive information such as the payable amount and payment address.
-- Call [Create order link](/v2/api-references/payment/create-order-link) to generate a payment link. This link will direct users to a payment page provided by Cobo, where they can create an order and complete payment without you needing to develop the front-end interaction. You can also embed this payment page into your website or application using an iFrame.
+- Call [Create pay-in order](/payments/en/api-references/payment/create-pay-in-order) to directly create a payment order. After a successful call, you will receive information such as the payable amount and payment address.
+- Call [Create order link](/payments/en/api-references/payment/create-order-link) to generate a payment link. This link will direct users to a payment page provided by Cobo, where they can create an order and complete payment without you needing to develop the front-end interaction. You can also embed this payment page into your website or application using an iFrame.
 
 ### Prerequisites
 
@@ -53,11 +53,11 @@ You have completed all the steps mentioned in [Preparation](/payments/en/guides/
 
 <Tabs>
   <Tab title="Payment Link" icon="browser">
-  You can call [Create order link](/v2/api-references/payment/create-order-link) to create an order payment link. The payment page is provided by Cobo, and users can access the link directly to complete the order payment. You can also embed the page into your existing website through an iFrame. For details, see [Create order link](/payments/en/guides/payment-link).
+  You can call [Create order link](/payments/en/api-references/payment/create-order-link) to create an order payment link. The payment page is provided by Cobo, and users can access the link directly to complete the order payment. You can also embed the page into your existing website through an iFrame. For details, see [Create order link](/payments/en/guides/payment-link).
   </Tab>
   <Tab title="Payments API" icon="code">
 
-You can call [Create pay-in order](/v2/api-references/payment/create-pay-in-order) to create a payment order. When creating an order, you need to specify the order amount, the cryptocurrency that the user will use for payment, and other information. The system will calculate the payable amount (`payable_amount`) based on this information. The calculation formula for the payable amount is:
+You can call [Create pay-in order](/payments/en/api-references/payment/create-pay-in-order) to create a payment order. When creating an order, you need to specify the order amount, the cryptocurrency that the user will use for payment, and other information. The system will calculate the payable amount (`payable_amount`) based on this information. The calculation formula for the payable amount is:
 
 **Payable Amount** = **(Order Amount + Developer Fee)** / **Exchange Rate**
 
@@ -69,7 +69,7 @@ You can call [Create pay-in order](/v2/api-references/payment/create-pay-in-orde
   - If you only set the `token_id` field and do not set the `currency` field, both the order amount and developer fee are denominated in the cryptocurrency specified by `token_id`. In this case, the exchange rate is fixed at 1 and no conversion is required.
   - If you set the `currency` field, both the order amount and developer fee are denominated in the fiat currency specified by `currency`.
     - If you set the `custom_exchange_rate` field, the exchange rate is the value specified by `custom_exchange_rate`.
-    - If you do not set the `custom_exchange_rate` field, the exchange rate is the real-time rate between the fiat currency specified by `currency` and the cryptocurrency specified by `token_id`, based on the rate returned by [Get exchange rate](/v2/api-references/payment/get-exchange-rate) at the time the order is created.
+    - If you do not set the `custom_exchange_rate` field, the exchange rate is the real-time rate between the fiat currency specified by `currency` and the cryptocurrency specified by `token_id`, based on the rate returned by [Get exchange rate](/payments/en/api-references/payment/get-exchange-rate) at the time the order is created.
 
 
 The table below shows how the payable amount is calculated by the system in four different configuration scenarios:
@@ -88,7 +88,7 @@ The table below shows how the payable amount is calculated by the system in four
 | `payable_amount` (final amount payable by user) | `"101.01"` | `"100"` | `"104.08"` | `"102"` |
 </Tab>
   <Tab title="Create order link" icon="browser">
-  You can call [Create order link](/v2/api-references/payment/create-order-link) to create an order payment link. The payment page is provided by Cobo, and users can access the link directly to complete the order payment. You can also embed the page into your existing website through an iFrame. For details, see [Create order link](/payments/en/guides/payment-link).
+  You can call [Create order link](/payments/en/api-references/payment/create-order-link) to create an order payment link. The payment page is provided by Cobo, and users can access the link directly to complete the order payment. You can also embed the page into your existing website through an iFrame. For details, see [Create order link](/payments/en/guides/payment-link).
   </Tab>
 </Tabs>
 
@@ -116,7 +116,7 @@ You can also actively query order status through Payments App or Payments API.
 
 
   <Tab title="Payments API" icon="code">
-You can call [Get pay-in order information](/v2/api-references/payment/get-pay-in-order-information) to query the status of a single payment order, or call [List all pay-in orders](/v2/api-references/payment/list-all-pay-in-orders) to query the status of all orders.
+You can call [Get pay-in order information](/payments/en/api-references/payment/get-pay-in-order-information) to query the status of a single payment order, or call [List all pay-in orders](/payments/en/api-references/payment/list-all-pay-in-orders) to query the status of all orders.
 
   </Tab>
 </Tabs>
@@ -129,7 +129,7 @@ In order mode, you may need to handle the following exception situations.
 
 ### Cancel payment order
 
-When a payment order is in the `Pending` status, that is, no deposit transaction has been detected yet, you can call [Update pay-in order](/v2/api-references/payment/update-pay-in-order) to cancel the order. After cancellation, the order status will change to `Expired`.
+When a payment order is in the `Pending` status, that is, no deposit transaction has been detected yet, you can call [Update pay-in order](/payments/en/api-references/payment/update-pay-in-order) to cancel the order. After cancellation, the order status will change to `Expired`.
 
 
 ### Overpayment, underpayment, and late payment
@@ -182,7 +182,7 @@ sequenceDiagram
 
   </Tab>
   <Tab title="Payments API" icon="code">
-Call [Create refund order](/v2/api-references/payment/create-refund-order) to create a refund order. When creating a refund order, pay attention to the following points:
+Call [Create refund order](/payments/en/api-references/payment/create-refund-order) to create a refund order. When creating a refund order, pay attention to the following points:
 
    - You need to specify the source of the refund amount through the `refund_type` field. When you select `Merchant`, Cobo will deduct the refund amount from the merchant balance; when you select `Psp`, Cobo will deduct the refund amount from the developer balance.
    - Since refunds involve transfers to external addresses, Cobo will charge related fees. You can charge an appropriate fee as compensation through the developer fee field (`merchant_fee_amount`). After specifying this field:
@@ -210,7 +210,7 @@ You can also actively query refund order status through Payments App or Payments
 
   </Tab>
   <Tab title="Payments API" icon="code">
-You can call [Get refund order information](/v2/api-references/payment/get-refund-order-information) to query the status of a single refund order, or call [List all refund orders](/v2/api-references/payment/list-all-refund-orders) to query the status of all refund orders.
+You can call [Get refund order information](/payments/en/api-references/payment/get-refund-order-information) to query the status of a single refund order, or call [List all refund orders](/payments/en/api-references/payment/list-all-refund-orders) to query the status of all refund orders.
   </Tab>
 </Tabs>
 

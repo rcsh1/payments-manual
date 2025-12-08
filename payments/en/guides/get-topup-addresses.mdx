@@ -61,7 +61,7 @@ You need to create a payer first, then get the top-up address corresponding to t
   
   
   <Tab title="Payments API" icon="code">
-1. Call [Create/Get top-up address](/v2/api-references/payment/createget-top-up-address) to create a top-up address. Key parameters in the request include:
+1. Call [Create/Get top-up address](/payments/en/api-references/payment/createget-top-up-address) to create a top-up address. Key parameters in the request include:
    * **Merchant ID** (`merchant_id`): The unique identifier for the merchant in the Cobo system, assigned by Cobo.
    * **Custom payer ID** (`custom_payer_id`): The unique identifier for the payer in your system.
    * **Token ID** (`token_id`): Specifies the cryptocurrency and blockchain network that the top-up address needs to support.
@@ -82,7 +82,7 @@ You can subscribe to the following webhook events to receive real-time update no
 You can also query all top-up transactions for each payer in the following ways:
 
 - **Payments App**: In the App's left navigation bar, click **Pay-In** > **Top-Ups**. In the payer list, find the target payer and click the **View Transaction** button on the right to view all top-up records for that payer.
-- **Payments API**: Call [List payers](/v2/api-references/payment/list-payers) to get detailed information about all payers and their top-up transactions.
+- **Payments API**: Call [List payers](/payments/en/api-references/payment/list-payers) to get detailed information about all payers and their top-up transactions.
 
 ## Exception handling
 
@@ -96,7 +96,7 @@ You can actively replace a payer's top-up address. Cobo will also automatically 
 
 When you need to replace a top-up address (for example, due to business changes, internal risk assessment, or other business needs), you can create a new address through Payments App or Payments API.
 - Payments App: In the payer list, find the target payer, then click the **View Address** button on the right. In the address list, click the **Create Address** button to create.
-- Payments API: Call [Update top-up address](/v2/api-references/payment/update-top-up-address) to create a new address.
+- Payments API: Call [Update top-up address](/payments/en/api-references/payment/update-top-up-address) to create a new address.
 
 <Note>For a single payer, the address can be replaced a maximum of 10 times. Exceeding the limit will result in an API request error.</Note>
 

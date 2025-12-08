@@ -45,8 +45,8 @@ On the off-ramp page, you can view the detailed fee breakdown and estimated arri
 
   <Tab title="Payments API" icon="code">
 
-  1. Before creating a withdrawal request, you can call [List merchant balances](/v2/api-references/payment/list-merchant-balances) or [Get developer balance](/v2/api-references/payment/get-developer-balance) to query merchant and developer balances respectively, to determine the maximum withdrawal amount.
-  2. Call [Create settlement request](/v2/api-references/payment/create-settlement-request) to create a withdrawal request.
+  1. Before creating a withdrawal request, you can call [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) or [Get developer balance](/payments/en/api-references/payment/get-developer-balance) to query merchant and developer balances respectively, to determine the maximum withdrawal amount.
+  2. Call [Create settlement request](/payments/en/api-references/payment/create-settlement-request) to create a withdrawal request.
 
 **Basic parameters**
 * `request_id`: The unique request ID you provide to track the withdrawal request
@@ -68,7 +68,7 @@ Depending on the source of funds, you need to specify different parameter combin
 - `order_ids`: Order ID list. If this parameter is empty, all eligible orders will be selected and the cryptocurrency amount for this withdrawal will be automatically calculated.
 - `amount`: Cryptocurrency amount.
 - `currency`: Fiat currency (currently only `USD` is supported).
-- `bank_account_id`: Destination bank account ID. Can be obtained by calling [List all bank accounts](/v2/api-references/payment/list-all-bank-accounts).
+- `bank_account_id`: Destination bank account ID. Can be obtained by calling [List all bank accounts](/payments/en/api-references/payment/list-all-bank-accounts).
 
 </Tab>
 </Tabs>
@@ -97,8 +97,8 @@ You can also actively query withdrawal request status through Payments App or Pa
 
   <Tab title="Payments API" icon="code">
 You can call the following API operations to query withdrawal request status:
-  - [Get settlement request information](/v2/api-references/payment/get-settlement-request-information) - Query detailed information about a single withdrawal request
-  - [List all settlement requests](/v2/api-references/payment/list-all-settlement-requests) - Query detailed information about all withdrawal requests
+  - [Get settlement request information](/payments/en/api-references/payment/get-settlement-request-information) - Query detailed information about a single withdrawal request
+  - [List all settlement requests](/payments/en/api-references/payment/list-all-settlement-requests) - Query detailed information about all withdrawal requests
   </Tab>
 </Tabs>
 

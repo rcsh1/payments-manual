@@ -3,7 +3,7 @@ title: "创建订单支付链接"
 lang: "zh-hans"
 ---
 
-如果您选择通过订单模式进行收款，并希望节省自建支付页面的开发时间，可以调用 [Create order link](/v2/api-references/payment/create-order-link) 创建一个订单支付链接。
+如果您选择通过订单模式进行收款，并希望节省自建支付页面的开发时间，可以调用 [Create order link](/payments/en/api-references/payment/create-order-link) 创建一个订单支付链接。
 
 - 打开支付链接后，付款方将被引导至由 Cobo 托管的支付页面。付款方可以在该页面查看订单详情并完成支付，无需您自行开发前端交互流程。您还可以将支付页面通过 iFrame 方式嵌入到您的网站或应用中。
 
@@ -45,7 +45,7 @@ lang: "zh-hans"
 该示例项目前后端的交互流程如下：
 
 1. 付款方点击 **Pay Now** 按钮后，前端会向后端发起请求，申请创建订单支付链接。
-2. 后端收到请求后，通过调用 [Create order link](/v2/api-references/payment/create-order-link)，生成对应的订单支付链接。
+2. 后端收到请求后，通过调用 [Create order link](/payments/en/api-references/payment/create-order-link)，生成对应的订单支付链接。
 3. 后端将该支付链接返回给前端。前端根据返回的链接，通过新窗口打开或在 iframe 中嵌入支付页面，付款方即可在该页面完成支付操作。
 
 您可以在浏览器中打开开发者工具，查看网络请求的详细内容：
@@ -54,7 +54,7 @@ lang: "zh-hans"
 
 ## 集成步骤
 
-您可以调用 [Create order link](/v2/api-references/payment/create-order-link) 来创建一个订单支付链接。
+您可以调用 [Create order link](/payments/en/api-references/payment/create-order-link) 来创建一个订单支付链接。
 
 ### 交互流程
 下图展示了付款方、您的应用前后端与 Cobo 之间的完整交互流程：
@@ -95,7 +95,7 @@ sequenceDiagram
   <Info>如果您是商户（直接服务于付款方），通常无需设置开发者费用。</Info>
 - **汇率**：
     - 如果您设置了 `custom_exchange_rates` 字段，则汇率为 `custom_exchange_rates` 字段值。
-    - 如果您未设置 `custom_exchange_rates` 字段，则系统会采用您设置的 `currency`（订单金额计价币种）与付款方实际选择的加密货币之间的实时汇率。该汇率以付款方下单时调用 [Get exchange rate](/v2/api-references/payment/get-exchange-rate) 返回的汇率为准。
+    - 如果您未设置 `custom_exchange_rates` 字段，则系统会采用您设置的 `currency`（订单金额计价币种）与付款方实际选择的加密货币之间的实时汇率。该汇率以付款方下单时调用 [Get exchange rate](/payments/en/api-references/payment/get-exchange-rate) 返回的汇率为准。
   
 
 下表展示了在四种不同设置下，系统如何计算应付金额：

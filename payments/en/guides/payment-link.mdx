@@ -5,7 +5,7 @@ lang: "en"
 
 <Note>**Disclaimer: This article contains AI translations and should only be used as reference.** Contact Cobo's support team through [help@cobo.com](mailto:help@cobo.com) if you have any questions.</Note>
 
-If you choose to collect payments via the order mode and want to save development time on your own payment page, you can call the [Create order link](/v2/api-references/payment/create-order-link) API to create an order payment link.
+If you choose to collect payments via the order mode and want to save development time on your own payment page, you can call the [Create order link](/payments/en/api-references/payment/create-order-link) API to create an order payment link.
 
 - When the payment link is opened, the payer will be directed to a payment page hosted by Cobo. On this page, the payer can view order details and complete the payment, so you don't need to develop the frontend interaction flow yourself. You can also embed the payment page into your website or application using an iFrame.
 
@@ -48,7 +48,7 @@ The example project includes two integration methods: clicking **Pay Now (By New
 The interaction process between frontend and backend in this demo is as follows:
 
 1. When the payer clicks the **Pay Now** button, the frontend sends a request to the backend to create an order payment link.
-2. The backend receives the request and calls the [Create order link](/v2/api-references/payment/create-order-link) API to generate the payment link.
+2. The backend receives the request and calls the [Create order link](/payments/en/api-references/payment/create-order-link) API to generate the payment link.
 3. The backend returns the payment link to the frontend. The frontend then opens a new window or embeds the payment page in an iframe using the returned link, where the payer can complete the payment.
 
 You can open your browser’s developer tools to see details of the network requests:
@@ -57,7 +57,7 @@ You can open your browser’s developer tools to see details of the network requ
 
 ## Integration Steps
 
-You can call the [Create order link](/v2/api-references/payment/create-order-link) API to create an order payment link.
+You can call the [Create order link](/payments/en/api-references/payment/create-order-link) API to create an order payment link.
 
 ### Interaction Flow
 The diagram below shows the complete interaction flow between the payer, your application’s frontend and backend, and Cobo:
@@ -98,7 +98,7 @@ When creating an order payment link, you must specify the order amount, develope
   <Info>If you are a merchant (serving payers directly), you usually do not need to set a developer fee.</Info>
 - **Exchange rate**:
     - If you specify the `custom_exchange_rates` field, the exchange rate will use the value from this field.
-    - If you do not specify `custom_exchange_rates`, the system will use the real-time exchange rate between your specified `currency` (denominated for the order amount) and the actual cryptocurrency selected by the payer. The exchange rate at the time of checkout is returned by the [Get exchange rate](/v2/api-references/payment/get-exchange-rate) API.
+    - If you do not specify `custom_exchange_rates`, the system will use the real-time exchange rate between your specified `currency` (denominated for the order amount) and the actual cryptocurrency selected by the payer. The exchange rate at the time of checkout is returned by the [Get exchange rate](/payments/en/api-references/payment/get-exchange-rate) API.
   
 
 The following table shows how the system calculates the payable amount in four different setups:

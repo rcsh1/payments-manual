@@ -24,9 +24,9 @@ lang: "zh-hans"
 
   <Tab title="Payments API" icon="code">
 
-  1. 在创建转账请求前，您可以调用 [List merchant balances](/v2/api-references/payment/list-merchant-balances) 或 [Get developer balance](/v2/api-references/payment/get-developer-balance) 分别查询商户和开发者余额，用于确定可转账的最大金额。
-  2. 调用 [Create crypto address](/v2/api-references/payment/create-crypto-address) 录入用于转账的加密货币地址。记录 `crypto_address_id` 字段，后续用于指定转账目标地址。
-  3. 调用 [Create settlement request](/v2/api-references/payment/create-settlement-request) 创建转账请求。
+  1. 在创建转账请求前，您可以调用 [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) 或 [Get developer balance](/payments/en/api-references/payment/get-developer-balance) 分别查询商户和开发者余额，用于确定可转账的最大金额。
+  2. 调用 [Create crypto address](/payments/en/api-references/payment/create-crypto-address) 录入用于转账的加密货币地址。记录 `crypto_address_id` 字段，后续用于指定转账目标地址。
+  3. 调用 [Create settlement request](/payments/en/api-references/payment/create-settlement-request) 创建转账请求。
 
 **基础参数**
 * `request_id`：您提供的唯一请求 ID，用于跟踪转账请求
@@ -49,8 +49,8 @@ lang: "zh-hans"
 - `amount`：加密货币金额
 - `token_id`：加密货币 ID（如 `ETH_USDT`、`TRON_USDT`）
 - `crypto_address_id`：目标加密货币地址的唯一标识符。您可以通过以下方式获取该 ID：
-  - 调用 [Create crypto address](/v2/api-references/payment/create-crypto-address) 录入新的转账地址
-  - 调用 [List crypto addresses](/v2/api-references/payment/list-crypto-addresses) 查询已录入的地址列表
+  - 调用 [Create crypto address](/payments/en/api-references/payment/create-crypto-address) 录入新的转账地址
+  - 调用 [List crypto addresses](/payments/en/api-references/payment/list-crypto-addresses) 查询已录入的地址列表
 </Tab>
 </Tabs>
 
@@ -79,8 +79,8 @@ lang: "zh-hans"
 
   <Tab title="Payments API" icon="code">
 您可以调用以下 API 操作查询转账请求状态：
-  - [Get settlement request information](/v2/api-references/payment/get-settlement-request-information) - 查询单个转账请求的详细信息
-  - [List all settlement requests](/v2/api-references/payment/list-all-settlement-requests) - 查询所有转账请求的详细信息
+  - [Get settlement request information](/payments/en/api-references/payment/get-settlement-request-information) - 查询单个转账请求的详细信息
+  - [List all settlement requests](/payments/en/api-references/payment/list-all-settlement-requests) - 查询所有转账请求的详细信息
   </Tab>
 </Tabs>
 
