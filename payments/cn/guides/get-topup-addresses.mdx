@@ -100,7 +100,7 @@ sequenceDiagram
 
 #### 系统自动更换地址
 
-当某一充值地址出现多次交易无法通过合规扫描的情况时，Cobo 会自动废弃该地址，并为该付款方生成新的充值地址。更换后会触发 `payment.address.updated` 回调，详情可参考[事件与状态](/payments/cn/guides/status-and-events)。
+当某一充值地址出现多次交易无法通过合规扫描的情况时，Cobo 会自动废弃该地址，并为该付款方生成新的充值地址。更换后会触发 `payment.address.updated` 事件，详情可参考[事件与状态](/payments/cn/guides/status-and-events)。
 
 
 #### 地址更换后的影响
