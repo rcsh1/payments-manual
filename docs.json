@@ -144,6 +144,16 @@
                     ]
                   },
                   {
+                    "group": "Allocations",
+                    "pages": [
+                      "payments/en/api-references/payment/get-available-allocation-amount",
+                      "payments/en/api-references/payment/create-batch-allocation",
+                      "payments/en/api-references/payment/get-batch-allocation-information",
+                      "payments/en/api-references/payment/list-all-batch-allocations",
+                      "payments/en/api-references/payment/list-all-allocation-records"
+                    ]
+                  },
+                  {
                     "group": "Payouts",
                     "pages": [
                       "payments/en/api-references/payment/create-settlement-request",
