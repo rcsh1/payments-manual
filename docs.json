@@ -307,7 +307,14 @@
           },
           {
             "tab": "API 参考",
-            "href": "/payments/en/api-references"
+            "groups": [
+              {
+                "group": "概览",
+                "pages": [
+                  "payments/cn/api-references/overview"
+                ]
+              }
+            ]
           },
           {
             "tab": "开发者工具",
