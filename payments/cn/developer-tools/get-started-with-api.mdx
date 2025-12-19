@@ -18,7 +18,7 @@ lang: "zh-hans"
 
 ## 生成 API Key 和 API Secret
 
-生成一对 Ed25519 密钥对作为 API Key 和 API Secret。本指南以 OpenSSL 为例。要了解有关生成密钥对的其他方法，请参阅[生成 API Key 和 API Secret](/payments/cn/developer-tools//cobo-auth#generate-an-api-key-and-an-api-secret)。
+生成一对 Ed25519 密钥对作为 API Key 和 API Secret。本指南以 OpenSSL 为例。要了解有关生成密钥对的其他方法，请参阅[生成 API Key 和 API Secret](/payments/cn/developer-tools/cobo-auth#generate-an-api-key-and-an-api-secret)。
 
 1. 在终端窗口中，运行以下 OpenSSL 命令：
 
@@ -64,7 +64,7 @@ openssl pkey -pubin -in public_key.pem -text | grep 'pub:' -A 3 | tail -n +2 | t
 
 <Note>如果您选择[使用 Payments API SDK](/payments/cn/developer-tools/quickstart-python)，则可以跳过此步骤，因为 SDK 封装了认证机制。</Note>
 
-在发送 API 请求时，您需要在请求头中包含 API Key、随机数和 API 签名，以作为身份认证信息。有关更多信息，请参阅 [Cobo Auth](/payments/cn/developer-tools//cobo-auth)。
+在发送 API 请求时，您需要在请求头中包含 API Key、随机数和 API 签名，以作为身份认证信息。有关更多信息，请参阅 [Cobo Auth](/payments/cn/developer-tools/cobo-auth)。
 
 ```
 headers = {
@@ -74,9 +74,9 @@ headers = {
 }
 ```
 
-- Biz-Api-Key：API Key。要了解如何生成 API Key，请参阅[生成 API Key 和 API Secret](/payments/cn/developer-tools//cobo-auth#generate-an-api-key-and-an-api-secret)。
+- Biz-Api-Key：API Key。要了解如何生成 API Key，请参阅[生成 API Key 和 API Secret](/payments/cn/developer-tools/cobo-auth#generate-an-api-key-and-an-api-secret)。
 - Biz-Api-Nonce：随机数是 Unix 时间戳格式的当前时间，以毫秒为单位。
-- Biz-Api-Signature：API 签名。要了解如何计算 API 签名，请参阅[计算 API 签名](/payments/cn/developer-tools//cobo-auth#calculate-the-api-signature)。
+- Biz-Api-Signature：API 签名。要了解如何计算 API 签名，请参阅[计算 API 签名](/payments/cn/developer-tools/cobo-auth#calculate-the-api-signature)。
 
 
 <Tip>欢迎您[提交反馈](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI)来帮助改进我们的文档！</Tip>
