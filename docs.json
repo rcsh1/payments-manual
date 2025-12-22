@@ -21,19 +21,21 @@
                 "pages": [
                   "payments/en/guides/overview",
                   "payments/en/guides/features",
+                  "payments/en/guides/quick-start",
                   "payments/en/guides/changelog"
+                ]
+              },
+              {
+                "group": "Initial Setup",
+                "pages": [
+                  "payments/en/guides/preparation",
+                  "payments/en/guides/preparation-prod",
+                  "payments/en/guides/merchants"
                 ]
               },
               {
                 "group": "Pay-In",
                 "pages": [
-                  {
-                    "group": "Prerequisites",
-                    "pages": [
-                      "payments/en/guides/preparation",
-                      "payments/en/guides/preparation-prod"
-                    ]
-                  },
                   {
                     "group": "Collect Payments",
                     "pages": [
@@ -67,12 +69,6 @@
                   "payments/en/guides/fiat-payouts",
                   "payments/en/guides/crypto-payouts",
                   "payments/en/guides/destinations"
-                ]
-              },
-              {
-                "group": "Collection-on-behalf-of",
-                "pages": [
-                  "payments/en/guides/merchants"
                 ]
               },
               {
