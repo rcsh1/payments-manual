@@ -21,19 +21,21 @@
                 "pages": [
                   "payments/en/guides/overview",
                   "payments/en/guides/features",
+                  "payments/en/guides/quick-start",
                   "payments/en/guides/changelog"
+                ]
+              },
+              {
+                "group": "Initial Setup",
+                "pages": [
+                  "payments/en/guides/preparation",
+                  "payments/en/guides/preparation-prod",
+                  "payments/en/guides/merchants"
                 ]
               },
               {
                 "group": "Pay-In",
                 "pages": [
-                  {
-                    "group": "Prerequisites",
-                    "pages": [
-                      "payments/en/guides/preparation",
-                      "payments/en/guides/preparation-prod"
-                    ]
-                  },
                   {
                     "group": "Collect Payments",
                     "pages": [
@@ -67,12 +69,6 @@
                   "payments/en/guides/fiat-payouts",
                   "payments/en/guides/crypto-payouts",
                   "payments/en/guides/destinations"
-                ]
-              },
-              {
-                "group": "Collection-on-behalf-of",
-                "pages": [
-                  "payments/en/guides/merchants"
                 ]
               },
               {
@@ -240,19 +236,21 @@
                 "pages": [
                   "payments/cn/guides/overview",
                   "payments/cn/guides/features",
+                  "payments/cn/guides/quick-start",
                   "payments/cn/guides/changelog"
+                ]
+              },
+              {
+                "group": "初始配置",
+                "pages": [
+                  "payments/cn/guides/preparation",
+                  "payments/cn/guides/preparation-prod",
+                  "payments/cn/guides/merchants"
                 ]
               },
               {
                 "group": "收款",
                 "pages": [
-                  {
-                    "group": "前置准备",
-                    "pages": [
-                      "payments/cn/guides/preparation",
-                      "payments/cn/guides/preparation-prod"
-                    ]
-                  },
                   {
                     "group": "发起收款",
                     "pages": [
@@ -286,12 +284,6 @@
                   "payments/cn/guides/fiat-payouts",
                   "payments/cn/guides/crypto-payouts",
                   "payments/cn/guides/destinations"
-                ]
-              },
-              {
-                "group": "代收款",
-                "pages": [
-                  "payments/cn/guides/merchants"
                 ]
               },
               {
