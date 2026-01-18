@@ -10,7 +10,7 @@ lang: "zh-hans"
 您可以通过 Payments App 或 Payments API 创建加密货币转账请求。
 
 <Tabs>
-  <Tab title="Payments App">
+  <Tab title="Payments App" icon="pager">
     1. 登录 Cobo Portal [开发环境](https://portal.dev.cobo.com/login)或[生产环境](https://portal.cobo.com/login)。
     2. 在左侧导航栏中点击 **Apps**，然后点击 **Payments** 卡片，启动 App。
     3. 在 App 的左侧导航栏中点击**资金管理** \> **资金转出**。
@@ -22,12 +22,13 @@ lang: "zh-hans"
          className="screenshot_full_screen"
          alt="加密货币转账入口"
        />
-    6. 填写转账信息，包括代币、网络、商户名称、金额、以及接收地址。<Note>
+    6. 填写转账信息，包括代币、网络、商户名称、金额、以及接收地址。
+       <Note>
          如果您在**转出目的地**中开启了**将转出目的地设为白名单**的开关，则仅可以转出至已录入的转出目的地。更多详情请参考[转出目的地](/payments/cn/guides/destinations)
        </Note>
     7. 按照页面提示确认并提交转账请求。
   </Tab>
-  <Tab title="Payments API">
+  <Tab title="Payments API" icon="code">
     1. 在创建转账请求前，您可以调用 [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) 或 [Get developer balance](/payments/en/api-references/payment/get-developer-balance) 分别查询商户和开发者余额，用于确定可转账的最大金额。
     2. 调用 [Create crypto address](/payments/en/api-references/payment/create-crypto-address) 录入用于转账的加密货币地址。记录 `crypto_address_id` 字段，后续用于指定转账目标地址。
     3. 调用 [Create settlement request](/payments/en/api-references/payment/create-settlement-request) 创建转账请求。
@@ -75,13 +76,13 @@ lang: "zh-hans"
 您也可以通过 Payments App 或 Payments API 主动查询转账请求状态。
 
 <Tabs>
-  <Tab title="Payments App">
+  <Tab title="Payments App" icon="pager">
     1. 登录 Cobo Portal [开发环境](https://portal.dev.cobo.com/login)或[生产环境](https://portal.cobo.com/login)。
     2. 在左侧导航栏中点击 **Apps**，然后点击 **Payments** 卡片，启动 App。
     3. 在 App 的左侧导航栏中点击**资金管理** \> **资金转出**。
     4. 在**资金转出历史**标签页查看所有转账请求的状态和详情。
   </Tab>
-  <Tab title="Payments API">
+  <Tab title="Payments API" icon="code">
     您可以调用以下 API 操作查询转账请求状态：
 
     - [Get settlement request information](/payments/en/api-references/payment/get-settlement-request-information) - 查询单个转账请求的详细信息

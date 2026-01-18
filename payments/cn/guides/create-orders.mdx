@@ -27,7 +27,7 @@ lang: "zh-hans"
 ### 操作步骤
 
 <Tabs>
-  <Tab title="使用 Payments API 创建支付订单">
+  <Tab title="使用 Payments API 创建支付订单" icon="code">
     您可以调用 [Create pay-in order](/payments/en/api-references/payment/create-pay-in-order) 来创建一个支付订单。下图展示了付款方、商户与 Cobo 之间的完整交互流程：
 
     <div style={{ maxWidth:"600px",margin:"0 auto" }}>
@@ -57,7 +57,8 @@ lang: "zh-hans"
     - **订单金额**（`pricing_amount`）：订单金额，不包括开发者费用。
       - 如果设置了 `pricing_currency`，订单金额以该法币计价。
       - 如果未设置 `pricing_currency`，订单金额以 `payable_currency` 指定的加密货币计价。
-    - **开发者费用**（`fee_amount`）：如果您是服务多个下游商户的平台机构，需要在您和下游商户之间分配收入，可以通过设置该费用来实现。开发者费用和订单金额之间的比例决定了您和下游商户之间的收入分成比例。更多信息请参考[账户与资金分配](/payments/cn/guides/amounts-and-balances)。 <Info>
+    - **开发者费用**（`fee_amount`）：如果您是服务多个下游商户的平台机构，需要在您和下游商户之间分配收入，可以通过设置该费用来实现。开发者费用和订单金额之间的比例决定了您和下游商户之间的收入分成比例。更多信息请参考[账户与资金分配](/payments/cn/guides/amounts-and-balances)。 
+     <Info>
         如果您是商户（直接服务于付款方），通常无需设置开发者费用。
       </Info>
     - **应付金额**（`payable_amount`）：付款方实际需支付的加密货币金额，以 `payable_currency` 指定的加密货币为单位。该字段为可选字段：
@@ -78,7 +79,7 @@ lang: "zh-hans"
     | 计算过程               | (100 + 0) / 0.99                             | (100 + 0) / 1                                  | 直接使用指定的 payable_amount                    | (100 + 2) / 1                                |
     | 最终应付金额             | `"101.01"`                                   | `"100.00"`                                     | `"104.08"`                                | `"102.00"`                                   |
   </Tab>
-  <Tab title="使用 Payments API 创建支付链接">
+  <Tab title="使用 Payments API 创建支付链接" icon="browser">
     您可以调用 [Create order link](/payments/en/api-references/payment/create-order-link) 创建一个订单支付链接。具体的支付页面效果和集成步骤请参考[创建订单支付链接](/payments/cn/guides/payment-link)。
   </Tab>
 </Tabs>
@@ -96,7 +97,7 @@ lang: "zh-hans"
 您也可以通过 Payments App 或 Payments API 主动查询订单状态。
 
 <Tabs>
-  <Tab title="Payments App">
+  <Tab title="Payments App" icon="pager">
     1. 登录 Cobo Portal [开发环境](https://portal.dev.cobo.com/login)或[生产环境](https://portal.cobo.com/login)。
     2. 在左侧导航栏中点击 **Apps**，然后点击 **Payments** 卡片，启动 App。
     3. 在 App 的左侧导航栏中点击**收款** \> **订单**。您可以在此页面查看所有订单的详细信息，如订单 ID、商户信息、支付金额、订单状态等。
@@ -108,7 +109,7 @@ lang: "zh-hans"
       alt="查看订单列表"
     />
   </Tab>
-  <Tab title="Payments API">
+  <Tab title="Payments API" icon="code">
     您可以调用 [Get pay-in order information](/payments/en/api-references/payment/get-pay-in-order-information) 查询单个支付订单状态，或调用 [List all pay-in orders](/payments/en/api-references/payment/list-all-pay-in-orders) 查询所有订单状态。
   </Tab>
 </Tabs>
@@ -155,7 +156,7 @@ sequenceDiagram
 #### 创建退款订单
 
 <Tabs>
-  <Tab title="Payments App">
+  <Tab title="Payments App" icon="pager">
     1. 登录 Cobo Portal [开发环境](https://portal.dev.cobo.com/login)或[生产环境](https://portal.cobo.com/login)。
     2. 在左侧导航栏中点击 **Apps**，然后点击 **Payments** 卡片，启动 App。
     3. 在 App 的左侧导航栏中点击**收款** \> **订单**。
@@ -182,7 +183,7 @@ sequenceDiagram
        - 输入收款地址。您可以点击**使用原始支付地址**，系统将自动填入该笔订单的原始支付地址。如果您想退款到其他地址，也可以手动输入目标地址。
     5. 点击**预览**确认所有信息无误后，点击**提交**创建退款订单。
   </Tab>
-  <Tab title="Payments API">
+  <Tab title="Payments API" icon="code">
     调用 [Create refund order](/payments/en/api-references/payment/create-refund-order) 创建退款订单。创建退款订单时需要注意以下几点：
 
     - 您需要通过 `refund_type` 字段指定退款金额的来源。当您选择 `Merchant` 时，Cobo 会从商户余额中扣除退款金额；当您选择 `Psp` 时，Cobo 会从开发者余额中扣除退款金额。
@@ -204,7 +205,7 @@ sequenceDiagram
 您也可以通过 Payments App 或 Payments API 主动查询退款订单状态。
 
 <Tabs>
-  <Tab title="Payments App">
+  <Tab title="Payments App" icon="pager">
     1. 登录 Cobo Portal [开发环境](https://portal.dev.cobo.com/login)或[生产环境](https://portal.cobo.com/login)。
     2. 在左侧导航栏中点击 **Apps**，然后点击 **Payments** 卡片，启动 App。
     3. 在 App 的左侧导航栏中点击**收款** \> **订单**。
@@ -218,7 +219,7 @@ sequenceDiagram
 
     5. 在退款订单详情页面查看订单状态。
   </Tab>
-  <Tab title="Payments API">
+  <Tab title="Payments API" icon="code">
     您可以调用 [Get refund order information](/payments/en/api-references/payment/get-refund-order-information) 查询单个退款订单状态，或调用 [List all refund orders](/payments/en/api-references/payment/list-all-refund-orders) 查询所有退款订单状态。
   </Tab>
 </Tabs>
