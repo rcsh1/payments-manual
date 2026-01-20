@@ -13,20 +13,23 @@ lang: "zh-hans"
   <Tab title="Payments App" icon="pager">
     1. 登录 Cobo Portal [开发环境](https://portal.dev.cobo.com/login)或[生产环境](https://portal.cobo.com/login)。
     2. 在左侧导航栏中点击 **Apps**，然后点击 **Payments** 卡片，启动 App。
-    3. 在 App 的左侧导航栏中点击**资金管理** \> **资金转出**。
-    4. 您可以选择提取**商户余额**或**开发者余额**。在本例中，我们选择提取商户余额。点击**商户余额**卡片上的**结算**按钮。
-    5. 在弹窗中，选择**加密货币转账**。
+    3. 在 App 的左侧导航栏中点击**资金管理** \> **余额**。
+    4. 您可以选择提取**商户余额**或**开发者余额**。在本例中，我们选择提取商户余额。点击**商户余额**卡片上的**出金**按钮。
+    5. 在弹窗中，选择**发送加密货币**。
 
        <img
          src="/payments/cn/images/payments/crypto-payout.png"
          className="screenshot_full_screen"
          alt="加密货币转账入口"
+         title=""
        />
-    6. 填写转账信息，包括代币、网络、商户名称、金额、以及接收地址。
+    6. 填写转账信息，商户名称选择后不可修改，需要填写收款代币及网络、接收地址、发送金额。
+
        <Note>
          如果您在**转出目的地**中开启了**将转出目的地设为白名单**的开关，则仅可以转出至已录入的转出目的地。更多详情请参考[转出目的地](/payments/cn/guides/destinations)
        </Note>
-    7. 按照页面提示确认并提交转账请求。
+    7. 自动选择资金来源：当开关开启时，您只需要填写总发送金额，系统自动根据您钱包内各代币的可用余额分配出金金额；开关关闭时，你需要自行填写各代币的出金金额。该开关默认开启，您可关闭。
+    8. 按照页面提示确认并提交转账请求。
   </Tab>
   <Tab title="Payments API" icon="code">
     1. 在创建转账请求前，您可以调用 [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) 或 [Get developer balance](/payments/en/api-references/payment/get-developer-balance) 分别查询商户和开发者余额，用于确定可转账的最大金额。
@@ -79,8 +82,8 @@ lang: "zh-hans"
   <Tab title="Payments App" icon="pager">
     1. 登录 Cobo Portal [开发环境](https://portal.dev.cobo.com/login)或[生产环境](https://portal.cobo.com/login)。
     2. 在左侧导航栏中点击 **Apps**，然后点击 **Payments** 卡片，启动 App。
-    3. 在 App 的左侧导航栏中点击**资金管理** \> **资金转出**。
-    4. 在**资金转出历史**标签页查看所有转账请求的状态和详情。
+    3. 在 App 的左侧导航栏中点击**资金管理** \> **余额**。
+    4. 在商户账户或者开发者账户详情页，**最近活动-加密货币转账**标签页查看所有转账请求的状态和详情。
   </Tab>
   <Tab title="Payments API" icon="code">
     您可以调用以下 API 操作查询转账请求状态：
