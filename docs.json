@@ -319,6 +319,7 @@
                   "payments/cn/guides/allocate-funds",
                   "payments/cn/guides/fiat-payouts",
                   "payments/cn/guides/crypto-payouts",
+                  "payments/cn/guides/bulk-send",
                   "payments/cn/guides/destinations"
                 ]
               },
