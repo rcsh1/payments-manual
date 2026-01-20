@@ -26,15 +26,16 @@ You can create crypto payout requests through Payments App or Payments API.
          className="screenshot_full_screen"
          alt="Crypto payout entry"
        />
-    6. Fill in the transfer information, including token, network, merchant name, amount, and receiving address.<Note>
+    6. Fill in the transfer information, including token, network, merchant name, amount, and receiving address.
+
+       <Note>
          If you have enabled the **Use Destinations as Payout Whitelist** toggle in **Destinations**, you can only transfer to registered destinations. For more details, see [Destinations](/payments/en/guides/destinations)
        </Note>
     7. Follow the on-page prompts to confirm and submit the transfer request.
   </Tab>
   <Tab title="Payments API">
     1. Before creating a transfer request, you can call [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) or [Get developer balance](/payments/en/api-references/payment/get-developer-balance) to query merchant and developer balances respectively, to determine the maximum transferable amount.
-    2. Call [Create crypto address](/payments/en/api-references/payment/create-crypto-address) to register the cryptocurrency address for transfer. Record the `crypto_address_id` field for later use in specifying the transfer destination address.
-    3. Call [Create settlement request](/payments/en/api-references/payment/create-settlement-request) to create a transfer request.
+    3. Call [Create Payout ](/payments/en/api-references/payment/create-settlement-request)to create a transfer request.
 
     **Basic parameters**
 
