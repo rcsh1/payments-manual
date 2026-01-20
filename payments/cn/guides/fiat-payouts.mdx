@@ -44,23 +44,20 @@ lang: "zh-hans"
   </Tab>
   <Tab title="Payments API" icon="code">
     1. 在创建出金请求前，您可以调用 [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) 或 [Get developer balance](/payments/en/api-references/payment/get-developer-balance) 分别查询商户和开发者余额，用于确定可出金的最大金额。
-    2. 调用 [Create settlement request](/payments/en/api-references/payment/create-settlement-request) 创建出金请求。
+    3. 调用 [Create Payout ](creat)创建出金请求。
 
     **基础参数**
 
     - `request_id`：您提供的唯一请求 ID，用于跟踪出金请求
-    - `acquiring_type`：收款模式。可以设置为 `Order` 或 `TopUp`，分别对应订单模式和充值模式收取的款项余额
-    - `settlement_type`：设置为 `Merchant` 或 `Psp`，分别对应商户余额和开发者余额
+    - `source_account`付款来源账户。当从商户账户出金时，传入 Merchant code；当从开发者账户出金时，设置为 developer
     - `payout_channel`：设置为 `OffRamp`， Off-Ramp 对接
 
-    **`详情参数（settlements 数组）`**
+    **`详情参数（payout items  recipient_info数组）`**
 
-    取决于资金来源，您需要指定不同的参数组合。
-
-    | 资金来源      | 相关参数                                                   |
-    | --------- | ------------------------------------------------------ |
-    | **商户余额**  | `merchant_id`、`order_ids`、`currency`、`bank_account_id` |
-    | **开发者余额** | `amount`、`currency`、`bank_account_id`                  |
+    | 参数组                | 相关参数                         |
+    | :----------------- | :--------------------------- |
+    | **payout items**   | `amount`、`token_id`          |
+    | **recipient_info** | `currency`、`bank_account_id` |
 
     **参数说明：**
 
@@ -96,8 +93,8 @@ lang: "zh-hans"
   <Tab title="Payments API" icon="code">
     您可以调用以下 API 操作查询出金请求状态：
 
-    - [Get settlement request information](/payments/en/api-references/payment/get-settlement-request-information) - 查询单个出金请求的详细信息
-    - [List all settlement requests](/payments/en/api-references/payment/list-all-settlement-requests) - 查询所有出金请求的详细信息
+    - [Get payout information](/payments/en/api-references/payment/get-settlement-request-information) - 查询单个出金请求的详细信息
+    - [List all payouts](/payments/en/api-references/payment/get-settlement-request-information)  - 查询所有出金请求的详细信息
   </Tab>
 </Tabs>
 
