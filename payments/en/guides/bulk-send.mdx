@@ -54,7 +54,7 @@ curl -X POST "https://api.example.com/v1/payments/bulk_sends" \
 
 After receiving a Bulk Send request, Cobo first validates **all** addresses in the request (including format validation and compliance checks such as KYA). `execution_mode` determines whether Cobo continues with on-chain transfers for valid items when **any** item fails validation.
 
-#### **``Behavior: Strict vs Partial``**
+#### **`Behavior: Strict vs Partial`**
 
 | execution_mode | If any address fails validation (e.g., KYA rejected) | On-chain transfer result                                                                  | What you need to do                                                                                   |
 | -------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
@@ -252,7 +252,6 @@ app.post("/webhooks/cobo", async (req, res) => {
 });
 
 app.listen(3000, () => console.log("Webhook listener on :3000"));
-
 ```
 
 ## **4. Best practices**
