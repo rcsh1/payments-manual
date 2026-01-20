@@ -179,9 +179,9 @@ curl -X GET "https://api.example.com/v1/payments/bulk_sends/{bulk_send_id}/items
 1. 接收 webhook
 2. 若状态为 PartiallyCompleted / Failed，则查询 items
 3. 筛选失败条目并更换地址（地址更换逻辑由您业务系统完成）
-4. 创建新的 bulk send 执行补发
+4. 创建新的 Bulk Send 任务并执行补发
 
-说明：以下是示意代码（Node.js 风格），你们可按实际 SDK/签名方式改写。
+说明：以下是示意代码（Node.js 风格）， 您可按实际 SDK/签名方式改写。
 
 ```javascript
 import express from "express";
@@ -263,7 +263,6 @@ app.post("/webhooks/cobo", async (req, res) => {
 });
 
 app.listen(3000, () => console.log("Webhook listener on :3000"));
-
 ```
 
 ## **4. 最佳实践**
