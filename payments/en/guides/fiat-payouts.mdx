@@ -65,7 +65,7 @@ You can create off-ramp requests through Payments App or Payments API.
 
     **Parameter description:**
 
-    - `token_id`: Merchant ID. Multiple merchants can be specified through the `settlements` array.
+    - `token_id`: Cryptocurrency ID (e.g., ETH_USDT, TRON_USDT) ID.
     - `amount`: Cryptocurrency amount.
     - `currency`: Fiat currency (currently only `USD` is supported).
     - `bank_account_id`: Destination bank account ID. Can be obtained by calling [List all bank accounts](/payments/en/api-references/payment/list-all-bank-accounts).
@@ -96,8 +96,8 @@ You can also actively query withdrawal request status through Payments App or Pa
   <Tab title="Payments API" icon="code">
     You can call the following API operations to query withdrawal request status:
 
-    - [Get settlement request information](/payments/en/api-references/payment/get-settlement-request-information) - Query detailed information about a single withdrawal request
-    - [List all settlement requests](/payments/en/api-references/payment/list-all-settlement-requests) - Query detailed information about all withdrawal requests
+    - [Get payout information](/payments/en/api-references/payment/get-settlement-request-information) - Query detailed information about a single withdrawal request
+    - [List all payouts](/payments/en/api-references/payment/list-all-settlement-requests) - Query detailed information about all withdrawal requests
   </Tab>
 </Tabs>
 
