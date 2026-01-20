@@ -1,0 +1,221 @@
+---
+title: "Bulk Send 集成指南e"
+description: "Bulk Send 用于一次性向多个收款地址批量转账，适用于工资发放、返佣奖励、合作方结算、电商/广告平台商家收益分发等场景。您只需提交包含多条 payout item 的请求，Cobo 将为每条 item 执行地址校验与合规验证（KYA），并根据执行模式（execution mode）决定是否继续链上转账。"
+---
+
+## **前提条件**
+
+在开始前，请确保您已完成以下准备：
+
+- 确保 source_account（资金来源账户）有足够余额。
+- （推荐）配置 Webhook Endpoint，用于接收 Bulk Send 的状态更新并驱动自动化重试流程。
+
+## **1. 如何做批量下发**
+
+### **1.1 创建 Bulk Send**
+
+创建 Bulk Send 时，您需要提供：
+
+- source_account：资金来源账户 ID（例如 M1001）
+- execution_mode：执行模式（**Strict / Partial**）
+- payout_params：批量 payout 明细数组，每条包含：
+  - token_id
+  - receiving_address
+  - amount
+  - description（建议填写业务侧可追溯信息，如工资单号/用户ID/发放批次）
+
+curl -X POST "https://api.example.com/v1/payments/bulk_sends" \\
+
+  -H "Content-Type: application/json" \\
+
+  -H "Authorization: Bearer \<YOUR_ACCESS_TOKEN\>" \\
+
+  -d '{
+
+    "source_account": "M1001",
+
+    "execution_mode": "Partial",
+
+    "description": "january salary"，
+
+    "payout_params": [
+
+      {
+
+        "token_id": "ETH_USDT",
+
+        "receiving_address": "0xabc123456789def0000000000000000000000000",
+
+        "amount": "500.00",
+
+        "description": "Salary 2026-01 | eid=10001"
+
+      },
+
+      {
+
+        "token_id": "TRX_USDT",
+
+        "receiving_address": "TQx8yq9hFJt2cNxxxxxxxxyyyyyyyyyy",
+
+        "amount": "320.50",
+
+        "description": "Salary 2026-01 | eid=10002"
+
+      }
+
+    ]
+
+  }'
+
+### **1.2 execution_mode（执行模式）如何选择**
+
+Cobo 在收到 Bulk Send 请求后，会先对 **请求中所有地址进行校验与验证**（包含格式校验与 KYA 等合规验证）。execution_mode 决定了当**任意地址存在问题**时，Cobo 是否继续对其他正常地址执行链上转账。
+
+#### **Strict vs Partial 的行为差异**
+
+| **execution_mode** | **校验阶段发现任意地址有问题<br />（ KYA 不通过）** | **链上转账结果**                             | **您需要做什么**                               |
+| :----------------- | :-------------------------------- | :------------------------------------- | :--------------------------------------- |
+| Strict             | 只要 **任意一条** payout item 地址有问题     | **不会发起任何链上转账**（整单不执行）                  | 更换有问题的地址后，**重新提交整单 Bulk Send**（需要包含全部条目） |
+| Partial            | 允许存在部分地址有问题                       | 会对 **所有校验通过的地址** 执行链上转账；有问题的地址 **不会转** | 查询失败条目，更换地址后，**仅补发失败条目**（只提交需要补发的 item）  |
+
+#### **场景建议**
+
+- 选择 Strict（强一致 / 要么全成要么全不成）
+  - 合作方结算（同批次必须一致生效）
+  - 供应商付款（财务侧要求整单一致）
+  - 任何“这批不允许部分成功”的场景
+- 选择 Partial（高吞吐 / 允许部分失败，后续补发）
+  - 全球员工工资发放（大批量，少数地址异常不应阻塞整体）
+  - 返佣/奖励空投（地址质量参差）
+  - 内容平台打赏金分发、电商/广告平台商家收益发放（可补发）
+
+影响总结：
+
+- **Strict 更利于财务一致性**，但会增加“因个别地址问题导致整批重提”的操作成本；
+- **Partial 更利于规模化与自动化**，但需要配套失败补发流程。
+
+## **2. Webhook 驱动自动化工作流（失败通知 + 查询条目 + 批量补发）**
+
+### **2.1 订阅 Bulk Send 状态更新事件**
+
+当 Bulk Send 的状态切换到以下任一状态时，Cobo 会触发 webhook event：
+
+- Completed
+- PartiallyCompleted
+- Failed
+
+Webhook 通知数据结构如下（Bulk Send Notification）：
+
+{
+
+    "data_type": "PaymentBulkSend",
+
+    "bulk_send_id": "8ecf2933-5ef2-4f1d-9b59-3f4ff017d16a",
+
+    "source_account": "M1001",
+
+    "execution_mode": "Partial",
+
+    "status": "Completed",
+
+    "created_timestamp": 1768875988,
+
+    "updated_timestamp": 1768878524
+
+}
+
+其中 status 枚举为：
+
+- Pending
+- Validating
+- Transfering
+- Completed
+- PartiallyCompleted
+- Failed
+
+实践建议
+
+- **仅当状态进入 PartiallyCompleted / Failed** 时启动补发流程；Validating / Transfering 阶段建议只做展示与监控。
+- 对 webhook 进行签名校验与幂等处理（同一事件可能重放）。
+
+---
+
+### **2.2 收到失败通知后：查询 Bulk Send items 明细**
+
+当收到 PartiallyCompleted 或 Failed 的 webhook 后，使用 **List bulk send items** 接口查询该 bulk send 的每条 item 状态：
+
+- Path 参数：bulk_send_id
+- Operation：list_bulk_send_items
+- Summary：List bulk send items
+
+（这里用伪路径示例表示）
+
+curl -X GET "https://api.example.com/v1/payments/bulk_sends/{bulk_send_id}/items" \\
+
+  -H "Authorization: Bearer \<YOUR_ACCESS_TOKEN\>"
+
+每个 item 包含两个关键状态字段：
+
+- status（item 执行状态）
+- validation_status（地址/合规验证状态）
+
+你提供的规则要求重点关注：
+
+- 若 status 为 **Failed** 或 **NotExecuted** → 该条目失败
+- 若 validation_status 为 **ValidationFailed** → 该地址未通过 Cobo 的 KYA 验证
+
+对这两类情况 **都建议更换地址**
+
+---
+
+### **2.3 自动化重试：更换地址后批量补发**
+
+根据 execution_mode 的不同，补发策略不同：
+
+#### **A) 前一次是 Strict 模式**
+
+- Strict 模式下：只要有一个地址有问题，整单不会发生任何链上转账
+- 因此补发（重新提交）时：**需要包含全部条目**（不是只提交失败条目）
+
+补发步骤：
+
+1. 查询 items，定位 ValidationFailed 或 Failed/NotExecuted 的条目
+2. 更换这些条目的地址（或修正其它导致失败的参数）
+3. **重新提交整单 Bulk Send（包含所有条目）**
+
+#### **B) 前一次是 Partial 模式**
+
+- Partial 模式下：已成功条目已转账完成
+- 因此补发时：**只需要提交失败条目**（减少重复转账风险）
+
+补发步骤：
+
+1. 查询 items，筛选失败条目（status=Failed/NotExecuted 或 validation_status=ValidationFailed）
+2. 更换失败条目的地址
+3. 新建一个 Bulk Send，只提交这些失败条目
+
+---
+
+## **3. 参考实现：Webhook 处理 + 自动补发（示例）**
+
+下面示例展示一个典型工作流：
+
+1. 接收 webhook
+2. 若状态为 PartiallyCompleted / Failed，则查询 items
+3. 筛选失败条目并更换地址（地址更换逻辑由您业务系统完成）
+4. 创建新的 bulk send 执行补发
+
+说明：以下是示意代码（Node.js 风格），你们可按实际 SDK/签名方式改写。
+
+## **4. 最佳实践**
+
+- **description 必填业务侧可追溯信息**：例如 batch_id + user_id/employee_id + period，用于审计、对账、定位失败原因与换地址。
+- **严格区分 Strict/Partial 的补发策略**：
+  - Strict：重提必须包含全量条目
+  - Partial：只补发失败条目（避免重复发放）
+- **Webhook 幂等性**：对 bulk_send_id + status + updated_timestamp 做幂等键，避免重复触发补发。
+- **失败分类处理**：
+  - validation_status=ValidationFailed：优先换地址
+
+status=Failed/NotExecuted：建议也换地址（按你给的规则），并保留失败原因用于风控/用户提示
