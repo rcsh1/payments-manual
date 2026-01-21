@@ -68,6 +68,7 @@
                   "payments/en/guides/allocate-funds",
                   "payments/en/guides/fiat-payouts",
                   "payments/en/guides/crypto-payouts",
+                  "payments/en/guides/bulk-send",
                   "payments/en/guides/destinations"
                 ]
               },

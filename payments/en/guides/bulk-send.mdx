@@ -1,0 +1,266 @@
+---
+title: "Bulk Send"
+---
+
+Bulk Send enables one-time batch transfers to multiple recipient addresses. It is suitable for payroll payouts, rebate/reward distributions, partner settlements, and revenue sharing for e-commerce/advertising/content platforms. You only need to submit a request containing multiple **payout items**. Cobo will validate each item (address format checks and compliance verification such as **KYA**) and then decide whether to proceed with on-chain transfers based on the **execution mode**.
+
+## **Prerequisites**
+
+Before you start, make sure you have completed the following:
+
+- Ensure the **source_account** has sufficient balance.
+- (Recommended) Configure a **Webhook Endpoint** to receive Bulk Send status updates and drive an automated retry workflow.
+
+## **1. How to send in batch**
+
+### **1.1 Create a Bulk Send**
+
+To create a Bulk Send, provide:
+
+- **source_account**: Source account ID (e.g., M1001)
+- **execution_mode**: Execution mode (Strict / Partial)
+- **payout_params**: Array of payout items. Each item includes:
+  - token_id
+  - receiving_address
+  - amount
+  - description (recommended: include business-traceable info such as payroll slip No./user ID/batch ID)
+
+```shell
+curl -X POST "https://api.example.com/v1/payments/bulk_sends" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
+  -d '{
+    "source_account": "M1001",
+    "execution_mode": "Partial",
+    "description": "january salary"，
+    "payout_params": [
+      {
+        "token_id": "ETH_USDT",
+        "receiving_address": "0xabc123456789def0000000000000000000000000",
+        "amount": "500.00",
+        "description": "Salary 2026-01 | eid=10001"
+      },
+      {
+        "token_id": "TRX_USDT",
+        "receiving_address": "TQx8yq9hFJt2cNxxxxxxxxyyyyyyyyyy",
+        "amount": "320.50",
+        "description": "Salary 2026-01 | eid=10002"
+      }
+    ]
+  }'
+```
+
+### **1.2 How to choose execution_mode**
+
+After receiving a Bulk Send request, Cobo first validates **all** addresses in the request (including format validation and compliance checks such as KYA). `execution_mode` determines whether Cobo continues with on-chain transfers for valid items when **any** item fails validation.
+
+#### **`Behavior: Strict vs Partial`**
+
+| execution_mode | If any address fails validation (e.g., KYA rejected) | On-chain transfer result                                                                  | What you need to do                                                                                   |
+| -------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Strict         | If **any** payout item has an invalid address        | **No** on-chain transfers will be initiated (the entire batch is not executed)            | Replace the problematic address(es) and resubmit the **entire** Bulk Send (must include **all** items |
+| Partial        | Allows some invalid addresses                        | Transfers will be executed for **all validated** items; invalid items will be **skipped** | Query failed items, replace addresses, and resend **only** the failed items                           |
+
+#### **Recommended scenarios**
+
+- **`Use Strict (strong consistency: all-or-nothing)`**
+  - Partner settlements (must take effect consistently within the same batch)
+  - Vendor payments (finance requires batch-level consistency)
+  - Any scenario where partial success is unacceptable
+- **`Use Partial (high throughput: partial failures allowed, retry later)`**
+  - Global payroll payouts (large volume; a few bad addresses should not block the whole batch)
+  - Rebates/rewards airdrops (mixed address quality)
+  - Tips/revenue distribution for content platforms; merchant payout distribution for e-commerce/ads platforms (retry is acceptable)
+
+**Impact summary：**
+
+- `Strict` improves financial consistency, but increases operational overhead due to “one bad address forces a full resubmission”.
+- `Partial` scales better and is more automation-friendly, but requires a retry workflow for failed items.
+
+## **2. Webhook-driven automation workflow (failure notification → query items → batch resend)**
+
+### **2.1 Subscribe to Bulk Send status update events**
+
+Cobo triggers a webhook event when the Bulk Send status transitions to any of the following:
+
+- Completed
+- PartiallyCompleted
+- Failed
+
+Webhook payload example (**Bulk Send Notification**):
+
+```json
+{
+    "data_type": "PaymentBulkSend",
+    "bulk_send_id": "8ecf2933-5ef2-4f1d-9b59-3f4ff017d16a",
+    "source_account": "M1001",
+    "execution_mode": "Partial",
+    "status": "Completed",
+    "created_timestamp": 1768875988,
+    "updated_timestamp": 1768878524
+}
+```
+
+Status can be one of:：
+
+- Pending
+- Validating
+- Transfering
+- Completed
+- PartiallyCompleted
+- Failed
+
+Recommendations
+
+- Trigger the resend workflow only when the status enters PartiallyCompleted or Failed. During Validating / Transfering, you may only display or monitor progress.
+- Implement webhook signature verification and idempotency handling (the same event may be replayed).
+
+### **2.2 After a failure notification: query Bulk Send item details**
+
+After receiving a PartiallyCompleted or Failed webhook, call **List bulk send items** to query the status of each payout item:
+
+- Path parameter：bulk_send_id
+- Operation：list_bulk_send_items
+- Summary：List bulk send items
+
+（Example pseudo endpoint）
+
+```shell
+curl -X GET "https://api.example.com/v1/payments/bulk_sends/{bulk_send_id}/items" \
+  -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>"
+```
+
+Each item includes two key status fields:
+
+- status（execution status of the item）
+- validation_status（address/compliance validation status）
+
+Rules to focus on:
+
+- If status = **Failed** or  **NotExecuted** → the item failed
+- If  validation_status 为 **ValidationFailed** → the address did not pass Cobo KYA validation
+
+For both cases, **replacing the address is recommended.**
+
+### **2.3 Automated retry: replace addresses and resend in batch**
+
+Resend strategy depends on execution_mode:
+
+#### **A) Previous batch used Strict**
+
+- Under `Strict`, if any address has an issue, **no** on-chain transfer is executed for the entire batch.
+- Therefore, on retry (resubmission), you must include **all** items (not only the failed ones).
+
+Steps：
+
+1. Query items and identify those with ValidationFailed or Failed/NotExecuted
+2. Replace the addresses for those items (or fix other parameters causing failures)
+3. Resubmit a new Bulk Send containing **all** items
+
+#### **`B) Previous batch used Partial`**
+
+- Under `Partial`, successful items have already been transferred.
+- Therefore, on retry, submit **only failed items** (reduces the risk of duplicate transfers).
+
+Steps：
+
+1. Query items and filter failed items (`status=Failed/NotExecuted` or `validation_status=ValidationFailed`)
+2. Replace the addresses for failed items
+3. Create a new Bulk Send containing only these failed items
+
+## **3. Reference implementation: webhook handling + auto resend (example)**
+
+This example demonstrates a typical workflow:
+
+1. Receive webhook
+2. If status is `PartiallyCompleted` / `Failed`, query items
+3. Filter failed items and replace addresses (address replacement is handled by your business system)
+4. Create a new Bulk Send for resend
+
+Note: This is illustrative pseudo-code (Node.js style). Adjust based on your actual SDK and signature verification mechanism.
+
+```javascript
+import express from "express";
+import fetch from "node-fetch";
+
+const app = express();
+app.use(express.json());
+
+function isTerminalFailedStatus(bulkStatus) {
+    return bulkStatus === "Failed" || bulkStatus === "PartiallyCompleted";
+}
+
+function isItemFailed(item) {
+    return item.status === "Failed" || item.status === "NotExecuted" || item.validation_status === "ValidationFailed";
+}
+
+async function replaceAddressForFailedItem(item) {
+    const newAddress = await lookupNewAddressFromYourSystem(item);
+    return { ...item, receiving_address: newAddress };
+}
+
+app.post("/webhooks/cobo", async (req, res) => {
+
+    const event = req.body;
+    const { bulk_send_id, status, source_account, execution_mode } = event;
+
+    if (!isTerminalFailedStatus(status)) {
+        return res.status(200).send("ok");
+    }
+
+    const itemsResp = await fetch(`https://api.example.com/v1/payments/bulk_sends/${bulk_send_id}/items`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${process.env.ACCESS_TOKEN}` }
+    });
+    const items = await itemsResp.json(); 
+
+    const failedItems = items.filter(isItemFailed);
+
+    const itemsToResend = [];
+    if (isTerminalFailedStatus(status)) {
+        for (const item of items) {
+            if (item.status === 'Failed') {
+                itemsToResend.push(item);  
+            } else if (item.status === 'NotExecuted' && item.validation_status === 'ValidationFailed') {
+                itemsToResend.push(await replaceAddressForFailedItem(item));  
+            }
+        }
+    }
+
+    const createResp = await fetch(`https://api.example.com/v1/payments/bulk_sends`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.ACCESS_TOKEN}`
+        },
+        body: JSON.stringify({
+            source_account,
+            execution_mode: "Partial", 
+            payout_params: itemsToResend.map(i => ({
+                token_id: i.token_id,
+                receiving_address: i.receiving_address,
+                amount: i.amount,
+                description: i.description
+            }))
+        })
+    });
+
+    const created = await createResp.json();
+    console.log("Resend bulk send created:", created);
+
+    return res.status(200).send("ok");
+});
+
+app.listen(3000, () => console.log("Webhook listener on :3000"));
+```
+
+## **4. Best practices**
+
+- **`Always include business-traceable identifiers in description`** (e.g., `batch_id + user_id/employee_id + period`) for auditing, reconciliation, diagnosing failures, and address replacement.
+- **Use different resend strategies for Strict vs Partial:**
+  - Strict：retry must include **all** items
+  - Partial：retry **only failed** items (avoid duplicate payouts)
+- **Webhook idempotency**: use `bulk_send_id + status + updated_timestamp` as an idempotency key to avoid duplicated resend triggers.
+- **Failure classification**:
+  - validation_status=ValidationFailed：prioritize replacing the address
+  - status=Failed/NotExecuted： also recommended to replace the address (per your rule), and retain the failure reason for risk control and user messaging

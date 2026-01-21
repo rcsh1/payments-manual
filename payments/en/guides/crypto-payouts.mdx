@@ -26,41 +26,36 @@ You can create crypto payout requests through Payments App or Payments API.
          className="screenshot_full_screen"
          alt="Crypto payout entry"
        />
-    6. Fill in the transfer information, including token, network, merchant name, amount, and receiving address.<Note>
+    6. Fill in the transfer information, including token, network, merchant name, amount, and receiving address.
+
+       <Note>
          If you have enabled the **Use Destinations as Payout Whitelist** toggle in **Destinations**, you can only transfer to registered destinations. For more details, see [Destinations](/payments/en/guides/destinations)
        </Note>
     7. Follow the on-page prompts to confirm and submit the transfer request.
   </Tab>
   <Tab title="Payments API">
     1. Before creating a transfer request, you can call [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) or [Get developer balance](/payments/en/api-references/payment/get-developer-balance) to query merchant and developer balances respectively, to determine the maximum transferable amount.
-    2. Call [Create crypto address](/payments/en/api-references/payment/create-crypto-address) to register the cryptocurrency address for transfer. Record the `crypto_address_id` field for later use in specifying the transfer destination address.
-    3. Call [Create settlement request](/payments/en/api-references/payment/create-settlement-request) to create a transfer request.
+    3. Call [Create Payout ](/payments/en/api-references/payment/create-settlement-request)to create a transfer request.
 
     **Basic parameters**
 
     - `request_id`: The unique request ID you provide to track the transfer request
-    - `acquiring_type`: Pay-in type. Can be set to `Order` or `TopUp`, corresponding to order mode and top-up mode payment balances respectively
-    - `settlement_type`: Set to `Merchant` or `Psp`, corresponding to merchant balance and developer balance respectively
+    - `source_account`:Payment source account.When withdrawing funds from a merchant account, pass the merchant_id; when withdrawing funds from a developer account, set to `developer`.
     - `payout_channel`: Set to `Crypto` for crypto payouts
 
-    **`Detail parameters (settlements array)`**
+    `Detail parameters (payout items   recipient_info)`
 
-    Depending on the source of funds, you need to specify different parameter combinations.
-
-    | Fund source           | Related parameters                                          |
-    | --------------------- | ----------------------------------------------------------- |
-    | **Merchant balance**  | `merchant_id`, `order_ids`, `token_id`, `crypto_address_id` |
-    | **Developer balance** | `amount`, `token_id`, `crypto_address_id`                   |
+    | Parameter group    | Related parameters   |
+    | :----------------- | :------------------- |
+    | **payout items**   | `amount`、`token_id`  |
+    | **recipient_info** | `token_id`、`address` |
 
     **Parameter description:**
 
     - `merchant_id`: Merchant ID. Multiple merchants can be specified through the `settlements` array
-    - `order_ids`: Order ID list. If this parameter is empty, all eligible orders will be selected and the cryptocurrency amount for this transfer will be automatically calculated.
     - `amount`: Cryptocurrency amount
     - `token_id`: Cryptocurrency ID (such as `ETH_USDT`, `TRON_USDT`)
-    - `crypto_address_id`: Unique identifier for the destination cryptocurrency address. You can obtain this ID in the following ways:
-      - Call [Create crypto address](/payments/en/api-references/payment/create-crypto-address) to register a new transfer address
-      - Call [List crypto addresses](/payments/en/api-references/payment/list-crypto-addresses) to query the list of registered addresses
+    - `address`: Target cryptocurrency address
   </Tab>
 </Tabs>
 
@@ -88,8 +83,8 @@ You can also actively query transfer request status through Payments App or Paym
   <Tab title="Payments API">
     You can call the following API operations to query transfer request status:
 
-    - [Get settlement request information](/payments/en/api-references/payment/get-settlement-request-information) - Query detailed information about a single transfer request
-    - [List all settlement requests](/payments/en/api-references/payment/list-all-settlement-requests) - Query detailed information about all transfer requests
+    - [Get payout information ](/payments/en/api-references/payment/get-settlement-request-information) - Query detailed information about a single transfer request
+    - [List all payouts](/payments/en/api-references/payment/list-all-settlement-requests) - Query detailed information about all transfer requests
   </Tab>
 </Tabs>
 

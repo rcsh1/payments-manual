@@ -48,28 +48,24 @@ You can create off-ramp requests through Payments App or Payments API.
   </Tab>
   <Tab title="Payments API" icon="code">
     1. Before creating a withdrawal request, you can call [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) or [Get developer balance](/payments/en/api-references/payment/get-developer-balance) to query merchant and developer balances respectively, to determine the maximum withdrawal amount.
-    2. Call [Create settlement request](/payments/en/api-references/payment/create-settlement-request) to create a withdrawal request.
+    2. Call [Create Payout ](creat) to create a withdrawal request.
 
     **Basic parameters**
 
     - `request_id`: The unique request ID you provide to track the withdrawal request
-    - `acquiring_type`: Pay-in type. Can be set to `Order` or `TopUp`, corresponding to order mode and top-up mode payment balances respectively
-    - `settlement_type`: Set to `Merchant` or `Psp`, corresponding to merchant balance and developer balance respectively
+    - `source_account`: Payment source account.When withdrawing funds from a merchant account, pass the merchant_id; when withdrawing funds from a developer account, set to `developer`.
     - `payout_channel`: Set to `OffRamp` for off-ramp
 
-    **`Detail parameters (settlements array)`**
+    **`Detail parameters (payout items   recipient_info)`**
 
-    Depending on the source of funds, you need to specify different parameter combinations.
-
-    | Fund source           | Related parameters                                        |
-    | --------------------- | --------------------------------------------------------- |
-    | **Merchant balance**  | `merchant_id`, `order_ids`, `currency`, `bank_account_id` |
-    | **Developer balance** | `amount`, `currency`, `bank_account_id`                   |
+    | Parameter group    | Related parameters           |
+    | ------------------ | ---------------------------- |
+    | **payout items**   | `amount`、`token_id`          |
+    | **recipient_info** | `currency`、`bank_account_id` |
 
     **Parameter description:**
 
-    - `merchant_id`: Merchant ID. Multiple merchants can be specified through the `settlements` array.
-    - `order_ids`: Order ID list. If this parameter is empty, all eligible orders will be selected and the cryptocurrency amount for this withdrawal will be automatically calculated.
+    - `token_id`: Cryptocurrency ID (e.g., ETH_USDT, TRON_USDT) ID.
     - `amount`: Cryptocurrency amount.
     - `currency`: Fiat currency (currently only `USD` is supported).
     - `bank_account_id`: Destination bank account ID. Can be obtained by calling [List all bank accounts](/payments/en/api-references/payment/list-all-bank-accounts).
@@ -100,8 +96,8 @@ You can also actively query withdrawal request status through Payments App or Pa
   <Tab title="Payments API" icon="code">
     You can call the following API operations to query withdrawal request status:
 
-    - [Get settlement request information](/payments/en/api-references/payment/get-settlement-request-information) - Query detailed information about a single withdrawal request
-    - [List all settlement requests](/payments/en/api-references/payment/list-all-settlement-requests) - Query detailed information about all withdrawal requests
+    - [Get payout information](/payments/en/api-references/payment/get-settlement-request-information) - Query detailed information about a single withdrawal request
+    - [List all payouts](/payments/en/api-references/payment/list-all-settlement-requests) - Query detailed information about all withdrawal requests
   </Tab>
 </Tabs>
 
