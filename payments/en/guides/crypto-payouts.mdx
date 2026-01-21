@@ -31,11 +31,33 @@ You can create crypto payout requests through Payments App or Payments API.
        <Note>
          If you have enabled the **Use Destinations as Payout Whitelist** toggle in **Destinations**, you can only transfer to registered destinations. For more details, see [Destinations](/payments/en/guides/destinations)
        </Note>
-    7. Follow the on-page prompts to confirm and submit the transfer request.
+    7. **Auto-Select Sources**:
+       - When enabled, you only need to enter the **total payout amount**, and the system automatically allocates the payout across available token balances in your wallet.
+       - When disabled, you must manually specify the payout amount for each token. This option is enabled by default and can be turned off if needed.
+    8. **Cross-chain payout**:
+       
+       When paying out **USDT or USDC on a specific network**, the system can use **USDT or USDC balances on other networks** in your wallet and bridge them before payout.
+
+       Currently, only **same-asset cross-chain payouts** are supported. Cross-asset conversion is not supported.
+       
+       1. **Fees**:
+          
+          Same-asset cross-chain payouts incur a processing fee, which is automatically calculated based on the payout amount.
+       
+       2. **Example**:
+          
+          Available balances in the source account:
+          - 150 USDT (Tron)
+          - 50 USDT (Ethereum)
+          
+          If the total payout amount is **200 USDT (Tron)**, the system will bridge **50 USDT (Ethereum)**.
+          
+          With a cross-chain fee of **10 USDT (Ethereum)**, the estimated amount received will be **190 USDT (Tron)**.
+    9. Follow the on-page prompts to confirm and submit the transfer request.
   </Tab>
   <Tab title="Payments API">
     1. Before creating a transfer request, you can call [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) or [Get developer balance](/payments/en/api-references/payment/get-developer-balance) to query merchant and developer balances respectively, to determine the maximum transferable amount.
-    3. Call [Create Payout ](/payments/en/api-references/payment/create-settlement-request)to create a transfer request.
+    2. Call [Create Payout](/payments/en/api-references/payment/create-payout) to create a transfer request.
 
     **Basic parameters**
 
@@ -43,18 +65,17 @@ You can create crypto payout requests through Payments App or Payments API.
     - `source_account`:Payment source account.When withdrawing funds from a merchant account, pass the merchant_id; when withdrawing funds from a developer account, set to `developer`.
     - `payout_channel`: Set to `Crypto` for crypto payouts
 
-    `Detail parameters (payout items   recipient_info)`
+    **Detail parameters (payout_params & recipient_info)**
 
-    | Parameter group    | Related parameters   |
+    | Schema             | Related parameters   |
     | :----------------- | :------------------- |
-    | **payout items**   | `amount`、`token_id`  |
+    | **payout_params**  | `amount`、`token_id`  |
     | **recipient_info** | `token_id`、`address` |
 
     **Parameter description:**
 
-    - `merchant_id`: Merchant ID. Multiple merchants can be specified through the `settlements` array
     - `amount`: Cryptocurrency amount
-    - `token_id`: Cryptocurrency ID (such as `ETH_USDT`, `TRON_USDT`)
+    - `token_id`: Cryptocurrency ID (such as `ETH_USDT`, `TRON_USDT`). When the `token_id` in **payout_params** and **recipient_info** have the same tokens but different chains, Cobo will automatically execute a cross-chain operation.
     - `address`: Target cryptocurrency address
   </Tab>
 </Tabs>
@@ -77,14 +98,14 @@ You can also actively query transfer request status through Payments App or Paym
   <Tab title="Payments App">
     1. Log in to Cobo Portal [development environment](https://portal.dev.cobo.com/login) or [production environment](https://portal.cobo.com/login).
     2. In the left navigation bar, click **Apps**, then click the **Payments** card to launch the App.
-    3. In the App's left navigation bar, click **Funds Management** \> **Payouts**.
-    4. View the status and details of all transfer requests on the **Payout History** tab.
+    3. In the App's left navigation bar, click **Funds Management** \> **Balances**.
+    4. On the **Merchant Account** or **Developer Account** details page, open the **Recent Activities – Payout - Crypto Payout** tab to view the status and details of all payout requests.
   </Tab>
   <Tab title="Payments API">
     You can call the following API operations to query transfer request status:
 
-    - [Get payout information ](/payments/en/api-references/payment/get-settlement-request-information) - Query detailed information about a single transfer request
-    - [List all payouts](/payments/en/api-references/payment/list-all-settlement-requests) - Query detailed information about all transfer requests
+    - [Get payout information ](/payments/en/api-references/payment/get-payout-information) - Query detailed information about a single transfer request
+    - [List all payouts](/payments/en/api-references/payment/list-all-payouts) - Query detailed information about all transfer requests
   </Tab>
 </Tabs>
 
