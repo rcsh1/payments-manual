@@ -5684,6 +5684,31 @@ paths:
           $ref: '#/components/responses/badRequestError'
         5XX:
           $ref: '#/components/responses/internalServerError'
+  '/payments/bulk_sends/{bulk_send_id}/items':
+    parameters:
+      - $ref: '#/components/parameters/PaymentBulkSendIdPathParam'
+    get:
+      tags:
+        - Payment
+      operationId: list_bulk_send_items
+      summary: List bulk send items
+      description: |
+        This operation retrieves the list of items for a specific bulk send.
+      security:
+        - CoboAuth: []
+        - OAuth2:
+            - payment_settlement.read
+      parameters:
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/beforeParam'
+        - $ref: '#/components/parameters/afterParam'
+      responses:
+        '200':
+          $ref: '#/components/responses/listPaymentBulkSendItemsResponse'
+        4XX:
+          $ref: '#/components/responses/badRequestError'
+        5XX:
+          $ref: '#/components/responses/internalServerError'
   /tokenization/activities:
     get:
       tags:
@@ -16412,13 +16437,13 @@ components:
         fee_amount:
           type: string
           description: |
-            The fee charged for bridging tokens to another blockchain during an off-ramp operation. Bridging fees apply when tokens are on a blockchain not directly supported by the off-ramp service.
+            The fee charged for bridging tokens to another chain.
         received_token_id:
           type: string
           description: The ID of the destination token received after bridging.
         received_amount:
           type: string
-          description: The final amount of destination tokens received after bridging.
+          description: The final amount of the token received after bridging.
     CommissionFee:
       type: object
       required:
@@ -16482,13 +16507,19 @@ components:
         - Refund
         - CryptoSettlement
         - OffRampSettlement
+        - CryptoPayout
+        - CryptoPayoutBridge
+        - OffRampPayout
       example: Order
       description: |
-        The type of fee to estimate:
-        - `Order`: Fee for accepting a payment.
-        - `Refund`: Fee for processing a refund.
-        - `CryptoSettlement`: Fee for crypto payouts.
-        - `OffRampSettlement`: Fee for fiat off-ramp.
+        The fee type. Possible values include:
+        - `Order`: Fees for order processing.
+        - `Refund`: Fees for refund processing.
+        - `CryptoSettlement`: This fee type is deprecated. Please use `CryptoPayout` instead.
+        - `OffRampSettlement`: This fee type is deprecated. Please use `OffRampPayout` instead.
+        - `CryptoPayout`: Fees for crypto payouts.
+        - `CryptoPayoutBridge`: Fees for crypto payouts with cross-chain bridging.
+        - `OffRampPayout`: Fees for fiat off-ramp payouts.
     WalletSetup:
       type: string
       enum:
@@ -17555,15 +17586,15 @@ components:
         actual_payout_amount:
           type: string
           description: |
-            In crypto bridge, the actual amount of the recipient_info token in the payout.
-            In offramp, the actual amount of the recipient_info currency in the payout.
+            - For `Crypto` payouts: The amount of cryptocurrency sent to the recipient's address, denominated in the token specified in `recipient_info.token_id`.
+            - For `OffRamp` payouts: The amount of fiat currency sent to the recipient's bank account, denominated in the currency specified in `recipient_info.currency`. (Note: The actual amount received may be lower due to additional bank transfer fees.)
           example: '500.00'
         status:
           $ref: '#/components/schemas/PaymentPayoutStatus'
         remark:
           type: string
-          description: The remark for the create payouts.
-          example: Create payouts for customer 123
+          description: A note or comment about the payout.
+          example: Payout for customer 123
         created_timestamp:
           type: integer
           description: 'The created time of the payout, represented as a UNIX timestamp in seconds.'
@@ -17590,12 +17621,12 @@ components:
       properties:
         token_id:
           type: string
-          description: The token id of the payout item.
+          description: The token ID of the payout item.
           example: ETH_USDT
         amount:
           type: string
           description: |
-            The payout item token_id amount.
+            The amount of the payout item.
           example: '500.00'
         bridging_fee:
           $ref: '#/components/schemas/BridgingFee'
@@ -17608,16 +17639,19 @@ components:
           example: '0x9876543210abcdef1234567890abcdef12345678'
         token_id:
           type: string
-          description: The token id can be bridged.
+          description: |
+            The token ID for the cryptocurrency to be sent to the recipient.
+
+            If `recipient_info.token_id` is on a different chain than `payout_param.token_id`, the token will be automatically bridged to the chain specified in `recipient_info.token_id`.
           example: TRON_USDT
         currency:
           type: string
-          description: The currency of the bank account.
+          description: The fiat currency of the bank account to which the payout will be sent.
           example: USD
         bank_account_id:
           type: string
           format: uuid
-          description: The destination bank account ID.
+          description: 'The ID of the bank account to which the payout will be sent. You can retrieve the bank account ID by calling [List destination entries](https://www.cobo.com/payments/en/api-references/payment/list-destination-entries).'
           example: 123e4567-e89b-12d3-a456-426614174003
     PaymentPayoutParam:
       type: object
@@ -17649,14 +17683,14 @@ components:
         - RejectedByBank
       example: Pending
       description: |
-        The current status of the payout:
-        - `Pending`: The payout has been created and is awaiting sweep.
-        - `Preparing`: The payout is being prepared and processed for transfer.
-        - `Transferring`: The finance team is making an offramp payment to a bank account, or a crypto payout is being sent to a crypto address.
-        - `Completed`: All payout transactions have been completed successfully.
-        - `PartiallyCompleted`: Some payout transactions succeeded while others failed.
-        - `Failed`: All payout transactions failed, or the bridge failed, or the sweep failed.
-        - `RejectedByBank`: The bank rejected the offramp transfer.
+        The current status of the payout. Possible values include:
+        - `Pending`: The payout has been created and is awaiting processing.
+        - `Preparing`: The payout is being prepared for transfer.
+        - `Transferring`: The payout is currently being transferred to the recipient's destination.
+        - `Completed`: The payout has been successfully completed and all transactions have been processed.
+        - `PartiallyCompleted`: The payout has been partially completed, with some transactions succeeding and others failing.
+        - `Failed`: The payout has failed and no transactions were completed successfully.
+        - `RejectedByBank`: The payout was rejected by the recipient's bank (applicable to OffRamp payouts only).
     PaymentAllocationAmount:
       type: object
       required:
@@ -17792,8 +17826,8 @@ components:
       example: Strict
       description: |
         The execution mode of the bulk send.
-        - `Strict`: The bulk send is executed in strict mode, which means all payout items should be successfully executed or all failed.
-        - `Partial`: The bulk send is executed in partial mode, which means some payout items can be successfully executed and some can be failed.
+        - `Strict`: The bulk send is executed in strict mode, which means all bulk send items should be successfully executed or all failed.
+        - `Partial`: The bulk send is executed in partial mode, which means some bulk send items can be successfully executed and some can be failed.
     PaymentBulkSendItemStatus:
       type: string
       enum:
@@ -23563,6 +23597,9 @@ components:
                 description: A list of token IDs and amounts for which fees will be calculated.
                 items:
                   $ref: '#/components/schemas/PaymentEstimateFee'
+              recipient_token_id:
+                type: string
+                description: The token ID that the recipient will receive. Required only when `fee_type` is `CryptoPayoutBridge`.
     createPaymentOrderLinkRequest:
       description: The request body to create a payment link for a pay-in order.
       content:
@@ -23907,7 +23944,7 @@ components:
                 $ref: '#/components/schemas/PaymentPayoutRecipientInfo'
               remark:
                 type: string
-                description: The remark for the create payouts.
+                description: An optional note or comment about the payout for your internal reference.
                 example: Create payouts for customer 123
     createCounterpartyEntryBody:
       description: The request body to create counterparty entries.
@@ -24056,7 +24093,7 @@ components:
                 example: Monthly vendor payments - January 2024
               payout_params:
                 type: array
-                description: The payout items of the bulk send.
+                description: The bulk send items.
                 items:
                   type: object
                   required:
@@ -24066,19 +24103,19 @@ components:
                   properties:
                     token_id:
                       type: string
-                      description: The token ID of the payout item.
+                      description: The token ID of the cryptocurrency to be sent to the recipient.
                       example: ETH_USDT
                     receiving_address:
                       type: string
-                      description: The receiving address of the payout item.
+                      description: The receiving address.
                       example: '0xabc123456789def0000000000000000000000000'
                     amount:
                       type: string
-                      description: The amount of the payout item.
+                      description: The amount of the cryptocurrency to be sent to the recipient.
                       example: '500.00'
                     description:
                       type: string
-                      description: The note of the payout item.
+                      description: A note or comment about the bulk send item.
                       example: 'Invoice #INV-2024-001'
     estimateFeeStationFeeBody:
       description: The information about a Fee Station top-up transaction.
@@ -26268,7 +26305,7 @@ components:
           schema:
             $ref: '#/components/schemas/BatchAllocationDetail'
     createPaymentPayoutResponse:
-      description: The create payout was successfully created.
+      description: The payout request was successfully created.
       content:
         application/json:
           schema:
@@ -26411,6 +26448,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PaymentBulkSend'
+    listPaymentBulkSendItemsResponse:
+      description: The request was successful.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentBulkSendItem'
+              pagination:
+                $ref: '#/components/schemas/Pagination'
     createDispositionResponse:
       description: Successfully created a disposition request.
       content:
