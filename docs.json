@@ -101,6 +101,7 @@
                     "group": "Top-up Mode",
                     "pages": [
                       "payments/en/api-references/payment/createget-top-up-address",
+                      "payments/en/api-references/payment/batch-create-top-up-addresses",
                       "payments/en/api-references/payment/update-top-up-address",
                       "payments/en/api-references/payment/list-payers"
                     ]
@@ -161,16 +162,27 @@
                       "payments/en/api-references/payment/create-batch-allocation",
                       "payments/en/api-references/payment/get-batch-allocation-information",
                       "payments/en/api-references/payment/list-all-batch-allocations",
-                      "payments/en/api-references/payment/list-all-allocation-records"
+                      "payments/en/api-references/payment/list-all-allocation-items"
                     ]
                   },
                   {
                     "group": "Payouts",
                     "pages": [
-                      "payments/en/api-references/payment/create-settlement-request",
-                      "payments/en/api-references/payment/list-all-settlement-requests",
-                      "payments/en/api-references/payment/get-settlement-request-information",
-                      "payments/en/api-references/payment/list-all-settlement-details"
+                      "payments/en/api-references/payment/create-payout",
+                      "payments/en/api-references/payment/get-payout-information",
+                      "payments/en/api-references/payment/list-all-payouts",
+                      "payments/en/api-references/payment/create-bulk-send",
+                      "payments/en/api-references/payment/get-bulk-send-information",
+                      "payments/en/api-references/payment/list-bulk-send-items",
+                      {
+                        "group": "Legacy Payouts (Deprecated)",
+                        "pages": [
+                          "payments/en/api-references/payment/create-settlement-request",
+                          "payments/en/api-references/payment/list-all-settlement-requests",
+                          "payments/en/api-references/payment/get-settlement-request-information",
+                          "payments/en/api-references/payment/list-all-settlement-details"
+                        ]
+                      }
                     ]
                   },
                   {
