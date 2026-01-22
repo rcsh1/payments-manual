@@ -65,9 +65,9 @@ lang: "zh-hans"
 
     您可以先了解以下订单金额相关的字段定义：
 
-    - **定价币种**（`pricing_currency`）：商品法币计价单位，目前支持设置法币币种请参考 [<u>支持的币种与公链</u>](/payments/cn/guides/supported-chains-and-tokens)。该字段为可选字段，如果您商品定价为数字货币则无需填写。
+    - **定价币种**（`pricing_currency`）：商品法币计价单位，目前支持设置法币币种请参考 [支持的币种与公链](/payments/cn/guides/supported-chains-and-tokens)。该字段为可选字段，如果您商品定价为数字货币则无需填写。
     - **定价金额**（`pricing_amount`）：商品法币计价金额，以 `pricing_currency` 指定的法币为单位。该字段为可选字段，如果您商品定价为数字货币则无需填写。
-    - **应收币种**（`payable_currency`）： 您计划收取的数字货币币种，目前支持数字货币币种请参考 [<u>支持的币种与公链</u>](/payments/cn/guides/supported-chains-and-tokens)
+    - **应收币种**（`payable_currency`）： 您计划收取的数字货币币种，目前支持数字货币币种请参考 [支持的币种与公链](/payments/cn/guides/supported-chains-and-tokens)
     - **应收金额**（`payable_amount`）：您计划向付款方收取的数币货币金额，以`payable_currency` 指定的加密货币为单位。该字段为可选字段：
       - 如果您指定了 `payable_amount`，则系统直接使用该值作为付款方需支付的金额。
       - 如果您未指定 `payable_amount`，系统将使用实时汇率计算：**应付金额 =（订单金额 + 开发者费用）/ 汇率**。汇率以创建订单时调用 [Get exchange rate](/payments/en/api-references/payment/get-exchange-rate) 操作返回的汇率为准。
