@@ -6,13 +6,18 @@ lang: "zh-hans"
 本文记录 Cobo 支付解决方案的全部重要更新与即将上线的功能，助您及时掌握产品动态与升级信息。
 
 
-## 功能预告（即将发布）
+## 2026 年 01 月
 
-<Note>以下功能即将上线，敬请期待。</Note>
-
-| 功能 | 功能预告 |
-|------|----------|
-| **资金管理** | - 新增批量转出功能，支持一次性将加密货币转账至大量地址。<br/>- 全新资金转出（Payout）API 操作，转出流程更加高效，无需区分资金来源（收款/充值模式）或指定订单，只需填写金额即可完成转出。 |
+| 功能 | 变更说明 | 发布时间 |
+| :---- | :---- | :---- |
+| **收款 (不兼容变更)** | (SDK v1.30.0) 调用 [Create pay-in order](/payments/en/api-references/payment/create-pay-in-order) 创建支付订单时，`pricing_amount`、`payable_currency` 现在为必填参数。未传入上述字段将导致请求校验失败，无法创建支付订单。请更新你的请求体，确保请求中包含以上字段。 | 2026-01-22 |
+| **支付链接 (不兼容变更)** | (SDK v1.30.0) 调用 [Create order link](/payments/en/api-references/payment/create-order-link) 创建支付链接时，`pricing_currency`、`pricing_amount`、`payable_currencies` 现在为必填参数。未传入上述字段将导致请求校验失败，无法创建支付链接。请更新你的请求体，确保请求中包含以上字段。  | 2026-01-22 |
+| **资金管理** | (SDK v1.30.0) 全新资金转出（Payout）API 操作，转出流程更加高效，无需区分资金来源（收款/充值模式）或指定订单，只需填写金额即可完成转出。进行加密货币转账时，支持[自动跨链](/payments/cn/guides/crypto-payouts)，可将分布在不同链上的同一代币一次性转出至一个目标地址。<br/><br/>涉及的 API 操作包括：   <br/>&nbsp;&nbsp;- [Create payout](/payments/en/api-references/payment/create-payout)   <br/>&nbsp;&nbsp;- [List all payouts](/payments/en/api-references/payment/list-all-payouts)   <br/>&nbsp;&nbsp;- [Get payout information](/payments/en/api-references/payment/get-payout-information) <br/><br/>以下资金转出操作已废弃：   <br/>&nbsp;&nbsp;- [Create settlement request](/payments/en/api-references/payment/create-settlement-request)   <br/>&nbsp;&nbsp;- [List all settlement requests](/payments/en/api-references/payment/list-all-settlement-requests)   <br/>&nbsp;&nbsp;- [Get settlement request information](/payments/en/api-references/payment/get-settlement-request-information)   <br/>&nbsp;&nbsp;- [List all settlement details](/payments/en/api-references/payment/list-all-settlement-details) <br/><br/>上述操作目前仍可继续使用，但建议尽快迁移至新的 API 操作，以获得更好的资金转出体验。 | 2026-01-22 |
+| **资金管理** | (SDK v1.30.0) 新增批量下发（Bulk Send）API 操作，支持加密货币批量转账功能：   <br/>&nbsp;&nbsp;- [Create bulk send](/payments/en/api-references/payment/create-bulk-send)   <br/>&nbsp;&nbsp;- [Get bulk send information](/payments/en/api-references/payment/get-bulk-send-information)   <br/>&nbsp;&nbsp;- [List bulk send items](/payments/en/api-references/payment/list-bulk-send-items) | 2026-01-22 |
+| **收款** | (SDK v1.30.0) 新增 [Batch Create Top-up Address](/payments/en/api-references/payment/batch-create-top-up-addresses) 操作，支持批量获取充值地址。 | 2026-01-22 |
+| **资金管理** | (SDK v1.30.0) [Estimate fees](/payments/en/api-references/payment/estimate-fees) 操作的 `fee_type` 枚举新增支持以下取值，用于预估各类资金转出方式的手续费： <br/><br/>&nbsp;&nbsp;- `CryptoPayout`（加密货币转账） <br/>&nbsp;&nbsp;- `CryptoPayoutBridge`（加密货币转账，包含跨链操作） <br/>&nbsp;&nbsp;- `OffRampPayout`（Off-ramp 对接） <br/><br/>同时废弃了 `CryptoSettlement` 和 `OffRampSettlement` 取值。 | 2026-01-22 |
+| **资金管理** |（SDK v1.30.0） 为提升参数命名一致性与结果可读性，以下划转资金（Allocation）操作中的字段名称已更新，请您同步调整请求参数与返回结果的解析逻辑： <br/><br/>&nbsp;&nbsp;- [Create batch allocation](/payments/en/api-references/payment/create-batch-allocation) 操作中的 `allocation_requests` 字段更新为 `allocation_params`。 <br/>&nbsp;&nbsp;- [Get batch allocation information](/payments/en/api-references/payment/get-batch-allocation-information) 中的返回字段 `allocation_records` 已更名为 `allocation_items`。 <br/>&nbsp;&nbsp; - **List all allocation records** 操作更名为 [List all allocation items](/payments/en/api-references/payment/list-all-allocation-items)，返回中的字段 `allocation_record_id` 更名为 `allocation_item_id`。  <br/><br/>请您尽快完成字段名称更新，以确保资金划转相关功能在后续版本中的兼容性。  | 2026-01-22 |
+| **转出目的地** | (SDK v1.30.0) 以下操作已废弃，请使用转出目的地（[Destination](/payments/en/api-references/payment/create-destination)）相关操作。<br/>&nbsp;&nbsp;-[List all bank accounts](/payments/en/api-references/payment/list-all-bank-accounts)<br/>&nbsp;&nbsp;-[Create crypto address](/payments/en/api-references/payment/create-crypto-address)<br/>&nbsp;&nbsp;-[Delete crypto address](/payments/en/api-references/payment/delete-crypto-address)<br/>&nbsp;&nbsp;-[List crypto addresses](/payments/en/api-references/payment/list-crypto-addresses) | 2026-01-22 |
 
 ## 2025 年 12 月
 

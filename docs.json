@@ -209,7 +209,7 @@
                     ]
                   },
                   {
-                    "group": "Bank accounts and addresses",
+                    "group": "Bank accounts and addresses (Deprecated)",
                     "pages": [
                       "payments/en/api-references/payment/list-all-bank-accounts",
                       "payments/en/api-references/payment/create-crypto-address",
