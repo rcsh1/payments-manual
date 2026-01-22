@@ -115,9 +115,9 @@ When creating an order payment link, you must specify the pricing amount, develo
 - **Pricing amount** (`pricing_amount`): The base amount of the order, excluding the developer fee.
   - If `pricing_currency` is set, the order amount is denominated in that fiat currency.
   - If `pricing_currency` is not set, the order amount is denominated in the cryptocurrency specified by `payable_currency`.
-- **Developer fee** (`fee_amount`): If you are a platform serving multiple downstream merchants and need to split revenue, you can set this field accordingly. The ratio of developer fee to pricing amount determines your revenue sharing ratio with your downstream merchants. For more information, see [Amounts and Balance Management](/payments/en/guides/amounts-and-balances). <Info>
-    If you are a merchant (serving payers directly), you usually do not need to set a developer fee.
-  </Info>
+- **Developer fee** (`fee_amount`): If you are a platform serving multiple downstream merchants and need to split revenue, you can set this field accordingly. The ratio of developer fee to pricing amount determines your revenue sharing ratio with your downstream merchants. For more information, see [Amounts and Balance Management](/payments/en/guides/amounts-and-balances). 
+
+  <Info>If you are a merchant (serving payers directly), you usually do not need to set a developer fee.</Info>
 - **Payable amounts** (`payable_amounts`): The actual cryptocurrency amounts to be paid by the payer for each supported currency. This allows you to directly specify the payable amount for each cryptocurrency. This field is optional:
   - If you specify `payable_amounts`, these values are used directly as the amounts the payer needs to pay for each currency.
   - If you do not specify `payable_amounts`, the system calculates the payable amount using the real-time exchange rate: **Payable Amount = (Pricing Amount + Developer Fee) / Exchange Rate**. The exchange rate is based on the rate returned by [Get exchange rate](/payments/en/api-references/payment/get-exchange-rate) at the time the order is created.

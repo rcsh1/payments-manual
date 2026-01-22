@@ -61,7 +61,9 @@ You have completed all the steps mentioned in [Preparation](/payments/en/guides/
     - **Pricing Amount** (`pricing_amount`): The base amount of the order, excluding the developer fee.
       - If `pricing_currency` is set, the order amount is denominated in that fiat currency.
       - If `pricing_currency` is not set, the order amount is denominated in the cryptocurrency specified by `payable_currency`.
-    - **Developer Fee** (`fee_amount`): If you are a platform serving multiple downstream merchants and need to distribute revenue between you and your downstream merchants, you can set this fee to achieve that. The ratio between the developer fee and the pricing amount determines the revenue split between you and your downstream merchants. For more information, see [Accounts and fund allocation](/payments/en/guides/amounts-and-balances). <Info>
+    - **Developer Fee** (`fee_amount`): If you are a platform serving multiple downstream merchants and need to distribute revenue between you and your downstream merchants, you can set this fee to achieve that. The ratio between the developer fee and the pricing amount determines the revenue split between you and your downstream merchants. For more information, see [Accounts and fund allocation](/payments/en/guides/amounts-and-balances). 
+    
+      <Info>
         If you are a merchant (serving users directly), you typically don't need to set the developer fee.
       </Info>
     - **Payable Amount** (`payable_amount`): The actual cryptocurrency amount that the user needs to pay, denominated in the cryptocurrency specified by `payable_currency`.

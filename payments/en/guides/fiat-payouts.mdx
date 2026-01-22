@@ -3,10 +3,11 @@ title: "Off-ramp"
 lang: "en"
 ---
 
-<Note>**Disclaimer: This article contains AI translations and should only be used as reference.** Contact Cobo's support team through [help@cobo.com](mailto:help@cobo.com) if you have any questions.</Note>
+<Note>
+  **Disclaimer: This article contains AI translations and should only be used as reference.** Contact Cobo's support team through [help@cobo.com](mailto:help@cobo.com) if you have any questions.
+</Note>
 
 This document introduces how to convert the cryptocurrency you received to fiat currency and transfer it to your bank account.
-
 
 ## Prerequisites
 
@@ -20,56 +21,55 @@ You can create off-ramp requests through Payments App or Payments API.
 
 <Tabs>
   <Tab title="Payments App" icon="pager">
+    <Note>
+      In the development environment, you can experience the complete operational process of off-ramp through Payments App, but actual fiat currency exchange and transfer operations are not supported.
+    </Note>
+    1. Log in to Cobo Portal [development environment](https://portal.dev.cobo.com/login) or [production environment](https://portal.cobo.com/login).
+    2. In the left navigation bar, click **Apps**, then click the **Payments** card to launch the App.
+    3. In the App's left navigation bar, click **Funds Management** \> **Payouts**.
+    4. You can choose to withdraw from **Merchant balance** or **Developer balance**. In this example, we choose to withdraw from the merchant balance. Click the **Settle** button on the **Merchant balance** card.
+    5. In the pop-up window, select **Fiat Off-Ramp**.
 
-<Note>In the development environment, you can experience the complete operational process of off-ramp through Payments App, but actual fiat currency exchange and transfer operations are not supported.</Note>
-1. Log in to Cobo Portal [development environment](https://portal.dev.cobo.com/login) or [production environment](https://portal.cobo.com/login).
-2. In the left navigation bar, click **Apps**, then click the **Payments** card to launch the App.
-3. In the App's left navigation bar, click **Funds Management** > **Payouts**.
-4. You can choose to withdraw from **Merchant balance** or **Developer balance**. In this example, we choose to withdraw from the merchant balance. Click the **Settle** button on the **Merchant balance** card.
-5. In the pop-up window, select **Fiat Off-Ramp**.
-   <img src="/payments/en/images/payments/fiat-payout.png" className="screenshot_full_screen" alt="Off-ramp entry" />
-6. Fill in the withdrawal information, including token, merchant name, amount, and receiving bank account. To add a new bank account, refer to [Destinations](/payments/en/guides/destinations).
-<Note>
-On the off-ramp page, you can view the detailed fee breakdown and estimated arrival amount for this withdrawal:
+       <img
+         src="/payments/en/images/payments/fiat-payout.png"
+         className="screenshot_full_screen"
+         alt="Off-ramp entry"
+       />
+    6. Fill in the withdrawal information, including token, merchant name, amount, and receiving bank account. To add a new bank account, refer to [Destinations](/payments/en/guides/destinations).
 
-- **Cross-chain fees**: Since Cobo currently only supports off-ramp on specific chains, if the cryptocurrency you want to withdraw is on other chains, the system needs to first transfer it to a supported chain. This operation will incur cross-chain fees, which will be deducted from the withdrawal amount. For example, if the USDT you want to withdraw is on the Polygon chain and the system does not support USDT off-ramp on the Polygon chain, the USDT needs to be first transferred from Polygon to a supported chain (such as TRON), and pay the corresponding cross-chain fees.
+    <Note>
+      On the off-ramp page, you can view the detailed fee breakdown and estimated arrival amount for this withdrawal:
 
-- **Fees**: Fees charged proportionally based on the withdrawal amount. This fee is deducted from your Fee Station account and will not affect the actual withdrawal amount.
-
-- **Estimated arrival amount**: The final fiat currency amount that the system estimates based on the current exchange rate and various fees. Since banks may charge additional fees and exchange rates may fluctuate, the actual arrival amount may differ from the estimated amount.
-</Note>
-7. Follow the on-page prompts to confirm and submit the withdrawal information.
+      - **Cross-chain fees**: Since Cobo currently only supports off-ramp on specific chains, if the cryptocurrency you want to withdraw is on other chains, the system needs to first transfer it to a supported chain. This operation will incur cross-chain fees, which will be deducted from the withdrawal amount. For example, if the USDT you want to withdraw is on the Polygon chain and the system does not support USDT off-ramp on the Polygon chain, the USDT needs to be first transferred from Polygon to a supported chain (such as TRON), and pay the corresponding cross-chain fees.
+      - **Fees**: Fees charged proportionally based on the withdrawal amount. This fee is deducted from your Fee Station account and will not affect the actual withdrawal amount.
+      - **Estimated arrival amount**: The final fiat currency amount that the system estimates based on the current exchange rate and various fees. Since banks may charge additional fees and exchange rates may fluctuate, the actual arrival amount may differ from the estimated amount.
+    </Note>
+    7. Follow the on-page prompts to confirm and submit the withdrawal information.
   </Tab>
-
-
   <Tab title="Payments API" icon="code">
+    1. Before creating a withdrawal request, you can call [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) or [Get developer balance](/payments/en/api-references/payment/get-developer-balance) to query merchant and developer balances respectively, to determine the maximum withdrawal amount.
+    2. Call [Create Payout ](creat) to create a withdrawal request.
 
-  1. Before creating a withdrawal request, you can call [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) or [Get developer balance](/payments/en/api-references/payment/get-developer-balance) to query merchant and developer balances respectively, to determine the maximum withdrawal amount.
-  2. Call [Create settlement request](/payments/en/api-references/payment/create-settlement-request) to create a withdrawal request.
+    **Basic parameters**
 
-**Basic parameters**
-* `request_id`: The unique request ID you provide to track the withdrawal request
-* `acquiring_type`: Pay-in type. Can be set to `Order` or `TopUp`, corresponding to order mode and top-up mode payment balances respectively
-* `settlement_type`: Set to `Merchant` or `Psp`, corresponding to merchant balance and developer balance respectively
-* `payout_channel`: Set to `OffRamp` for off-ramp
+    - `request_id`: The unique request ID you provide to track the withdrawal request
+    - `source_account`: Payment source account.When withdrawing funds from a merchant account, pass the merchant_id; when withdrawing funds from a developer account, set to `developer`.
+    - `payout_channel`: Set to `OffRamp` for off-ramp
 
-**Detail parameters (`settlements` array)**
+    **`Detail parameters (payout items   recipient_info)`**
 
-Depending on the source of funds, you need to specify different parameter combinations.
+    | Parameter group    | Related parameters           |
+    | ------------------ | ---------------------------- |
+    | **payout items**   | `amount`、`token_id`          |
+    | **recipient_info** | `currency`、`bank_account_id` |
 
-| Fund source | Related parameters |
-|---------|---------|
-| **Merchant balance**  | `merchant_id`, `order_ids`, `currency`, `bank_account_id` |
-| **Developer balance**  | `amount`, `currency`, `bank_account_id` |
+    **Parameter description:**
 
-**Parameter description:**
-- `merchant_id`: Merchant ID. Multiple merchants can be specified through the `settlements` array.
-- `order_ids`: Order ID list. If this parameter is empty, all eligible orders will be selected and the cryptocurrency amount for this withdrawal will be automatically calculated.
-- `amount`: Cryptocurrency amount.
-- `currency`: Fiat currency (currently only `USD` is supported).
-- `bank_account_id`: Destination bank account ID. Can be obtained by calling [List all bank accounts](/payments/en/api-references/payment/list-all-bank-accounts).
-
-</Tab>
+    - `token_id`: Cryptocurrency ID (e.g., ETH_USDT, TRON_USDT) ID.
+    - `amount`: Cryptocurrency amount.
+    - `currency`: Fiat currency (currently only `USD` is supported).
+    - `bank_account_id`: Destination bank account ID. Can be obtained by calling [List all bank accounts](/payments/en/api-references/payment/list-all-bank-accounts).
+  </Tab>
 </Tabs>
 
 ### 2. Complete secondary confirmation, risk control review, and transaction signing
@@ -80,28 +80,27 @@ After creating a withdrawal request, based on your submission method, risk contr
 - Risk control review: If you have set transaction policies, reviewers may need to approve the withdrawal request on Cobo Guard.
 - Transaction signing: If you are using MPC Wallets, Mobile Co-Signer or Server Co-Signer needs to sign to finally complete the withdrawal operation.
 
-
 ### 3. Follow up on withdrawal status
+
 You can subscribe to the `payment.settlement.status.updated` event to receive real-time updates on off-ramp status. Refer to [Webhook reference](/payments/en/guides/status-and-events) to understand the detailed trigger conditions and returned data structure of each event.
 
 You can also actively query withdrawal request status through Payments App or Payments API.
 
 <Tabs>
   <Tab title="Payments App" icon="pager">
-1. Log in to Cobo Portal [development environment](https://portal.dev.cobo.com/login) or [production environment](https://portal.cobo.com/login).
-2. In the left navigation bar, click **Apps**, then click the **Payments** card to launch the App.
-3. In the App's left navigation bar, click **Funds Management** > **Payouts**.
-4. View the status and details of all withdrawal requests on the **Payout History** tab.
+    1. Log in to Cobo Portal [development environment](https://portal.dev.cobo.com/login) or [production environment](https://portal.cobo.com/login).
+    2. In the left navigation bar, click **Apps**, then click the **Payments** card to launch the App.
+    3. In the App's left navigation bar, click **Funds Management** \> **Payouts**.
+    4. View the status and details of all withdrawal requests on the **Payout History** tab.
   </Tab>
-
   <Tab title="Payments API" icon="code">
-You can call the following API operations to query withdrawal request status:
-  - [Get settlement request information](/payments/en/api-references/payment/get-settlement-request-information) - Query detailed information about a single withdrawal request
-  - [List all settlement requests](/payments/en/api-references/payment/list-all-settlement-requests) - Query detailed information about all withdrawal requests
+    You can call the following API operations to query withdrawal request status:
+
+    - [Get payout information](/payments/en/api-references/payment/get-payout-information) - Query detailed information about a single withdrawal request
+    - [List all payouts](/payments/en/api-references/payment/list-all-payouts) - Query detailed information about all withdrawal requests
   </Tab>
 </Tabs>
 
-
-
-<Tip>Feel free to [share your feedback](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI) to improve our documentation!</Tip>
-
+<Tip>
+  Feel free to [share your feedback](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI) to improve our documentation!
+</Tip>

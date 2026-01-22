@@ -3814,6 +3814,7 @@ paths:
       operationId: update_bank_account_by_id
       summary: Update bank account
       description: |
+        <Note>This operation has been deprecated.</Note>
         This operation updates the information of an existing bank account.
       security:
         - CoboAuth: []
@@ -4104,6 +4105,7 @@ paths:
       operationId: create_crypto_address
       summary: Create crypto address
       description: |
+        <Note>This operation has been deprecated.</Note>
         This operation registers a crypto address for crypto payouts.
 
         The registered address can later be referenced by its ID when creating settlement requests.
@@ -4130,6 +4132,7 @@ paths:
       operationId: list_crypto_addresses
       summary: List crypto addresses
       description: |
+        <Note>This operation has been deprecated.</Note>
         This operation retrieves a list of crypto addresses registered for crypto payouts. 
 
         Contact our support team at [help@cobo.com](mailto:help@cobo.com) to register a new crypto address.
@@ -4153,6 +4156,7 @@ paths:
       operationId: delete_crypto_address
       summary: Delete crypto address
       description: |
+        <Note>This operation has been deprecated.</Note>
         This operation unregisters a crypto address from being used for crypto payouts.
       security:
         - CoboAuth: []
@@ -15524,9 +15528,6 @@ components:
         - fee_amount
         - exchange_rate
         - psp_order_code
-        - pricing_currency
-        - pricing_amount
-        - payable_currency
         - status
         - received_token_amount
       properties:
@@ -17769,32 +17770,32 @@ components:
     PaymentBulkSendItem:
       type: object
       required:
-        - payout_item_id
+        - bulk_send_item_id
         - token_id
         - receiving_address
         - amount
         - status
         - validation_status
       properties:
-        payout_item_id:
+        bulk_send_item_id:
           type: string
-          description: The payout item ID.
+          description: The bulk send item ID.
           example: 123e4567-e89b-12d3-a456-426614174003
         token_id:
           type: string
-          description: The token ID of the payout item.
+          description: The token ID of the cryptocurrency to be sent to the recipient.
           example: ETH_USDT
         receiving_address:
           type: string
-          description: The receiving address of the payout item.
+          description: The receiving address.
           example: '0xabc123456789def0000000000000000000000000'
         amount:
           type: string
-          description: The amount of the payout item.
+          description: The amount of the cryptocurrency to be sent to the recipient.
           example: '500.00'
         description:
           type: string
-          description: The note of the payout item.
+          description: A note or comment about the bulk send item.
           example: 'Invoice #INV-2024-001'
         status:
           $ref: '#/components/schemas/PaymentBulkSendItemStatus'
@@ -17805,7 +17806,7 @@ components:
       enum:
         - Pending
         - Validating
-        - Transfering
+        - Transferring
         - Completed
         - PartiallyCompleted
         - Failed
@@ -17814,7 +17815,7 @@ components:
         The current status of the bulk send. Possible values include:
         - `Pending`: The bulk send has been created and is waiting to be processed.
         - `Validating`: The bulk send items are being validated.
-        - `Transfering`: The bulk send items are being processed and funds are being transferred.
+        - `Transferring`: The bulk send items are being processed and funds are being transferred.
         - `Completed`: All items in the bulk send have been successfully processed.
         - `PartiallyCompleted`: Some items in the bulk send have been successfully processed, while others have failed.
         - `Failed`: The bulk send has failed and no items were processed successfully.
@@ -20515,7 +20516,6 @@ components:
           maxItems: 50
           description: |
             A list of unique custom payer IDs required to create top-up addresses.
-            The maximum number of items is 50.
           items:
             type: string
             description: 'Unique customer identifier on the merchant side, used to allocate a dedicated top-up address.'
@@ -23332,7 +23332,6 @@ components:
               - merchant_id
               - fee_amount
               - psp_order_code
-              - pricing_amount
               - payable_currency
             properties:
               merchant_id:
@@ -23351,7 +23350,7 @@ components:
                 type: string
                 description: |
                   The pricing currency that denominates `pricing_amount` and `fee_amount`. If left empty, both values will be denominated in `payable_currency`. 
-                  Currently, For a complete list of supported currencies, see [Supported chains and tokens](https://www.cobo.com/developers/v2/guides/overview/supported-chains-and-tokens).
+                  Currently, For a complete list of supported currencies, see [Supported chains and tokens](https://www.cobo.com//payments/en/guides/supported-chains-and-tokens#pricing-currency).
                 example: USD
               pricing_amount:
                 type: string

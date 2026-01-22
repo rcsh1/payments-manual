@@ -4,13 +4,11 @@ lang: "en"
 description: ""
 ---
 
-<Note>**Disclaimer: This article contains AI translations and should only be used as reference.** Contact Cobo's support team through [help@cobo.com](mailto:help@cobo.com) if you have any questions.</Note>
-
-The Cobo payments solution currently supports **USDC** and **USDT**, and can be used on multiple mainstream chains. This document details the support for various token and chain combinations for payment collection and off-ramp scenarios.
+This document details the supported currencies for payment collection and Off-Ramp scenarios.
 
 ## Supported tokens and chains for payment collection
 
-The Cobo payments solution supports the following token and chain combinations for payment collection:
+The stablecoins and chain combinations that can be received during payment collection are as follows:
 
 | Stablecoin | Supported Chain | Token ID |
 |------------|-----------------|----------|
@@ -34,10 +32,62 @@ You can also use TTRON (TRON testnet) for testing in the development environment
 * Token contract address: `TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf`
 * Test token faucet: https://nileex.io/join/getJoinPage
 
+## <a name="pricing-currency"></a>Supported pricing currencies
 
-## Off-ramp support
+When creating a payment order, you can use the following fiat currencies as the pricing currency (`pricing_currency`). The system will automatically calculate the payable amount based on the real-time exchange rate of the currency.
 
-The following table lists the off-ramp support for various token and chain combinations across different environments:
+<Note>
+You can only specify the following currencies as pricing currencies during payment collection. After cryptocurrencies are deposited, if you need to perform Off-Ramp operations, only USD is supported for conversion.
+</Note>
+
+- `USD` — United States Dollar
+- `CAD` — Canadian Dollar
+- `MXN` — Mexican Peso
+- `BRL` — Brazilian Real
+- `ARS` — Argentine Peso
+- `CLP` — Chilean Peso
+- `COP` — Colombian Peso
+- `PEN` — Peruvian Nuevo Sol
+- `EUR` — Euro
+- `GBP` — British Pound Sterling
+- `CHF` — Swiss Franc
+- `SEK` — Swedish Krona
+- `NOK` — Norwegian Krone
+- `DKK` — Danish Krone
+- `PLN` — Polish Zloty
+- `CZK` — Czech Koruna
+- `HUF` — Hungarian Forint
+- `CNH` — Chinese Yuan Offshore
+- `HKD` — Hong Kong Dollar
+- `JPY` — Japanese Yen
+- `KRW` — South Korean Won
+- `SGD` — Singapore Dollar
+- `TWD` — New Taiwan Dollar
+- `THB` — Thai Baht
+- `MYR` — Malaysian Ringgit
+- `IDR` — Indonesian Rupiah
+- `INR` — Indian Rupee
+- `AUD` — Australian Dollar
+- `NZD` — New Zealand Dollar
+- `PHP` — Philippine Peso
+- `VND` — Vietnamese Dong
+- `AED` — United Arab Emirates Dirham
+- `SAR` — Saudi Riyal
+- `QAR` — Qatari Rial
+- `KWD` — Kuwaiti Dinar
+- `BHD` — Bahraini Dinar
+- `ZAR` — South African Rand
+- `EGP` — Egyptian Pound
+- `NGN` — Nigerian Naira
+- `KES` — Kenyan Shilling
+- `TRY` — Turkish Lira
+- `ILS` — Israeli New Sheqel
+- `MAD` — Moroccan Dirham
+
+
+## Off-Ramp support
+
+The following table lists the supported token and chain combinations for Off-Ramp operations. For example, you can convert BASE_USDC to fiat currency through Off-Ramp in the production environment, but bridging fees are required.
 
 | Token and Chain | Development Environment | Production Environment |
 |-----------------|-------------------------|------------------------|
@@ -56,7 +106,7 @@ The following table lists the off-ramp support for various token and chain combi
 | BSC_USDT | ✅ Supported (bridging fee required) | ✅ Supported (bridging fee required) |
 | TTRON_USDT | ✅ Supported | ❌ Not supported |
 
-<Info>Token and chain combinations marked as "bridging fee required" incur additional bridging fees on top of regular fees when performing off-ramp operations.</Info>
+<Info>Token and chain combinations marked as "bridging fee required" incur additional bridging fees on top of regular fees when performing Off-Ramp operations.</Info>
 
 <Tip>Feel free to [share your feedback](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI) to improve our documentation!</Tip>
 
