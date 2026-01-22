@@ -4,11 +4,11 @@ lang: "zh-hans"
 description: ""
 ---
 
-Cobo 支付解决方案目前支持两种主流稳定币：**USDC** 和 **USDT**，并可在多个主流公链上使用。本文档详细说明各币种和公链组合在收款和 Off-Ramp 对接场景下的支持情况。
+本文档详细说明收款和 Off-Ramp 对接场景下支持的币种。
 
 ## 收款支持的币种和公链
 
-Cobo 支付解决方案支持以下币种和公链组合进行收款：
+收款时可接收的稳定币和公链组合如下：
 
 | 稳定币 | 支持的公链 | Token ID |
 |--------|------------|----------|
@@ -32,10 +32,62 @@ Cobo 支付解决方案支持以下币种和公链组合进行收款：
 * 代币合约地址：`TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf`
 * 测试币水龙头：https://nileex.io/join/getJoinPage
 
+## <a name="pricing-currency"></a>支持的定价货币
+
+在创建支付订单时，您可以使用以下法币作为定价货币（`pricing_currency`）。系统会自动根据该币种的实时汇率计算应付金额。
+
+<Note>
+仅在收款时支持指定以下货币作为定价货币。加密货币入账后，如需进行 Off-Ramp 对接，仅支持转出 USD。
+</Note>
+
+- `USD` — 美元 (United States Dollar)
+- `CAD` — 加元 (Canadian Dollar)
+- `MXN` — 墨西哥比索 (Mexican Peso)
+- `BRL` — 巴西雷亚尔 (Brazilian Real)
+- `ARS` — 阿根廷比索 (Argentine Peso)
+- `CLP` — 智利比索 (Chilean Peso)
+- `COP` — 哥伦比亚比索 (Colombian Peso)
+- `PEN` — 秘鲁新索尔 (Peruvian Nuevo Sol)
+- `EUR` — 欧元 (Euro)
+- `GBP` — 英镑 (British Pound Sterling)
+- `CHF` — 瑞士法郎 (Swiss Franc)
+- `SEK` — 瑞典克朗 (Swedish Krona)
+- `NOK` — 挪威克朗 (Norwegian Krone)
+- `DKK` — 丹麦克朗 (Danish Krone)
+- `PLN` — 波兰兹罗提 (Polish Zloty)
+- `CZK` — 捷克克朗 (Czech Koruna)
+- `HUF` — 匈牙利福林 (Hungarian Forint)
+- `CNH` — 离岸人民币 (Chinese Yuan Offshore)
+- `HKD` — 港元 (Hong Kong Dollar)
+- `JPY` — 日元 (Japanese Yen)
+- `KRW` — 韩元 (South Korean Won)
+- `SGD` — 新加坡元 (Singapore Dollar)
+- `TWD` — 新台币 (New Taiwan Dollar)
+- `THB` — 泰铢 (Thai Baht)
+- `MYR` — 马来西亚林吉特 (Malaysian Ringgit)
+- `IDR` — 印度尼西亚卢比 (Indonesian Rupiah)
+- `INR` — 印度卢比 (Indian Rupee)
+- `AUD` — 澳大利亚元 (Australian Dollar)
+- `NZD` — 新西兰元 (New Zealand Dollar)
+- `PHP` — 菲律宾比索 (Philippine Peso)
+- `VND` — 越南盾 (Vietnamese Dong)
+- `AED` — 阿联酋迪拉姆 (United Arab Emirates Dirham)
+- `SAR` — 沙特里亚尔 (Saudi Riyal)
+- `QAR` — 卡塔尔里亚尔 (Qatari Rial)
+- `KWD` — 科威特第纳尔 (Kuwaiti Dinar)
+- `BHD` — 巴林第纳尔 (Bahraini Dinar)
+- `ZAR` — 南非兰特 (South African Rand)
+- `EGP` — 埃及镑 (Egyptian Pound)
+- `NGN` — 尼日利亚奈拉 (Nigerian Naira)
+- `KES` — 肯尼亚先令 (Kenyan Shilling)
+- `TRY` — 土耳其里拉 (Turkish Lira)
+- `ILS` — 以色列新谢克尔 (Israeli New Sheqel)
+- `MAD` — 摩洛哥迪拉姆 (Moroccan Dirham)
+
 
 ## Off-Ramp 对接支持情况
 
-以下表格列出了各币种和公链组合在不同环境中的 Off-Ramp 对接支持情况：
+以下表格列出了 Off-Ramp 对接时，支持的币种和公链组合。举例来说，您可以在生产环境将 BASE_USDC 通过 Off-ramp 对接转换为法币，但需要支付跨链费用。
 
 | 币种和公链 | 开发环境 | 生产环境 |
 |---------|----------|----------|
