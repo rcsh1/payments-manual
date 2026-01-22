@@ -20516,7 +20516,6 @@ components:
           maxItems: 50
           description: |
             A list of unique custom payer IDs required to create top-up addresses.
-            The maximum number of items is 50.
           items:
             type: string
             description: 'Unique customer identifier on the merchant side, used to allocate a dedicated top-up address.'
@@ -23351,7 +23350,7 @@ components:
                 type: string
                 description: |
                   The pricing currency that denominates `pricing_amount` and `fee_amount`. If left empty, both values will be denominated in `payable_currency`. 
-                  Currently, For a complete list of supported currencies, see [Supported chains and tokens](https://www.cobo.com/developers/v2/guides/overview/supported-chains-and-tokens).
+                  Currently, For a complete list of supported currencies, see [Supported chains and tokens](https://www.cobo.com//payments/en/guides/supported-chains-and-tokens#pricing-currency).
                 example: USD
               pricing_amount:
                 type: string
