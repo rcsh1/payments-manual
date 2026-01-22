@@ -78,11 +78,11 @@ sequenceDiagram
     3. 将所需充值地址提供给付款方，完成支付。
   </Tab>
   <Tab title="Payments API" icon="code">
-    1. 调用 [Create/Get top-up address](/payments/en/api-references/payment/createget-top-up-address) 创建充值地址。请求中的关键参数包括：
+    1. 调用 [Create/Get top-up address](/payments/en/api-references/payment/createget-top-up-address) 为付款方创建单一充值地址。请求中的关键参数包括：
        - **商户 ID** (`merchant_id`)：商户在 Cobo 系统中的唯一标识，由 Cobo 分配。
        - **自定义付款方 ID** (`custom_payer_id`)：付款方在您的系统中的唯一标识。
        - **Token ID** (`token_id`)：指定充值地址需要支持的加密货币和区块链网络。
-    2. 
+    2. 若需要同时为多个付款方批量创建充值地址，可调用 [Batch create top-up addresses](/payments/en/api-references/payment/batch-create-top-up-addresses) 。
     2. **配置充值事件监听**：通过 Webhook 接收充值相关的事件通知，详情可参考[事件与状态](/payments/cn/guides/status-and-events)。
   </Tab>
 </Tabs>

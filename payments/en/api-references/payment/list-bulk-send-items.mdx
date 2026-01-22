@@ -1,13 +1,12 @@
 ---
-openapi: get /payments/counterparty
+openapi: get /payments/bulk_sends/{bulk_send_id}/items
 ---
 
 <RequestExample>
 ```python Python
 import cobo_waas2
-from cobo_waas2.models.counterparty_type import CounterpartyType
-from cobo_waas2.models.list_counterparties200_response import (
-    ListCounterparties200Response,
+from cobo_waas2.models.list_bulk_send_items200_response import (
+    ListBulkSendItems200Response,
 )
 from cobo_waas2.rest import ApiException
 from pprint import pprint
@@ -23,27 +22,20 @@ configuration = cobo_waas2.Configuration(
 with cobo_waas2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = cobo_waas2.PaymentApi(api_client)
+    bulk_send_id = "123e4567-e89b-12d3-a456-426614174003"
     limit = 10
     before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
     after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-    keyword = "keyword"
-    counterparty_type = "Individual"
-    country = "USA"
 
     try:
-        # List all counterparties
-        api_response = api_instance.list_counterparties(
-            limit=limit,
-            before=before,
-            after=after,
-            keyword=keyword,
-            counterparty_type=counterparty_type,
-            country=country,
+        # List bulk send items
+        api_response = api_instance.list_bulk_send_items(
+            bulk_send_id, limit=limit, before=before, after=after
         )
-        print("The response of PaymentApi->list_counterparties:\n")
+        print("The response of PaymentApi->list_bulk_send_items:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling PaymentApi->list_counterparties: %s\n" % e)
+        print("Exception when calling PaymentApi->list_bulk_send_items: %s\n" % e)
 
 ```
 ```java Java
@@ -65,18 +57,16 @@ public class Example {
     // Replace `<YOUR_PRIVATE_KEY>` with your private key
     defaultClient.setPrivKey("<YOUR_PRIVATE_KEY>");
     PaymentApi apiInstance = new PaymentApi();
+    String bulkSendId = "123e4567-e89b-12d3-a456-426614174003";
     Integer limit = 10;
     String before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1";
     String after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk";
-    String keyword = "keyword";
-    CounterpartyType counterpartyType = CounterpartyType.fromValue("Individual");
-    String country = "USA";
     try {
-      ListCounterparties200Response result =
-          apiInstance.listCounterparties(limit, before, after, keyword, counterpartyType, country);
+      ListBulkSendItems200Response result =
+          apiInstance.listBulkSendItems(bulkSendId, limit, before, after);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling PaymentApi#listCounterparties");
+      System.err.println("Exception when calling PaymentApi#listBulkSendItems");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -98,12 +88,10 @@ import (
 )
 
 func main() {
+	bulkSendId := "123e4567-e89b-12d3-a456-426614174003"
 	limit := int32(10)
 	before := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
 	after := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-	keyword := "keyword"
-	counterpartyType := coboWaas2.CounterpartyType("Individual")
-	country := "USA"
 
 	configuration := coboWaas2.NewConfiguration()
 	// Initialize the API client
@@ -116,20 +104,17 @@ func main() {
 	ctx = context.WithValue(ctx, coboWaas2.ContextPortalSigner, crypto.Ed25519Signer{
 		Secret: "<YOUR_PRIVATE_KEY>",
 	})
-	resp, r, err := apiClient.PaymentAPI.ListCounterparties(ctx).
+	resp, r, err := apiClient.PaymentAPI.ListBulkSendItems(ctx, bulkSendId).
 		Limit(limit).
 		Before(before).
 		After(after).
-		Keyword(keyword).
-		CounterpartyType(counterpartyType).
-		Country(country).
 		Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.ListCounterparties``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.ListBulkSendItems``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListCounterparties`: ListCounterparties200Response
-	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.ListCounterparties`: %v\n", resp)
+	// response from `ListBulkSendItems`: ListBulkSendItems200Response
+	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.ListBulkSendItems`: %v\n", resp)
 }
 
 ```
@@ -143,15 +128,13 @@ apiClient.setEnv(CoboWaas2.Env.DEV);
 apiClient.setPrivateKey("<YOUR_PRIVATE_KEY>");
 // Call the API
 const apiInstance = new CoboWaas2.PaymentApi();
+const bulk_send_id = "123e4567-e89b-12d3-a456-426614174003";
 const opts = {
   limit: 10,
   before: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1",
   after: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk",
-  keyword: "keyword",
-  counterparty_type: "Individual",
-  country: "USA",
 };
-apiInstance.listCounterparties(opts).then(
+apiInstance.listBulkSendItems(bulk_send_id, opts).then(
   (data) => {
     console.log("API called successfully. Returned data: " + data);
   },

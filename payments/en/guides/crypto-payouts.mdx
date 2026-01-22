@@ -3,59 +3,82 @@ title: "Crypto payouts"
 lang: "en"
 ---
 
-<Note>**Disclaimer: This article contains AI translations and should only be used as reference.** Contact Cobo's support team through [help@cobo.com](mailto:help@cobo.com) if you have any questions.</Note>
+<Note>
+  **Disclaimer: This article contains AI translations and should only be used as reference.** Contact Cobo's support team through [help@cobo.com](mailto:help@cobo.com) if you have any questions.
+</Note>
 
 This document introduces how to transfer the cryptocurrency you received to an external cryptocurrency address.
-
 
 ## 1. Create crypto payout request
 
 You can create crypto payout requests through Payments App or Payments API.
 
 <Tabs>
-  <Tab title="Payments App" icon="pager">
-1. Log in to Cobo Portal [development environment](https://portal.dev.cobo.com/login) or [production environment](https://portal.cobo.com/login).
-2. In the left navigation bar, click **Apps**, then click the **Payments** card to launch the App.
-3. In the App's left navigation bar, click **Funds Management** > **Payouts**.
-4. You can choose to withdraw from **Merchant balance** or **Developer balance**. In this example, we choose to withdraw from the merchant balance. Click the **Payout** button on the **Merchant Balance** card.
-5. In the pop-up window, select **Crypto Payout**.
-   <img src="/payments/en/images/payments/crypto-payout.png" className="screenshot_full_screen" alt="Crypto payout entry" />
-6. Fill in the transfer information, including token, network, merchant name, amount, and receiving address.<Note>If you have enabled the **Use Destinations as Payout Whitelist** toggle in **Destinations**, you can only transfer to registered destinations. For more details, see [Destinations](/payments/en/guides/destinations)</Note>
-7. Follow the on-page prompts to confirm and submit the transfer request.
+  <Tab title="Payments App">
+    1. Log in to Cobo Portal [development environment](https://portal.dev.cobo.com/login) or [production environment](https://portal.cobo.com/login).
+    2. In the left navigation bar, click **Apps**, then click the **Payments** card to launch the App.
+    3. In the App's left navigation bar, click **Funds Management** \> **Payouts**.
+    4. You can choose to withdraw from **Merchant balance** or **Developer balance**. In this example, we choose to withdraw from the merchant balance. Click the **Payout** button on the **Merchant Balance** card.
+    5. In the pop-up window, select **Crypto Payout**.
+
+       <img
+         src="/payments/en/images/payments/crypto-payout.png"
+         className="screenshot_full_screen"
+         alt="Crypto payout entry"
+       />
+    6. Fill in the transfer information, including token, network, merchant name, amount, and receiving address.
+
+       <Note>
+         If you have enabled the **Use Destinations as Payout Whitelist** toggle in **Destinations**, you can only transfer to registered destinations. For more details, see [Destinations](/payments/en/guides/destinations)
+       </Note>
+    7. **Auto-Select Sources**:
+       - When enabled, you only need to enter the **total payout amount**, and the system automatically allocates the payout across available token balances in your wallet.
+       - When disabled, you must manually specify the payout amount for each token. This option is enabled by default and can be turned off if needed.
+    8. **Cross-chain payout**:
+       
+       When paying out **USDT or USDC on a specific network**, the system can use **USDT or USDC balances on other networks** in your wallet and bridge them before payout.
+
+       Currently, only **same-asset cross-chain payouts** are supported. Cross-asset conversion is not supported.
+       
+       1. **Fees**:
+          
+          Same-asset cross-chain payouts incur a processing fee, which is automatically calculated based on the payout amount.
+       
+       2. **Example**:
+          
+          Available balances in the source account:
+          - 150 USDT (Tron)
+          - 50 USDT (Ethereum)
+          
+          If the total payout amount is **200 USDT (Tron)**, the system will bridge **50 USDT (Ethereum)**.
+          
+          With a cross-chain fee of **10 USDT (Ethereum)**, the estimated amount received will be **190 USDT (Tron)**.
+    9. Follow the on-page prompts to confirm and submit the transfer request.
   </Tab>
+  <Tab title="Payments API">
+    1. Before creating a transfer request, you can call [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) or [Get developer balance](/payments/en/api-references/payment/get-developer-balance) to query merchant and developer balances respectively, to determine the maximum transferable amount.
+    2. Call [Create Payout](/payments/en/api-references/payment/create-payout) to create a transfer request.
 
-  <Tab title="Payments API" icon="code">
+    **Basic parameters**
 
-  1. Before creating a transfer request, you can call [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) or [Get developer balance](/payments/en/api-references/payment/get-developer-balance) to query merchant and developer balances respectively, to determine the maximum transferable amount.
-  2. Call [Create crypto address](/payments/en/api-references/payment/create-crypto-address) to register the cryptocurrency address for transfer. Record the `crypto_address_id` field for later use in specifying the transfer destination address.
-  3. Call [Create settlement request](/payments/en/api-references/payment/create-settlement-request) to create a transfer request.
+    - `request_id`: The unique request ID you provide to track the transfer request
+    - `source_account`:Payment source account.When withdrawing funds from a merchant account, pass the merchant_id; when withdrawing funds from a developer account, set to `developer`.
+    - `payout_channel`: Set to `Crypto` for crypto payouts
 
-**Basic parameters**
-* `request_id`: The unique request ID you provide to track the transfer request
-* `acquiring_type`: Pay-in type. Can be set to `Order` or `TopUp`, corresponding to order mode and top-up mode payment balances respectively
-* `settlement_type`: Set to `Merchant` or `Psp`, corresponding to merchant balance and developer balance respectively
-* `payout_channel`: Set to `Crypto` for crypto payouts
+    **Detail parameters (payout_params & recipient_info)**
 
-**Detail parameters (`settlements` array)**
+    | Schema             | Related parameters   |
+    | :----------------- | :------------------- |
+    | **payout_params**  | `amount`、`token_id`  |
+    | **recipient_info** | `token_id`、`address` |
 
-Depending on the source of funds, you need to specify different parameter combinations.
+    **Parameter description:**
 
-| Fund source | Related parameters |
-|---------|---------|
-| **Merchant balance** |  `merchant_id`, `order_ids`, `token_id`, `crypto_address_id` |
-| **Developer balance** | `amount`, `token_id`, `crypto_address_id` |
-
-**Parameter description:**
-- `merchant_id`: Merchant ID. Multiple merchants can be specified through the `settlements` array
-- `order_ids`: Order ID list. If this parameter is empty, all eligible orders will be selected and the cryptocurrency amount for this transfer will be automatically calculated.
-- `amount`: Cryptocurrency amount
-- `token_id`: Cryptocurrency ID (such as `ETH_USDT`, `TRON_USDT`)
-- `crypto_address_id`: Unique identifier for the destination cryptocurrency address. You can obtain this ID in the following ways:
-  - Call [Create crypto address](/payments/en/api-references/payment/create-crypto-address) to register a new transfer address
-  - Call [List crypto addresses](/payments/en/api-references/payment/list-crypto-addresses) to query the list of registered addresses
-</Tab>
+    - `amount`: Cryptocurrency amount
+    - `token_id`: Cryptocurrency ID (such as `ETH_USDT`, `TRON_USDT`). When the `token_id` in **payout_params** and **recipient_info** have the same tokens but different chains, Cobo will automatically execute a cross-chain operation.
+    - `address`: Target cryptocurrency address
+  </Tab>
 </Tabs>
-
 
 ## 2. Complete secondary confirmation, risk control review, and transaction signing
 
@@ -65,27 +88,27 @@ After creating a transfer request, based on your submission method, risk control
 - Risk control review: If you have set transaction policies, reviewers may need to approve the transfer request on Cobo Guard.
 - Transaction signing: If you are using MPC Wallets, Mobile Co-Signer or Server Co-Signer needs to sign to finally complete the transfer operation.
 
-
 ## 3. Follow up on transfer status
+
 You can subscribe to the `payment.settlement.status.updated` event to receive real-time updates on transfer status. Refer to [Webhook reference](/payments/en/guides/status-and-events) to understand the detailed trigger conditions and returned data structure of each event.
 
 You can also actively query transfer request status through Payments App or Payments API.
 
 <Tabs>
-  <Tab title="Payments App" icon="pager">
-1. Log in to Cobo Portal [development environment](https://portal.dev.cobo.com/login) or [production environment](https://portal.cobo.com/login).
-2. In the left navigation bar, click **Apps**, then click the **Payments** card to launch the App.
-3. In the App's left navigation bar, click **Funds Management** > **Payouts**.
-4. View the status and details of all transfer requests on the **Payout History** tab.
+  <Tab title="Payments App">
+    1. Log in to Cobo Portal [development environment](https://portal.dev.cobo.com/login) or [production environment](https://portal.cobo.com/login).
+    2. In the left navigation bar, click **Apps**, then click the **Payments** card to launch the App.
+    3. In the App's left navigation bar, click **Funds Management** \> **Balances**.
+    4. On the **Merchant Account** or **Developer Account** details page, open the **Recent Activities – Payout - Crypto Payout** tab to view the status and details of all payout requests.
   </Tab>
+  <Tab title="Payments API">
+    You can call the following API operations to query transfer request status:
 
-  <Tab title="Payments API" icon="code">
-You can call the following API operations to query transfer request status:
-  - [Get settlement request information](/payments/en/api-references/payment/get-settlement-request-information) - Query detailed information about a single transfer request
-  - [List all settlement requests](/payments/en/api-references/payment/list-all-settlement-requests) - Query detailed information about all transfer requests
+    - [Get payout information ](/payments/en/api-references/payment/get-payout-information) - Query detailed information about a single transfer request
+    - [List all payouts](/payments/en/api-references/payment/list-all-payouts) - Query detailed information about all transfer requests
   </Tab>
 </Tabs>
 
-
-<Tip>Feel free to [share your feedback](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI) to improve our documentation!</Tip>
-
+<Tip>
+  Feel free to [share your feedback](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI) to improve our documentation!
+</Tip>

@@ -1,14 +1,12 @@
 ---
-openapi: get /payments/counterparty
+openapi: post /payments/bulk_sends
 ---
 
 <RequestExample>
 ```python Python
 import cobo_waas2
-from cobo_waas2.models.counterparty_type import CounterpartyType
-from cobo_waas2.models.list_counterparties200_response import (
-    ListCounterparties200Response,
-)
+from cobo_waas2.models.create_bulk_send_request import CreateBulkSendRequest
+from cobo_waas2.models.payment_bulk_send import PaymentBulkSend
 from cobo_waas2.rest import ApiException
 from pprint import pprint
 
@@ -23,27 +21,27 @@ configuration = cobo_waas2.Configuration(
 with cobo_waas2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = cobo_waas2.PaymentApi(api_client)
-    limit = 10
-    before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
-    after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-    keyword = "keyword"
-    counterparty_type = "Individual"
-    country = "USA"
+    create_bulk_send_request = cobo_waas2.CreateBulkSendRequest(
+        source_account="M1001",
+        execution_mode="Strict",
+        payout_params=[
+            cobo_waas2.CreateBulkSendRequestPayoutParamsInner(
+                token_id="ETH_USDT",
+                receiving_address="0xabc123456789def0000000000000000000000000",
+                amount="500.00",
+            )
+        ],
+    )
 
     try:
-        # List all counterparties
-        api_response = api_instance.list_counterparties(
-            limit=limit,
-            before=before,
-            after=after,
-            keyword=keyword,
-            counterparty_type=counterparty_type,
-            country=country,
+        # Create bulk send
+        api_response = api_instance.create_bulk_send(
+            create_bulk_send_request=create_bulk_send_request
         )
-        print("The response of PaymentApi->list_counterparties:\n")
+        print("The response of PaymentApi->create_bulk_send:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling PaymentApi->list_counterparties: %s\n" % e)
+        print("Exception when calling PaymentApi->create_bulk_send: %s\n" % e)
 
 ```
 ```java Java
@@ -54,6 +52,7 @@ import com.cobo.waas2.Configuration;
 import com.cobo.waas2.Env;
 import com.cobo.waas2.api.PaymentApi;
 import com.cobo.waas2.model.*;
+import java.util.Arrays;
 
 public class Example {
   public static void main(String[] args) {
@@ -65,18 +64,21 @@ public class Example {
     // Replace `<YOUR_PRIVATE_KEY>` with your private key
     defaultClient.setPrivKey("<YOUR_PRIVATE_KEY>");
     PaymentApi apiInstance = new PaymentApi();
-    Integer limit = 10;
-    String before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1";
-    String after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk";
-    String keyword = "keyword";
-    CounterpartyType counterpartyType = CounterpartyType.fromValue("Individual");
-    String country = "USA";
+    CreateBulkSendRequest createBulkSendRequest =
+        new CreateBulkSendRequest()
+            .sourceAccount("M1001")
+            .executionMode(PaymentBulkSendExecutionMode.STRICT)
+            .payoutParams(
+                Arrays.asList(
+                    new CreateBulkSendRequestPayoutParamsInner()
+                        .tokenId("ETH_USDT")
+                        .receivingAddress("0xabc123456789def0000000000000000000000000")
+                        .amount("500.00")));
     try {
-      ListCounterparties200Response result =
-          apiInstance.listCounterparties(limit, before, after, keyword, counterpartyType, country);
+      PaymentBulkSend result = apiInstance.createBulkSend(createBulkSendRequest);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling PaymentApi#listCounterparties");
+      System.err.println("Exception when calling PaymentApi#createBulkSend");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -98,12 +100,7 @@ import (
 )
 
 func main() {
-	limit := int32(10)
-	before := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
-	after := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-	keyword := "keyword"
-	counterpartyType := coboWaas2.CounterpartyType("Individual")
-	country := "USA"
+	createBulkSendRequest := *coboWaas2.NewCreateBulkSendRequest("M1001", coboWaas2.PaymentBulkSendExecutionMode("Strict"), []coboWaas2.CreateBulkSendRequestPayoutParamsInner{*coboWaas2.NewCreateBulkSendRequestPayoutParamsInner("ETH_USDT", "0xabc123456789def0000000000000000000000000", "500.00")})
 
 	configuration := coboWaas2.NewConfiguration()
 	// Initialize the API client
@@ -116,20 +113,15 @@ func main() {
 	ctx = context.WithValue(ctx, coboWaas2.ContextPortalSigner, crypto.Ed25519Signer{
 		Secret: "<YOUR_PRIVATE_KEY>",
 	})
-	resp, r, err := apiClient.PaymentAPI.ListCounterparties(ctx).
-		Limit(limit).
-		Before(before).
-		After(after).
-		Keyword(keyword).
-		CounterpartyType(counterpartyType).
-		Country(country).
+	resp, r, err := apiClient.PaymentAPI.CreateBulkSend(ctx).
+		CreateBulkSendRequest(createBulkSendRequest).
 		Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.ListCounterparties``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.CreateBulkSend``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListCounterparties`: ListCounterparties200Response
-	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.ListCounterparties`: %v\n", resp)
+	// response from `CreateBulkSend`: PaymentBulkSend
+	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.CreateBulkSend`: %v\n", resp)
 }
 
 ```
@@ -144,14 +136,19 @@ apiClient.setPrivateKey("<YOUR_PRIVATE_KEY>");
 // Call the API
 const apiInstance = new CoboWaas2.PaymentApi();
 const opts = {
-  limit: 10,
-  before: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1",
-  after: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk",
-  keyword: "keyword",
-  counterparty_type: "Individual",
-  country: "USA",
+  CreateBulkSendRequest: CoboWaas2.CreateBulkSendRequest.constructFromObject({
+    source_account: "M1001",
+    execution_mode: "Strict",
+    payout_params: [
+      {
+        token_id: "ETH_USDT",
+        receiving_address: "0xabc123456789def0000000000000000000000000",
+        amount: "500.00",
+      },
+    ],
+  }),
 };
-apiInstance.listCounterparties(opts).then(
+apiInstance.createBulkSend(opts).then(
   (data) => {
     console.log("API called successfully. Returned data: " + data);
   },
