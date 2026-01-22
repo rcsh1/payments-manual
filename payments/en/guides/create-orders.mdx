@@ -17,9 +17,7 @@ Order mode is suitable for scenarios that require specifying a specific payment 
   - Initiating refunds for paid orders
   - Handling payment exceptions such as overpayment, underpayment, and late payment
 
-<div style={{ maxWidth:"600px",margin:"0 auto" }}>
-
-</div>
+<div style={{ maxWidth:"600px",margin:"0 auto" }} />
 
 ## Create order
 
@@ -62,10 +60,10 @@ You have completed all the steps mentioned in [Preparation](/payments/en/guides/
 
     When creating an order, you must choose **one** of the following two amount parameter combinations based on your business model:
 
-    - **Option 1: **The original order is priced in fiat currency, and you collect payment in cryptocurrency
+    - \*\*Option 1: \*\*The original order is priced in fiat currency, and you collect payment in cryptocurrency
       - **Required**: `pricing_currency`, `pricing_amount`, `payable_currency`
       - **Not required**: `payable_amount`
-    - **Option 2: **The original order is priced in cryptocurrency, and you collect the payment directly in the same cryptocurrency
+    - \*\*Option 2: \*\*The original order is priced in cryptocurrency, and you collect the payment directly in the same cryptocurrency
       - **Required**: `payable_currency`, `payable_amount`
       - **Not required**: `pricing_currency`, `pricing_amount`
 
