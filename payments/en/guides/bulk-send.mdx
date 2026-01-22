@@ -1,8 +1,8 @@
 ---
-title: "Bulk Send"
+title: "Bulk send"
 ---
 
-Bulk Send enables one-time batch transfers to multiple recipient addresses. It is suitable for payroll payouts, rebate/reward distributions, partner settlements, and revenue sharing for e-commerce/advertising/content platforms. You only need to submit a request containing multiple **payout items**. Cobo will validate each item (address format checks and compliance verification such as **KYA**) and then decide whether to proceed with on-chain transfers based on the **execution mode**.
+Bulk Send enables one-time batch crypto transfers to multiple recipient addresses. It is suitable for payroll payouts, rebate/reward distributions, partner settlements, and revenue sharing for e-commerce/advertising/content platforms. You only need to submit a request containing multiple **bulk send items**. Cobo will validate each item (address format checks and compliance verification such as **KYA**) and then decide whether to proceed with on-chain transfers based on the **execution mode**.
 
 ## **Prerequisites**
 
@@ -19,7 +19,7 @@ To create a Bulk Send, provide:
 
 - **source_account**: Source account ID (e.g., M1001)
 - **execution_mode**: Execution mode (Strict / Partial)
-- **payout_params**: Array of payout items. Each item includes:
+- **payout_params**: Array of bulk send items. Each item includes:
   - token_id
   - receiving_address
   - amount
@@ -58,7 +58,7 @@ After receiving a Bulk Send request, Cobo first validates **all** addresses in t
 
 | execution_mode | If any address fails validation (e.g., KYA rejected) | On-chain transfer result                                                                  | What you need to do                                                                                   |
 | -------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| Strict         | If **any** payout item has an invalid address        | **No** on-chain transfers will be initiated (the entire batch is not executed)            | Replace the problematic address(es) and resubmit the **entire** Bulk Send (must include **all** items |
+| Strict         | If **any** bulk send item has an invalid address        | **No** on-chain transfers will be initiated (the entire batch is not executed)            | Replace the problematic address(es) and resubmit the **entire** Bulk Send (must include **all** items |
 | Partial        | Allows some invalid addresses                        | Transfers will be executed for **all validated** items; invalid items will be **skipped** | Query failed items, replace addresses, and resend **only** the failed items                           |
 
 #### **Recommended scenarios**
@@ -117,7 +117,7 @@ Recommendations
 
 ### **2.2 After a failure notification: query Bulk Send item details**
 
-After receiving a PartiallyCompleted or Failed webhook, call **List bulk send items** to query the status of each payout item:
+After receiving a PartiallyCompleted or Failed webhook, call **List bulk send items** to query the status of each bulk send item:
 
 - Path parameter：bulk_send_id
 - Operation：list_bulk_send_items

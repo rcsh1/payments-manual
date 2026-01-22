@@ -28,31 +28,33 @@ lang: "zh-hans"
        <Note>
          如果您在**转出目的地**中开启了**将转出目的地设为白名单**的开关，则仅可以转出至已录入的转出目的地。更多详情请参考[转出目的地](/payments/cn/guides/destinations)
        </Note>
-    7. 自动选择资金来源：当开关开启时，您只需要填写总发送金额，系统自动根据您钱包内各代币的可用余额分配出金金额；开关关闭时，你需要自行填写各代币的出金金额。该开关默认开启，您可关闭。
-    8. 按照页面提示确认并提交转账请求。
+    7. **自动选择资金来源**：当开关开启时，您只需要填写总发送金额，系统自动根据您钱包内各代币的可用余额分配出金金额；开关关闭时，你需要自行填写各代币的出金金额。该开关默认开启，您可关闭。
+    8. **跨链**：当您出金特定链的 USDT 或者 USDC 资产时，可使用您钱包内**其他链的** USDT 或者 USDC 资产跨链后转出。特别的，目前仅支持同资产跨链，暂不支持不同资产兑换。
+       - **收费**：同资产跨链会收取一定的费用，根据您发送金额自动计算。
+       - **举例**：当前转出账户内可用余额：150 Tron USDT，50 ETH USDT。总发送金额 200 Tron USDT，则需对 50 ETH USDT 进行跨链，跨链手续费 10 ETH USDT，预计接收金额 190 Tron USDT。
+    9. 按照页面提示确认并提交转账请求。
   </Tab>
   <Tab title="Payments API" icon="code">
     1. 在创建转账请求前，您可以调用 [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) 或 [Get developer balance](/payments/en/api-references/payment/get-developer-balance) 分别查询商户和开发者余额，用于确定可转账的最大金额。
-    2. 调用 [Create crypto address](/payments/en/api-references/payment/create-crypto-address) 录入用于转账的加密货币地址。
-    3. 调用 [Create Payout ](creat)创建转账请求。
+    2. 调用 [Create Payout](/payments/en/api-references/payment/create-payout) 创建转账请求。
 
     **基础参数**
 
     - `request_id`：您提供的唯一请求 ID，用于跟踪转账请求
-    - `source_account`付款来源账户。当从商户账户出金时，传入 Merchant code；当从开发者账户出金时，设置为 developer
+    - `source_account`：付款来源账户。当从商户账户出金时，传入商户 ID；当从开发者账户出金时，设置为 `developer`。
     - `payout_channel`：设置为 `Crypto`，加密货币转账
 
-    **`详情参数（payout items`**`recipient_info`**`数组）`**
+    **关键参数说明**
 
-    | 参数组                | 相关参数                 |
+    | Schema               | 相关参数                |
     | ------------------ | -------------------- |
-    | **payout items**   | `amount`、`token_id`  |
+    | **payout_params**   | `amount`、`token_id`  |
     | **recipient_info** | `token_id`、`address` |
 
     **参数说明：**
 
     - `amount`：加密货币金额
-    - `token_id`：加密货币 ID（如 `ETH_USDT`、`TRON_USDT`），两个参数组中token_id不一样时，Cobo会为您做Bridge。
+    - `token_id`：加密货币 ID（如 `ETH_USDT`、`TRON_USDT`）。当 **payout_params** 和 **recipient_info** 中的 `token_id` 币种相同但链不同时，Cobo 会自动执行跨链操作。
     - `address`：目标加密货币地址
   </Tab>
 </Tabs>
@@ -81,8 +83,8 @@ lang: "zh-hans"
   <Tab title="Payments API" icon="code">
     您可以调用以下 API 操作查询转账请求状态：
 
-    - [Get payout information](/payments/en/api-references/payment/get-settlement-request-information) - 查询单个转账请求的详细信息
-    - [List all payouts](/payments/en/api-references/payment/get-settlement-request-information) - 查询所有转账请求的详细信息
+    - [Get payout information](/payments/en/api-references/payment/get-payout-information) - 查询单个转账请求的详细信息
+    - [List all payouts](/payments/en/api-references/payment/list-all-payouts) - 查询所有转账请求的详细信息
   </Tab>
 </Tabs>
 
