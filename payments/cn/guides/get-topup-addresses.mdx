@@ -91,9 +91,7 @@ sequenceDiagram
 
 您可以订阅以下 Webhook 事件，以获取充值地址以及充值交易的实时更新通知。请参考 [Webhook reference](/payments/cn/guides/status-and-events) 了解每个事件的触发时间和返回的数据结构。
 
-- `payment.address.updated`
 - `payment.transaction.created`
-- `payment.transaction.held`
 - `payment.transaction.completed`
 
 您也可以通过以下方式查询每个付款方的所有充值交易：
@@ -120,10 +118,6 @@ sequenceDiagram
   对于单个付款方，最多可进行 10 次地址更换，超过次数上限会出现接口请求报错。
 </Note>
 
-#### 系统自动更换地址
-
-当某一充值地址出现多次交易无法通过合规扫描的情况时，Cobo 会自动废弃该地址，并为该付款方生成新的充值地址。更换后会触发 `payment.address.updated` 事件，详情可参考[事件与状态](/payments/cn/guides/status-and-events)。
-
 #### 地址更换后的影响
 
 <Warning>
@@ -136,7 +130,7 @@ sequenceDiagram
 
 ### 合规扫描不通过
 
-当某笔交易收到 `payment.transaction.held` 事件，但长期未收到 `payment.transaction.completed` 事件时，这表明该笔交易未能通过 Cobo KYT 或 Screening App 的合规扫描。这种情况下，您需要按照以下步骤进行处理：
+当某笔交易收到 `payment.transaction.failed` 事件时，这表明该笔交易未能通过 Cobo KYT 或 Screening App 的合规扫描。这种情况下，您需要按照以下步骤进行处理：
 
 - 若该笔交易后续通过人工审核：该笔资金将计入充值金额。
 - 若该笔交易最终未通过人工审核：资金将被冻结，不会被计入充值金额
@@ -145,6 +139,11 @@ sequenceDiagram
 
 - Cobo KYT：请通过 [help@cobo.com](mailto:help@cobo.com) 联系 Cobo 支持团队处理
 - Screening App：您可以在应用内自行评估和处理
+
+### 最小入账金额限制
+
+为优化您的账户成本，避免因粉尘金额产生的入账手续费高于交易金额，系统设定了最小入账阈值。当单笔交易金额低于 **0.05 USDT**（或等值币种）时，系统将不自动进行入账处理。\
+_注：若您需要对此类低于阈值的累积资金进行手动处理，请联系 Cobo 客服或技术支持，我们将协助您从归集地址提取。_
 
 <Tip>
   欢迎您[提交反馈](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI)来帮助改进我们的文档！
