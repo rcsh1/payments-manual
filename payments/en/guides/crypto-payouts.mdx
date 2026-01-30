@@ -35,25 +35,23 @@ You can create crypto payout requests through Payments App or Payments API.
        - When enabled, you only need to enter the **total payout amount**, and the system automatically allocates the payout across available token balances in your wallet.
        - When disabled, you must manually specify the payout amount for each token. This option is enabled by default and can be turned off if needed.
     8. **Cross-chain payout**:
-       
+
        When paying out **USDT or USDC on a specific network**, the system can use **USDT or USDC balances on other networks** in your wallet and bridge them before payout.
 
        Currently, only **same-asset cross-chain payouts** are supported. Cross-asset conversion is not supported.
-       
        1. **Fees**:
-          
+
           Same-asset cross-chain payouts incur a processing fee, which is automatically calculated based on the payout amount.
-       
        2. **Example**:
-          
+
           Available balances in the source account:
           - 150 USDT (Tron)
           - 50 USDT (Ethereum)
-          
+
           If the total payout amount is **200 USDT (Tron)**, the system will bridge **50 USDT (Ethereum)**.
-          
+
           With a cross-chain fee of **10 USDT (Ethereum)**, the estimated amount received will be **190 USDT (Tron)**.
-    9. Follow the on-page prompts to confirm and submit the transfer request.
+    1. Follow the on-page prompts to confirm and submit the transfer request.
   </Tab>
   <Tab title="Payments API">
     1. Before creating a transfer request, you can call [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) or [Get developer balance](/payments/en/api-references/payment/get-developer-balance) to query merchant and developer balances respectively, to determine the maximum transferable amount.
@@ -90,7 +88,7 @@ After creating a transfer request, based on your submission method, risk control
 
 ## 3. Follow up on transfer status
 
-You can subscribe to the `payment.settlement.status.updated` event to receive real-time updates on transfer status. Refer to [Webhook reference](/payments/en/guides/status-and-events) to understand the detailed trigger conditions and returned data structure of each event.
+You can subscribe to the `payment.payout.status.updated` event to receive real-time updates on transfer status. Refer to [Webhook reference](/payments/en/guides/status-and-events) to understand the detailed trigger conditions and returned data structure of each event.
 
 You can also actively query transfer request status through Payments App or Payments API.
 
