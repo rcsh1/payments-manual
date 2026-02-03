@@ -62,15 +62,15 @@ You can create crypto payout requests through Payments App or Payments API.
     **Basic parameters**
 
     - `request_id`: The unique request ID you provide to track the transfer request
-    - `source_account`:Payment source account.When withdrawing funds from a merchant account, pass the merchant_id; when withdrawing funds from a developer account, set to `developer`.
+    - `source_account`: Payment source account. When withdrawing funds from a merchant account, pass the merchant_id; when withdrawing funds from a developer account, set to `developer`.
     - `payout_channel`: Set to `Crypto` for crypto payouts
 
     **Detail parameters (payout_params & recipient_info)**
 
     | Schema             | Related parameters   |
     | :----------------- | :------------------- |
-    | **payout_params**  | `amount`、`token_id`  |
-    | **recipient_info** | `token_id`、`address` |
+    | **payout_params**  | `amount`, `token_id`  |
+    | **recipient_info** | `token_id`, `address` |
 
     **Parameter description:**
 
