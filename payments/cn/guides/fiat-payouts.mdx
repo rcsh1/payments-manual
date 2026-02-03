@@ -44,19 +44,19 @@ lang: "zh-hans"
   </Tab>
   <Tab title="Payments API" icon="code">
     1. 在创建出金请求前，您可以调用 [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) 或 [Get developer balance](/payments/en/api-references/payment/get-developer-balance) 分别查询商户和开发者余额，用于确定可出金的最大金额。
-    3. 调用 [Create Payout ](creat)创建出金请求。
+    3. 调用 [Create payout](/payments/en/api-references/payment/create-payout) 创建出金请求。
 
     **基础参数**
 
     - `request_id`：您提供的唯一请求 ID，用于跟踪出金请求
-    - `source_account`付款来源账户。当从商户账户出金时，传入 Merchant code；当从开发者账户出金时，设置为 developer
+    - `source_account`：付款来源账户。当从商户账户出金时，传入 Merchant Code；当从开发者账户出金时，设置为 `developer`。
     - `payout_channel`：设置为 `OffRamp`， Off-Ramp 对接
 
-    **`详情参数（payout items  recipient_info数组）`**
+    **详情参数（payout_params & recipient_info）**
 
     | 参数组                | 相关参数                         |
     | :----------------- | :--------------------------- |
-    | **payout items**   | `amount`、`token_id`          |
+    | **payout_params**  | `amount`、`token_id`          |
     | **recipient_info** | `currency`、`bank_account_id` |
 
     **参数说明：**

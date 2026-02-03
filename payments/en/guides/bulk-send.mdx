@@ -32,7 +32,7 @@ curl -X POST "https://api.example.com/v1/payments/bulk_sends" \
   -d '{
     "source_account": "M1001",
     "execution_mode": "Partial",
-    "description": "january salary"，
+    "description": "january salary",
     "payout_params": [
       {
         "token_id": "ETH_USDT",
@@ -72,7 +72,7 @@ After receiving a Bulk Send request, Cobo first validates **all** addresses in t
   - Rebates/rewards airdrops (mixed address quality)
   - Tips/revenue distribution for content platforms; merchant payout distribution for e-commerce/ads platforms (retry is acceptable)
 
-**Impact summary：**
+**Impact summary:**
 
 - `Strict` improves financial consistency, but increases operational overhead due to “one bad address forces a full resubmission”.
 - `Partial` scales better and is more automation-friendly, but requires a retry workflow for failed items.
@@ -101,7 +101,7 @@ Webhook payload example (**Bulk Send Notification**):
 }
 ```
 
-Status can be one of:：
+Status can be one of:
 
 - Pending
 - Validating
@@ -119,11 +119,11 @@ Recommendations
 
 After receiving a PartiallyCompleted or Failed webhook, call **List bulk send items** to query the status of each bulk send item:
 
-- Path parameter：bulk_send_id
-- Operation：list_bulk_send_items
-- Summary：List bulk send items
+- Path parameter: bulk_send_id
+- Operation: list_bulk_send_items
+- Summary: List bulk send items
 
-（Example pseudo endpoint）
+(Example pseudo endpoint)
 
 ```shell
 curl -X GET "https://api.example.com/v1/payments/bulk_sends/{bulk_send_id}/items" \
@@ -132,13 +132,13 @@ curl -X GET "https://api.example.com/v1/payments/bulk_sends/{bulk_send_id}/items
 
 Each item includes two key status fields:
 
-- status（execution status of the item）
-- validation_status（address/compliance validation status）
+- status (execution status of the item)
+- validation_status (address/compliance validation status)
 
 Rules to focus on:
 
 - If status = **Failed** or  **NotExecuted** → the item failed
-- If  validation_status 为 **ValidationFailed** → the address did not pass Cobo KYA validation
+- If validation_status = **ValidationFailed** → the address did not pass Cobo KYA validation
 
 For both cases, **replacing the address is recommended.**
 
@@ -151,7 +151,7 @@ Resend strategy depends on execution_mode:
 - Under `Strict`, if any address has an issue, **no** on-chain transfer is executed for the entire batch.
 - Therefore, on retry (resubmission), you must include **all** items (not only the failed ones).
 
-Steps：
+Steps:
 
 1. Query items and identify those with ValidationFailed or Failed/NotExecuted
 2. Replace the addresses for those items (or fix other parameters causing failures)
@@ -162,7 +162,7 @@ Steps：
 - Under `Partial`, successful items have already been transferred.
 - Therefore, on retry, submit **only failed items** (reduces the risk of duplicate transfers).
 
-Steps：
+Steps:
 
 1. Query items and filter failed items (`status=Failed/NotExecuted` or `validation_status=ValidationFailed`)
 2. Replace the addresses for failed items
