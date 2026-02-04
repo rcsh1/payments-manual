@@ -108,6 +108,12 @@ Cobo Portal 提供多种风控机制，旨在提高存储、管理和转移加�
 
 <img src="/payments/cn/images/payments/key-shares.svg" className="diagram" alt="私钥分片"/>
 
+在创建主控组时，您需要选择[签名人类型](https://manuals.cobo.com/cn/portal/mpc-wallets/ocw/holder-group-main-group)。签名人分为移动端签名人和服务端签名人两种类型：
+- **移动端签名人**：使用 Cobo Guard 移动应用进行签名，适合小规模交易或需要人工审核的场景。
+- **服务端签名人**：通过 TSS Node 服务器自动签名，适合大规模自动化交易场景。
+
+<Note>由于资金转出之前可能会发生大量资金归集交易且交易时间集中，所以推荐您使用服务端签名人，以实现自动化签名。使用服务端签名人需要提前部署 [TSS Node 服务器](https://www.cobo.com/developers/v2_cn/guides/mpc-wallets/server-co-signer/tss-node-overview)。</Note>
+
 按照以下步骤在 Cobo Portal 中创建主控组：
 1. 登录 Cobo Portal [生产环境](https://portal.cobo.com/login)。
 2. 点击 <img src="/payments/cn/images/guides/wallets-icon.svg" className="icon"></img> > **MPC 钱包**。
