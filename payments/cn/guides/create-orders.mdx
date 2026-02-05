@@ -54,10 +54,10 @@ lang: "zh-hans"
 
     创建订单时，您需要在以下两种方式中**选择一种适合业务的金额参数组合**：
 
-    - **方式一：**原订单商品以法币定价，您需要收取数字货币金额
+    - \*\*方式一：\*\*原订单商品以法币定价，您需要收取数字货币金额
       - 填写：`pricing_currency`、`pricing_amount`、`payable_currency`；
       - 不填：`payable_amount`
-    - **方式二：**原订单商品以数币定价，您直接按原币种收取数字货币金额
+    - \*\*方式二：\*\*原订单商品以数币定价，您直接按原币种收取数字货币金额
       - 填写：`payable_currency`、`payable_amount`；
       - 不填：`pricing_currency`、`pricing_amount`
 
@@ -102,9 +102,7 @@ lang: "zh-hans"
 您可以订阅以下 Webhook 事件，以获取订单状态的实时更新通知。请参考 [Webhook reference](/payments/cn/guides/status-and-events) 了解每个事件的触发时间和返回的数据结构。
 
 - `payment.status.updated`
-- `payment.transaction.created`
 - `payment.transaction.late`
-- `payment.transaction.held`
 - `payment.transaction.completed`
 
 您也可以通过 Payments App 或 Payments API 主动查询订单状态。
@@ -239,7 +237,7 @@ sequenceDiagram
 
 ### 合规筛查不通过
 
-当某笔交易收到 `payment.transaction.held` 事件，但长期未收到 `payment.transaction.completed` 事件时，这表明该笔交易未能通过 Cobo KYT 或 Screening App 的合规筛查。这种情况下，您需要按照以下步骤进行处理：
+当某笔交易收到 `payment.transaction.failed` 事件时，这表明该笔交易未能通过 Cobo KYT 或 Screening App 的合规筛查。这种情况下，您需要按照以下步骤进行处理：
 
 - 若该笔交易后续通过人工审核：
   - 如果订单未过期：该笔资金将计入订单实收金额，订单状态将根据实收金额相应更新
@@ -253,6 +251,11 @@ sequenceDiagram
 
 - Cobo KYT：请通过 [help@cobo.com](mailto:help@cobo.com) 联系 Cobo 支持团队处理
 - Screening App：您可以在应用内自行评估和处理
+
+### 最小入账金额限制
+
+为优化您的账户成本，避免因粉尘金额产生的入账手续费高于交易金额，系统设定了最小入账阈值。当单笔交易金额低于 **0.05 USDT**（或等值币种）时，系统将不自动进行入账处理。\
+_注：若您需要对此类低于阈值的累积资金进行手动处理，请联系 Cobo 客服或技术支持，我们将协助您从归集地址提取。_
 
 <Tip>
   欢迎您[提交反馈](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI)来帮助改进我们的文档！

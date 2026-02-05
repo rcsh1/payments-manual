@@ -121,9 +121,7 @@ You have completed all the steps mentioned in [Preparation](/payments/en/guides/
 You can subscribe to the following webhook events to receive real-time update notifications of order status. Refer to [Webhook reference](/payments/en/guides/status-and-events) to understand the trigger time and returned data structure of each event.
 
 - `payment.status.updated`
-- `payment.transaction.created`
 - `payment.transaction.late`
-- `payment.transaction.held`
 - `payment.transaction.completed`
 
 You can also actively query order status through Payments App or Payments API.
@@ -237,7 +235,7 @@ You can also actively query refund order status through Payments App or Payments
 
 ### Compliance screening failure
 
-When a transaction receives the `payment.transaction.held` event but does not receive the `payment.transaction.completed` event for a long time, this indicates that the transaction has failed to pass compliance screening by Cobo KYT or Screening App. In this case, you need to follow these steps to handle it:
+When a transaction receives the `payment.transaction.failed` event , this indicates that the transaction has failed to pass compliance screening by Cobo KYT or Screening App. In this case, you need to follow these steps to handle it:
 
 - If the transaction subsequently passes manual review:
   - If the order has not expired: The funds will be counted towards the order's actual received amount, and the order status will be updated accordingly based on the actual received amount
@@ -251,6 +249,11 @@ For isolated or frozen funds:
 
 - Cobo KYT: Please contact the Cobo support team through [help@cobo.com](mailto:help@cobo.com) for handling
 - Screening App: You can evaluate and handle it yourself within the application
+
+### Minimum Deposit Threshold
+
+- To optimize your account costs and prevent situations where the collection fee exceeds the transaction value, a minimum deposit threshold is applied. Transactions with a value below **0.05 USDT** (or equivalent) will not be processed for automatic credit.\
+  _Note: If you need to manually recover accumulated funds below this threshold, please contact Cobo Support for assistance in extracting them from the consolidation addresses._
 
 <Tip>
   Feel free to [share your feedback](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI) to improve our documentation!
