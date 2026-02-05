@@ -122,7 +122,7 @@ sequenceDiagram
 
 #### 系统自动更换地址
 
-当某一充值地址出现多次交易无法通过合规扫描的情况时，Cobo 会自动废弃该地址，并为该付款方生成新的充值地址。更换后会触发 `payment.address.updated` 事件，详情可参考[事件与状态](/payments/cn/guides/status-and-events)。
+当某一充值地址出现多次交易无法通过合规筛查的情况时，Cobo 会自动废弃该地址，并为该付款方生成新的充值地址。更换后会触发 `payment.address.updated` 事件，详情可参考[事件与状态](/payments/cn/guides/status-and-events)。
 
 #### 地址更换后的影响
 
@@ -134,9 +134,9 @@ sequenceDiagram
 - **资金处理**：该地址与商户的关联关系依然存在。按照原有配置，收到的资金会分配到对应的商户余额，如果该商户配置了开发者费率，相应比例的资金会被分配到开发者余额中。
 - **地址查询**：您在 Payments App 上可以查看付款方历史上所有绑定过的地址。
 
-### 合规扫描不通过
+### 合规筛查不通过
 
-当某笔交易收到 `payment.transaction.held` 事件，但长期未收到 `payment.transaction.completed` 事件时，这表明该笔交易未能通过 Cobo KYT 或 Screening App 的合规扫描。这种情况下，您需要按照以下步骤进行处理：
+当某笔交易收到 `payment.transaction.held` 事件，但长期未收到 `payment.transaction.completed` 事件时，这表明该笔交易未能通过 Cobo KYT 或 Screening App 的合规筛查。这种情况下，您需要按照以下步骤进行处理：
 
 - 若该笔交易后续通过人工审核：该笔资金将计入充值金额。
 - 若该笔交易最终未通过人工审核：资金将被冻结，不会被计入充值金额

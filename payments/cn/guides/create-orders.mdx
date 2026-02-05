@@ -114,7 +114,7 @@ lang: "zh-hans"
     1. 登录 Cobo Portal [开发环境](https://portal.dev.cobo.com/login)或[生产环境](https://portal.cobo.com/login)。
     2. 在左侧导航栏中点击 **Apps**，然后点击 **Payments** 卡片，启动 App。
     3. 在 App 的左侧导航栏中点击**收款** \> **订单**。您可以在此页面查看所有订单的详细信息，如订单 ID、商户信息、支付金额、订单状态等。
-    4. 当付款方完成支付、且交易通过合规扫描后，订单状态会流转为**已完成**。
+    4. 当付款方完成支付、且交易通过合规筛查后，订单状态会流转为**已完成**。
 
     <img
       src="/payments/cn/images/payments/view-orders.png"
@@ -237,9 +237,9 @@ sequenceDiagram
   </Tab>
 </Tabs>
 
-### 合规扫描不通过
+### 合规筛查不通过
 
-当某笔交易收到 `payment.transaction.held` 事件，但长期未收到 `payment.transaction.completed` 事件时，这表明该笔交易未能通过 Cobo KYT 或 Screening App 的合规扫描。这种情况下，您需要按照以下步骤进行处理：
+当某笔交易收到 `payment.transaction.held` 事件，但长期未收到 `payment.transaction.completed` 事件时，这表明该笔交易未能通过 Cobo KYT 或 Screening App 的合规筛查。这种情况下，您需要按照以下步骤进行处理：
 
 - 若该笔交易后续通过人工审核：
   - 如果订单未过期：该笔资金将计入订单实收金额，订单状态将根据实收金额相应更新
@@ -247,7 +247,7 @@ sequenceDiagram
 - 若该笔交易最终未通过人工审核：
   - 资金将被冻结，不会被计入订单实收金额
   - 订单状态将保持不变
-  - 付款方需要在订单有效期内重新充入足额资金并通过合规扫描，订单才能转为 `Completed` 状态
+  - 付款方需要在订单有效期内重新充入足额资金并通过合规筛查，订单才能转为 `Completed` 状态
 
 对于被隔离或冻结的资金：
 
