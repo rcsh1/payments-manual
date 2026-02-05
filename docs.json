@@ -141,6 +141,12 @@
                       "payments/en/api-references/payment/get-counterparty-entry-information",
                       "payments/en/api-references/payment/delete-counterparty-entry"
                     ]
+                  },
+                  {
+                    "group": "Supported Tokens",
+                    "pages": [
+                      "payments/en/api-references/payment/list-supported-tokens"
+                    ]
                   }
                 ]
               },
