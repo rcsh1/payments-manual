@@ -12,10 +12,9 @@ This document helps you understand which tokens, chains, and currencies are supp
 - **Pricing**: Set prices in familiar fiat currencies
 - **Off-Ramp**: Convert stablecoins to fiat currency
 
-Use this guide to:
-- Choose the right token and chain combination for your use case
-- Understand the differences between development and production environments
-- Set up testing with testnet tokens
+<Note>
+The tokens listed in this document are specifically supported for Cobo Payment. While Cobo Portal supports a broader range of tokens, only the stablecoins listed below will be automatically credited when received. Other tokens sent to Payment addresses will not be automatically processed.
+</Note>
 
 ## Supported tokens and chains for payment collection
 
@@ -40,8 +39,6 @@ The stablecoins and chain combinations that can be received during payment colle
 | | TON | TON_USDT | 5 | 0.05 USDT | TON |
 | | Avalanche C-Chain | AVALANCHE_C_USDT | 18 | 0.05 USDT | AVAX |
 
-<Note>You can also query the `confirming_threshold` field through the [List supported chains API](https://www.cobo.com/developers/v2/api-references/wallets/list-supported-chains#response-data-confirming-threshold).</Note>
-
 ### How to choose the right chain
 
 | Priority | Recommended Chains | Why |
@@ -54,7 +51,7 @@ The stablecoins and chain combinations that can be received during payment colle
 
 When creating a payment order, you can use the following fiat currencies as the pricing currency (`pricing_currency`). The system will automatically calculate the payable amount based on the real-time exchange rate of the currency.
 
-Exchange rates are updated every 10 minutes.
+Exchange rates are updated every 10 minutes. You can query the current exchange rate using the [Get exchange rate API](/payments/en/api-references/payment/get-exchange-rate).
 
 <Note>
 You can only specify the following currencies as pricing currencies during payment collection. After cryptocurrencies are deposited, if you need to perform Off-Ramp operations, only USD is supported for conversion.
@@ -116,17 +113,17 @@ The following table lists the supported token and chain combinations for Off-Ram
 | BASE_USDC | Not supported | Supported (bridging fee required) |
 | MATIC_USDC2 | Not supported | Supported (bridging fee required) |
 | BSC_USDC | Not supported | Supported (bridging fee required) |
-| AVALANCHE_C_USDC | Not supported | Supported (bridging fee required) |
+| SOL_USDC | Not supported | Supported (bridging fee required) |
+| AVALANCHE_C_USDC | Not supported | Not supported |
 | TRON_USDT | Supported | Supported |
 | ETH_USDT | Supported | Supported |
 | ARBITRUM_USDT | Not supported | Supported (bridging fee required) |
-| SOL_USDC | Not supported | Supported (bridging fee required) |
-| SOL_USDT | Not supported | Supported (bridging fee required) |
-| TON_USDT | Not supported | Supported (bridging fee required) |
-| AVALANCHE_C_USDT | Not supported | Supported (bridging fee required) |
 | BASE_USDT | Not supported | Not supported |
 | MATIC_USDT | Supported (bridging fee required) | Supported (bridging fee required) |
 | BSC_USDT | Supported (bridging fee required) | Supported (bridging fee required) |
+| SOL_USDT | Not supported | Supported (bridging fee required) |
+| TON_USDT | Not supported | Not supported |
+| AVALANCHE_C_USDT | Not supported | Not supported |
 | TTRON_USDT | Supported | Not supported |
 
 <Info>Token and chain combinations marked as "bridging fee required" incur additional bridging fees on top of regular fees when performing Off-Ramp operations.</Info>
@@ -163,8 +160,6 @@ When integrating with the Cobo API, always use the exact Token ID (such as `ETH_
 
 ## Related resources
 
-- [List supported tokens API](/api-references/payment/list-supported-tokens) — Get the real-time list of supported tokens programmatically
-- [Create a pay-in order](/api-references/payment/create-pay-in-order) — Learn how to create payment orders with pricing currencies
-- [Cobo Support](https://support.cobo.com) — Contact support for assistance
+- [List tokens supported by Payment](/payments/en/api-references/payment/list-supported-tokens) — Query the tokens supported for Payment programmatically (returns only Payment-supported tokens, not all Cobo-supported tokens)
+- [Create a pay-in order](/payments/en/guides/create-orders) — Learn how to create payment orders with pricing currencies
 
-<Tip>Feel free to [share your feedback](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI) to improve our documentation!</Tip>

@@ -12,10 +12,9 @@ description: "了解收款和 Off-Ramp 场景下支持的币种、公链和定�
 - **定价**：使用熟悉的法币设置价格
 - **Off-Ramp 对接**：将稳定币兑换为法币
 
-通过本指南，您可以：
-- 根据业务需求选择合适的币种和公链组合
-- 了解开发环境和生产环境的差异
-- 使用测试网代币进行集成测试
+<Note>
+本文档列出的代币是 Cobo Payment 支持的币种。虽然 Cobo 托管平台支持更广泛的代币种类，但只有下方列出的稳定币在 Payment 收款时才会自动入账。发送到 Payment 地址的其他代币将不会被自动处理。
+</Note>
 
 ## 收款支持的币种和公链
 
@@ -40,8 +39,6 @@ description: "了解收款和 Off-Ramp 场景下支持的币种、公链和定�
 | | TON | TON_USDT | 5 | 0.05 USDT | TON |
 | | Avalanche C-Chain | AVALANCHE_C_USDT | 18 | 0.05 USDT | AVAX |
 
-<Note>您也可以通过 [List supported chains API](https://www.cobo.com/developers/v2/api-references/wallets/list-supported-chains#response-data-confirming-threshold) 查询 `confirming_threshold` 字段获取确认数信息。</Note>
-
 ### 如何选择合适的公链
 
 | 优先级 | 推荐公链 | 原因 |
@@ -54,7 +51,7 @@ description: "了解收款和 Off-Ramp 场景下支持的币种、公链和定�
 
 在创建支付订单时，您可以使用以下法币作为定价货币（`pricing_currency`）。系统会自动根据该币种的实时汇率计算应付金额。
 
-汇率更新频率：每 10 分钟。
+汇率更新频率：每 10 分钟。您可以通过[获取汇率 API](/payments/cn/api-references/payment/get-exchange-rate) 查询当前汇率。
 
 <Note>
 仅在收款时支持指定以下货币作为定价货币。加密货币入账后，如需进行 Off-Ramp 对接，仅支持转出 USD。
@@ -116,17 +113,17 @@ description: "了解收款和 Off-Ramp 场景下支持的币种、公链和定�
 | BASE_USDC | 不支持 | 支持（需跨链费用）|
 | MATIC_USDC2 | 不支持 | 支持（需跨链费用）|
 | BSC_USDC | 不支持 | 支持（需跨链费用）|
-| AVALANCHE_C_USDC | 不支持 | 支持（需跨链费用）|
+| SOL_USDC | 不支持 | 支持（需跨链费用）|
+| AVALANCHE_C_USDC | 不支持 | 不支持 |
 | TRON_USDT | 支持 | 支持 |
 | ETH_USDT | 支持 | 支持 |
 | ARBITRUM_USDT | 不支持 | 支持（需跨链费用）|
-| SOL_USDC | 不支持 | 支持（需跨链费用）|
-| SOL_USDT | 不支持 | 支持（需跨链费用）|
-| TON_USDT | 不支持 | 支持（需跨链费用）|
-| AVALANCHE_C_USDT | 不支持 | 支持（需跨链费用）|
 | BASE_USDT | 不支持 | 不支持 |
 | MATIC_USDT | 支持（需跨链费用）| 支持（需跨链费用）|
 | BSC_USDT | 支持（需跨链费用）| 支持（需跨链费用）|
+| SOL_USDT | 不支持 | 支持（需跨链费用）|
+| TON_USDT | 不支持 | 不支持 |
+| AVALANCHE_C_USDT | 不支持 | 不支持 |
 | TTRON_USDT | 支持 | 不支持 |
 
 <Info>标记为"需跨链费用"的币种和公链组合在进行 Off-Ramp 对接时，除常规费用外，还需额外支付跨链费用。</Info>
@@ -163,8 +160,6 @@ description: "了解收款和 Off-Ramp 场景下支持的币种、公链和定�
 
 ## 相关资源
 
-- [获取支持的代币列表 API](/api-references/payment/list-supported-tokens) — 通过 API 获取实时支持的代币列表
-- [创建收款订单](/api-references/payment/create-pay-in-order) — 了解如何使用定价货币创建支付订单
-- [Cobo 支持](https://support.cobo.com) — 联系支持团队获取帮助
+- [获取 Payment 支持的代币列表](/payments/cn/api-references/payment/list-supported-tokens) — 通过 API 查询 Payment 支持的代币（仅返回 Payment 支持的代币，而非 Cobo 托管支持的所有代币）
+- [创建收款订单](/payments/cn/guides/create-orders) — 了解如何使用定价货币创建支付订单
 
-<Tip>欢迎您[提交反馈](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI)来帮助改进我们的文档！</Tip>
