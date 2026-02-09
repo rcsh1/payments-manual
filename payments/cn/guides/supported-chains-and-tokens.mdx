@@ -1,40 +1,60 @@
 ---
 title: "支持的币种与公链"
 lang: "zh-hans"
-description: ""
+description: "了解收款和 Off-Ramp 场景下支持的币种、公链和定价货币。"
 ---
 
-本文档详细说明收款和 Off-Ramp 对接场景下支持的币种。
+## 概述
+
+本文档帮助您了解不同支付场景下支持的币种、公链和货币：
+
+- **收款**：接收客户的稳定币付款
+- **定价**：使用熟悉的法币设置价格
+- **Off-Ramp 对接**：将稳定币兑换为法币
+
+通过本指南，您可以：
+- 根据业务需求选择合适的币种和公链组合
+- 了解开发环境和生产环境的差异
+- 使用测试网代币进行集成测试
 
 ## 收款支持的币种和公链
 
 收款时可接收的稳定币和公链组合如下：
 
-| 稳定币 | 支持的公链 | Token ID |
-|--------|------------|----------|
-| **USDC** | Ethereum | ETH_USDC |
-| | Arbitrum | ARBITRUM_USDCOIN |
-| | Base | BASE_USDC |
-| | Polygon | MATIC_USDC2 |
-| | BNB Smart Chain | BSC_USDC |
-| | Solana | SOL_USDC |
-| **USDT** | TRON | TRON_USDT |
-| | Ethereum | ETH_USDT |
-| | Arbitrum | ARBITRUM_USDT |
-| | Base | BASE_USDT |
-| | Polygon | MATIC_USDT |
-| | BNB Smart Chain | BSC_USDT |
-| | Solana | SOL_USDT |
+| 稳定币 | 公链 | Token ID | 确认数 | 最小金额 | Gas 代币 |
+|--------|------|----------|--------|----------|----------|
+| **USDC** | Ethereum | ETH_USDC | 64 | 0.05 USDC | ETH |
+| | Arbitrum | ARBITRUM_USDCOIN | 32 | 0.05 USDC | ETH |
+| | Base | BASE_USDC | 100 | 0.05 USDC | ETH |
+| | Polygon | MATIC_USDC2 | 128 | 0.05 USDC | MATIC |
+| | BNB Smart Chain | BSC_USDC | 15 | 0.05 USDC | BNB |
+| | Solana | SOL_USDC | 1 | 0.05 USDC | SOL |
+| | Avalanche C-Chain | AVALANCHE_C_USDC | 18 | 0.05 USDC | AVAX |
+| **USDT** | TRON | TRON_USDT | 20 | 0.05 USDT | TRX |
+| | Ethereum | ETH_USDT | 64 | 0.05 USDT | ETH |
+| | Arbitrum | ARBITRUM_USDT | 32 | 0.05 USDT | ETH |
+| | Base | BASE_USDT | 100 | 0.05 USDT | ETH |
+| | Polygon | MATIC_USDT | 128 | 0.05 USDT | MATIC |
+| | BNB Smart Chain | BSC_USDT | 15 | 0.05 USDT | BNB |
+| | Solana | SOL_USDT | 1 | 0.05 USDT | SOL |
+| | TON | TON_USDT | 5 | 0.05 USDT | TON |
+| | Avalanche C-Chain | AVALANCHE_C_USDT | 18 | 0.05 USDT | AVAX |
 
+<Note>您也可以通过 [List supported chains API](https://www.cobo.com/developers/v2/api-references/wallets/list-supported-chains#response-data-confirming-threshold) 查询 `confirming_threshold` 字段获取确认数信息。</Note>
 
-同时，您也可以使用 TTRON (TRON 测试链) 在开发环境进行测试。Cobo 支付解决方案目前支持测试币 TTRON_USDT1：
+### 如何选择合适的公链
 
-* 代币合约地址：`TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf`
-* 测试币水龙头：https://nileex.io/join/getJoinPage
+| 优先级 | 推荐公链 | 原因 |
+|--------|----------|------|
+| 最低手续费 | BNB Smart Chain、Arbitrum、Base | Layer 2 或低成本网络 |
+| 最广泛兼容性 | Ethereum | 支持范围最广 |
+| 可直接 Off-Ramp（无跨链费用） | Ethereum (ETH_USDC, ETH_USDT)、TRON (TRON_USDT) | 无需支付额外跨链费用 |
 
 ## <a name="pricing-currency"></a>支持的定价货币
 
 在创建支付订单时，您可以使用以下法币作为定价货币（`pricing_currency`）。系统会自动根据该币种的实时汇率计算应付金额。
+
+汇率更新频率：每 10 分钟。
 
 <Note>
 仅在收款时支持指定以下货币作为定价货币。加密货币入账后，如需进行 Off-Ramp 对接，仅支持转出 USD。
@@ -87,25 +107,64 @@ description: ""
 
 ## Off-Ramp 对接支持情况
 
-以下表格列出了 Off-Ramp 对接时，支持的币种和公链组合。举例来说，您可以在生产环境将 BASE_USDC 通过 Off-ramp 对接转换为法币，但需要支付跨链费用。
+以下表格列出了 Off-Ramp 对接时，支持的币种和公链组合。举例来说，您可以在生产环境将 BASE_USDC 通过 Off-Ramp 对接转换为法币，但需要支付跨链费用。
 
 | 币种和公链 | 开发环境 | 生产环境 |
 |---------|----------|----------|
-| ETH_USDC | ✅ 支持 | ✅ 支持 |
-| ARBITRUM_USDCOIN | ❌ 不支持 | ✅ 支持（需跨链费用）|
-| BASE_USDC | ❌ 不支持 | ✅ 支持（需跨链费用）|
-| MATIC_USDC2 | ❌ 不支持 | ✅ 支持（需跨链费用）|
-| BSC_USDC | ❌ 不支持 | ✅ 支持（需跨链费用）|
-| TRON_USDT | ✅ 支持 | ✅ 支持 |
-| ETH_USDT | ✅ 支持 | ✅ 支持 |
-| ARBITRUM_USDT | ❌ 不支持 | ✅ 支持（需跨链费用）|
-| SOL_USDC | ❌ 不支持 | ✅ 支持（需跨链费用）|
-| SOL_USDT | ❌ 不支持 | ✅ 支持（需跨链费用）|
-| BASE_USDT | ❌ 不支持 | ❌ 不支持 |
-| MATIC_USDT | ✅ 支持（需跨链费用）| ✅ 支持（需跨链费用）|
-| BSC_USDT | ✅ 支持（需跨链费用）| ✅ 支持（需跨链费用）|
-| TTRON_USDT | ✅ 支持 | ❌ 不支持 |
+| ETH_USDC | 支持 | 支持 |
+| ARBITRUM_USDCOIN | 不支持 | 支持（需跨链费用）|
+| BASE_USDC | 不支持 | 支持（需跨链费用）|
+| MATIC_USDC2 | 不支持 | 支持（需跨链费用）|
+| BSC_USDC | 不支持 | 支持（需跨链费用）|
+| AVALANCHE_C_USDC | 不支持 | 支持（需跨链费用）|
+| TRON_USDT | 支持 | 支持 |
+| ETH_USDT | 支持 | 支持 |
+| ARBITRUM_USDT | 不支持 | 支持（需跨链费用）|
+| SOL_USDC | 不支持 | 支持（需跨链费用）|
+| SOL_USDT | 不支持 | 支持（需跨链费用）|
+| TON_USDT | 不支持 | 支持（需跨链费用）|
+| AVALANCHE_C_USDT | 不支持 | 支持（需跨链费用）|
+| BASE_USDT | 不支持 | 不支持 |
+| MATIC_USDT | 支持（需跨链费用）| 支持（需跨链费用）|
+| BSC_USDT | 支持（需跨链费用）| 支持（需跨链费用）|
+| TTRON_USDT | 支持 | 不支持 |
 
 <Info>标记为"需跨链费用"的币种和公链组合在进行 Off-Ramp 对接时，除常规费用外，还需额外支付跨链费用。</Info>
+
+## 测试
+
+您可以使用测试网代币在上线前验证集成。测试网交易不涉及真实资金。
+
+| 代币 | 测试网 | Token ID | 合约地址 | 水龙头 |
+|------|--------|----------|----------|--------|
+| USDT | TRON Nile | TTRON_USDT1 | `TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf` | [获取测试代币](https://nileex.io/join/getJoinPage) |
+
+<Note>
+目前仅支持 TRON Nile 测试网进行测试。未来可能会添加更多测试网。
+</Note>
+
+## 重要说明
+
+<Warning>
+**发送前务必确认网络**
+
+在错误的网络上发送代币可能导致资金永久丢失。例如：
+- 将 Polygon 网络上的 USDC 发送到 Ethereum 地址将无法入账
+- 每个 Token ID 对应特定的公链 — 请务必准确匹配
+
+如果您或您的客户不慎将代币发送到不支持的网络，请携带交易哈希联系 [Cobo 支持](https://support.cobo.com) 寻求帮助。
+</Warning>
+
+<Note>
+**Token ID 使用说明**
+
+在与 Cobo API 集成时，请务必使用本文档中指定的准确 Token ID（如 `ETH_USDC` 或 `TRON_USDT`）。使用错误的 Token ID 将导致 API 报错。
+</Note>
+
+## 相关资源
+
+- [获取支持的代币列表 API](/api-references/payment/list-supported-tokens) — 通过 API 获取实时支持的代币列表
+- [创建收款订单](/api-references/payment/create-pay-in-order) — 了解如何使用定价货币创建支付订单
+- [Cobo 支持](https://support.cobo.com) — 联系支持团队获取帮助
 
 <Tip>欢迎您[提交反馈](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI)来帮助改进我们的文档！</Tip>
