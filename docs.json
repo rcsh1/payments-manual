@@ -420,12 +420,7 @@
     "strict": true
   },
   "navbar": {
-    "links": [
-      {
-        "label": "Submit Feedback",
-        "href": "https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI"
-      }
-    ],
+    "links": [],
     "primary": {
       "type": "button",
       "label": "Cobo Portal",

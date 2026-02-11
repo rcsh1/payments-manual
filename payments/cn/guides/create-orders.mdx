@@ -112,7 +112,7 @@ lang: "zh-hans"
     1. 登录 Cobo Portal [开发环境](https://portal.dev.cobo.com/login)或[生产环境](https://portal.cobo.com/login)。
     2. 在左侧导航栏中点击 **Apps**，然后点击 **Payments** 卡片，启动 App。
     3. 在 App 的左侧导航栏中点击**收款** \> **订单**。您可以在此页面查看所有订单的详细信息，如订单 ID、商户信息、支付金额、订单状态等。
-    4. 当付款方完成支付、且交易通过合规扫描后，订单状态会流转为**已完成**。
+    4. 当付款方完成支付、且交易通过合规筛查后，订单状态会流转为**已完成**。
 
     <img
       src="/payments/cn/images/payments/view-orders.png"
@@ -235,9 +235,9 @@ sequenceDiagram
   </Tab>
 </Tabs>
 
-### 合规扫描不通过
+### 合规筛查不通过
 
-当某笔交易收到 `payment.transaction.failed` 事件时，这表明该笔交易未能通过 Cobo KYT 或 Screening App 的合规扫描。这种情况下，您需要按照以下步骤进行处理：
+当某笔交易收到 `payment.transaction.failed` 事件时，这表明该笔交易未能通过 Cobo KYT 或 Screening App 的合规筛查。这种情况下，您需要按照以下步骤进行处理：
 
 - 若该笔交易后续通过人工审核：
   - 如果订单未过期：该笔资金将计入订单实收金额，订单状态将根据实收金额相应更新
@@ -245,7 +245,7 @@ sequenceDiagram
 - 若该笔交易最终未通过人工审核：
   - 资金将被冻结，不会被计入订单实收金额
   - 订单状态将保持不变
-  - 付款方需要在订单有效期内重新充入足额资金并通过合规扫描，订单才能转为 `Completed` 状态
+  - 付款方需要在订单有效期内重新充入足额资金并通过合规筛查，订单才能转为 `Completed` 状态
 
 对于被隔离或冻结的资金：
 
@@ -257,6 +257,3 @@ sequenceDiagram
 为优化您的账户成本，避免因粉尘金额产生的入账手续费高于交易金额，系统设定了最小入账阈值。当单笔交易金额低于 **0.05 USDT**（或等值币种）时，系统将不自动进行入账处理。\
 _注：若您需要对此类低于阈值的累积资金进行手动处理，请联系 Cobo 客服或技术支持，我们将协助您从归集地址提取。_
 
-<Tip>
-  欢迎您[提交反馈](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI)来帮助改进我们的文档！
-</Tip>

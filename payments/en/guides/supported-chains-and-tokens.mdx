@@ -1,40 +1,57 @@
 ---
 title: "Supported tokens and chains"
 lang: "en"
-description: ""
+description: "Learn about supported tokens, chains, and currencies for payment collection and Off-Ramp scenarios."
 ---
 
-This document details the supported currencies for payment collection and Off-Ramp scenarios.
+## Overview
+
+This document helps you understand which tokens, chains, and currencies are supported for different payment scenarios:
+
+- **Payment collection**: Accept stablecoin payments from your customers
+- **Pricing**: Set prices in familiar fiat currencies
+- **Off-Ramp**: Convert stablecoins to fiat currency
+
+<Note>
+The tokens listed in this document are specifically supported for Cobo Payment. While Cobo Portal supports a broader range of tokens, only the stablecoins listed below will be automatically credited when received. Other tokens sent to Payment addresses will not be automatically processed.
+</Note>
 
 ## Supported tokens and chains for payment collection
 
 The stablecoins and chain combinations that can be received during payment collection are as follows:
 
-| Stablecoin | Supported Chain | Token ID |
-|------------|-----------------|----------|
-| **USDC** | Ethereum | ETH_USDC |
-| | Arbitrum | ARBITRUM_USDCOIN |
-| | Base | BASE_USDC |
-| | Polygon | MATIC_USDC2 |
-| | BNB Smart Chain | BSC_USDC |
-| | Solana | SOL_USDC |
-| **USDT** | TRON | TRON_USDT |
-| | Ethereum | ETH_USDT |
-| | Arbitrum | ARBITRUM_USDT |
-| | Base | BASE_USDT |
-| | Polygon | MATIC_USDT |
-| | BNB Smart Chain | BSC_USDT |
-| | Solana | SOL_USDT |
+| Stablecoin | Chain | Token ID | Confirmations | Min Amount | Gas Token |
+|------------|-------|----------|---------------|------------|-----------|
+| **USDC** | Ethereum | ETH_USDC | 64 | 0.05 USDC | ETH |
+| | Arbitrum | ARBITRUM_USDCOIN | 32 | 0.05 USDC | ETH |
+| | Base | BASE_USDC | 100 | 0.05 USDC | ETH |
+| | Polygon | MATIC_USDC2 | 128 | 0.05 USDC | MATIC |
+| | BNB Smart Chain | BSC_USDC | 15 | 0.05 USDC | BNB |
+| | Solana | SOL_USDC | 1 | 0.05 USDC | SOL |
+| | Avalanche C-Chain | AVALANCHE_C_USDC | 18 | 0.05 USDC | AVAX |
+| **USDT** | TRON | TRON_USDT | 20 | 0.05 USDT | TRX |
+| | Ethereum | ETH_USDT | 64 | 0.05 USDT | ETH |
+| | Arbitrum | ARBITRUM_USDT | 32 | 0.05 USDT | ETH |
+| | Base | BASE_USDT | 100 | 0.05 USDT | ETH |
+| | Polygon | MATIC_USDT | 128 | 0.05 USDT | MATIC |
+| | BNB Smart Chain | BSC_USDT | 15 | 0.05 USDT | BNB |
+| | Solana | SOL_USDT | 1 | 0.05 USDT | SOL |
+| | TON | TON_USDT | 5 | 0.05 USDT | TON |
+| | Avalanche C-Chain | AVALANCHE_C_USDT | 18 | 0.05 USDT | AVAX |
 
+### How to choose the right chain
 
-You can also use TTRON (TRON testnet) for testing in the development environment. The Cobo payments solution currently supports the test token TTRON_USDT1:
-
-* Token contract address: `TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf`
-* Test token faucet: https://nileex.io/join/getJoinPage
+| Priority | Recommended Chains | Why |
+|----------|-------------------|-----|
+| Lowest fees | BNB Smart Chain, Arbitrum, Base | Layer 2 or low-cost networks |
+| Widest compatibility | Ethereum | Most widely supported |
+| Off-Ramp ready (no bridging fee) | Ethereum (ETH_USDC, ETH_USDT), TRON (TRON_USDT) | No additional bridging fees required |
 
 ## <a name="pricing-currency"></a>Supported pricing currencies
 
 When creating a payment order, you can use the following fiat currencies as the pricing currency (`pricing_currency`). The system will automatically calculate the payable amount based on the real-time exchange rate of the currency.
+
+Exchange rates are updated every 10 minutes. You can query the current exchange rate using the [Get exchange rate](/payments/en/api-references/payment/get-exchange-rate) operation.
 
 <Note>
 You can only specify the following currencies as pricing currencies during payment collection. After cryptocurrencies are deposited, if you need to perform Off-Ramp operations, only USD is supported for conversion.
@@ -91,22 +108,58 @@ The following table lists the supported token and chain combinations for Off-Ram
 
 | Token and Chain | Development Environment | Production Environment |
 |-----------------|-------------------------|------------------------|
-| ETH_USDC | ✅ Supported | ✅ Supported |
-| ARBITRUM_USDCOIN | ❌ Not supported | ✅ Supported (bridging fee required) |
-| BASE_USDC | ❌ Not supported | ✅ Supported (bridging fee required) |
-| MATIC_USDC2 | ❌ Not supported | ✅ Supported (bridging fee required) |
-| BSC_USDC | ❌ Not supported | ✅ Supported (bridging fee required) |
-| TRON_USDT | ✅ Supported | ✅ Supported |
-| ETH_USDT | ✅ Supported | ✅ Supported |
-| ARBITRUM_USDT | ❌ Not supported | ✅ Supported (bridging fee required) |
-| SOL_USDC | ❌ Not supported | ✅ Supported (bridging fee required) |
-| SOL_USDT | ❌ Not supported | ✅ Supported (bridging fee required) |
-| BASE_USDT | ❌ Not supported | ❌ Not supported |
-| MATIC_USDT | ✅ Supported (bridging fee required) | ✅ Supported (bridging fee required) |
-| BSC_USDT | ✅ Supported (bridging fee required) | ✅ Supported (bridging fee required) |
-| TTRON_USDT | ✅ Supported | ❌ Not supported |
+| ETH_USDC | Supported | Supported |
+| ARBITRUM_USDCOIN | Not supported | Supported (bridging fee required) |
+| BASE_USDC | Not supported | Supported (bridging fee required) |
+| MATIC_USDC2 | Not supported | Supported (bridging fee required) |
+| BSC_USDC | Not supported | Supported (bridging fee required) |
+| SOL_USDC | Not supported | Supported (bridging fee required) |
+| AVALANCHE_C_USDC | Not supported | Not supported |
+| TRON_USDT | Supported | Supported |
+| ETH_USDT | Supported | Supported |
+| ARBITRUM_USDT | Not supported | Supported (bridging fee required) |
+| BASE_USDT | Not supported | Not supported |
+| MATIC_USDT | Supported (bridging fee required) | Supported (bridging fee required) |
+| BSC_USDT | Supported (bridging fee required) | Supported (bridging fee required) |
+| SOL_USDT | Not supported | Supported (bridging fee required) |
+| TON_USDT | Not supported | Not supported |
+| AVALANCHE_C_USDT | Not supported | Not supported |
+| TTRON_USDT | Supported | Not supported |
 
 <Info>Token and chain combinations marked as "bridging fee required" incur additional bridging fees on top of regular fees when performing Off-Ramp operations.</Info>
 
-<Tip>Feel free to [share your feedback](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI) to improve our documentation!</Tip>
+## Testing
+
+You can use testnet tokens to verify your integration before going live. Testnet transactions do not involve real funds.
+
+| Token | Testnet | Token ID | Contract Address | Faucet |
+|-------|---------|----------|------------------|--------|
+| USDT | TRON Nile | TTRON_USDT1 | `TXYZopYRdj2D9XRtbG411XZZ3kM5VkAeBf` | [Get test tokens](https://nileex.io/join/getJoinPage) |
+
+<Note>
+Currently, only TRON Nile testnet is supported for testing. More testnets may be added in the future.
+</Note>
+
+## Important notes
+
+<Warning>
+**Always verify the network before sending**
+
+Sending tokens on the wrong network may result in permanent loss of funds. For example:
+- Sending USDC on Polygon to an Ethereum address will not be credited
+- Each Token ID corresponds to a specific chain — always match them exactly
+
+If you or your customer accidentally sends tokens on an unsupported network, contact [Cobo Support](https://support.cobo.com) with the transaction hash for assistance.
+</Warning>
+
+<Note>
+**Token ID usage**
+
+When integrating with the Cobo API, always use the exact Token ID (such as `ETH_USDC` or `TRON_USDT`) as specified in this document. Using incorrect Token IDs will result in API errors.
+</Note>
+
+## Related resources
+
+- [List tokens supported by Payment](/payments/en/api-references/payment/list-supported-tokens) — Query the tokens supported for Payment programmatically (returns only Payment-supported tokens, not all Cobo-supported tokens)
+- [Create a pay-in order](/payments/en/guides/create-orders) — Learn how to create payment orders with pricing currencies
 
