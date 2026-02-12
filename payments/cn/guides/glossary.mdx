@@ -2,258 +2,308 @@
 title: "术语表"
 lang: "zh-hans"
 sidebarTitle: "术语表"
-description: "Cobo 支付解决方案核心术语的中文解释，帮助您快速理解文档与产品概念。"
+description: "Cobo 支付解决方案核心术语的中英文对照与解释，帮助您快速理解文档与产品概念。"
 ---
 
-本文档列出 Cobo 支付解决方案中的核心术语，并用简单语言解释其含义，便于查阅与理解。
+本文档列出 Cobo 支付解决方案中的核心术语及其英文对照，并用简单语言解释其含义，便于查阅与理解。
 
 ---
 
 ## 产品与平台
 
-**Cobo 支付解决方案**  
+**Cobo 支付解决方案 (Cobo Payments Solution)**
 一套完整的[加密货币支付](/payments/cn/guides/overview)基础设施，涵盖[收款](/payments/cn/guides/features#收款)、[资金管理](/payments/cn/guides/amounts-and-balances)、合规扫描、[商户管理](/payments/cn/guides/merchants)等，为企业提供安全、合规、高效的一站式支付服务。
 
-**Cobo Portal**  
+**Cobo Portal**
 Cobo 提供的 Web 管理后台。您在此创建团队、管理成员、[配置 API](/payments/cn/guides/preparation)、安装 Payments App、查看钱包与报表等。
 
-**Payments App**  
+**Payments App**
 安装在 Cobo Portal 内的支付应用，提供 Web 界面，用于收款查询、[资金管理](/payments/cn/guides/amounts-and-balances)、[资金转出](/payments/cn/guides/crypto-payouts)、[商户](/payments/cn/guides/merchants)与[转出目的地](/payments/cn/guides/destinations)管理等日常运营。
 
-**Cobo Guard**  
+**Cobo Guard**
 Cobo 提供的移动端 App（如 iOS），用于多因素认证（MFA）、操作审批、交易签名和私钥分片管理。提币、邀请成员等操作常需在 Cobo Guard 上确认。
 
-**Fee Station**  
+**Fee Station**
 Cobo 平台内用于管理各类费用的账户。[资金转出](/payments/cn/guides/crypto-payouts)、退款等产生的手续费从此处扣除，需提前充值 USDT 或 USDC 等。详见[手续费扣款](/payments/cn/guides/wallet-fee-deduction)。
 
-**开发环境 / 生产环境**  
+**开发环境 / 生产环境 (Development / Production)**
 [开发环境](/payments/cn/guides/preparation)（如 portal.dev.cobo.com）用于联调与测试；[生产环境](/payments/cn/guides/preparation-prod)（如 portal.cobo.com）用于正式业务，配置与安全要求更高。
+
+**Screening App**
+Cobo 提供的合规扫描应用，您可对收到的资金进行扫描，并在应用内对隔离/冻结资金进行退款、隔离、解冻等操作。
 
 ---
 
 ## 账户与资金
 
-**账户**  
+**账户 (Account)**
 系统账本中的虚拟资金主体，与链上钱包或链上地址没有一一对应。每一笔收款、[划转](/payments/cn/guides/allocate-funds)、退款或资金转出都会在账本中形成明细并更新余额。详见[账户与资金分配](/payments/cn/guides/amounts-and-balances)。
 
-**开发者账户**  
+**开发者账户 (Developer Account)**
 持有开发者余额的单一账户，代表您作为收款服务提供方所拥有的资金。多商户场景下，开发者费用会结算到此账户。
 
-**商户账户**  
+**商户账户 (Merchant Account)**
 每个商户对应一个账户，持有该商户的商户余额。每个商户代表实际收款的业务主体（如一家店铺或一条业务线）。
 
-**商户余额 / 开发者余额**  
+**商户余额 / 开发者余额 (Merchant Balance / Developer Balance)**
 某一账户在特定时刻可用于[资金转出](/payments/cn/guides/crypto-payouts)（Payout）或退款的资金总额。可通过 Payments App 或 API 查询。详见[账户与资金分配](/payments/cn/guides/amounts-and-balances)。
 
-**结算**  
+**结算 (Settlement)**
 收款完成后，系统根据预设规则（如开发者费率）自动将资金分配到商户账户和开发者账户的过程。仅在账本内部发生，不产生链上转账。
 
-**划转**  
+**已结算金额 (Settled Amount)**
+已完成结算的资金数额，即已分配到对应账户的金额。
+
+**划转 (Allocation)**
 在账户之间手动转移资金的操作，如从开发者账户划到商户账户。仅调整账本余额，不产生链上转账；且一般限于同一钱包内的账户之间。详见[划转资金](/payments/cn/guides/allocate-funds)。
 
-**开发者费率（developer_fee_rate）**  
-商户维度设置的百分比，表示每笔收款中结算到开发者账户的比例。例如 1% 表示每 100 USDT 收款中 1 USDT 归开发者。
+**开发者费率 (Developer Fee Rate)**
+商户维度设置的百分比，表示每笔收款中结算到开发者账户的比例。例如 1% 表示每 100 USDT 收款中 1 USDT 归开发者。对应 API 参数 `developer_fee_rate`。
 
-**开发者费用（fee_amount / merchant_fee_amount）**  
-订单或退款中您作为平台收取的金额，以加密货币或法币为单位。决定您与商户之间的收入分成比例。
+**开发者费用 (Developer Fee)**
+订单或退款中您作为平台收取的金额，以加密货币或法币为单位。决定您与商户之间的收入分成比例。对应 API 参数 `fee_amount` / `merchant_fee_amount`。
+
+**代收款 (Collection-on-behalf-of / COBO)**
+由开发者代替商户收取付款方的资金，并在结算后将资金分配到对应商户账户的模式。适用于 PSP 等多商户场景。
+
+**入账 (Credit / Deposit Confirmation)**
+链上转账被系统识别且通过合规扫描后，资金计入商户或开发者账户的过程。
 
 ---
 
 ## 收款
 
-**收款**  
-向付款方收取加密货币的过程。支持三种模式：[充值模式](/payments/cn/guides/get-topup-addresses)、[订单模式](/payments/cn/guides/create-orders)、[订阅模式](/payments/cn/guides/create-subscriptions)。
+**收款 (Payment Collection / Pay-in)**
+向付款方收取加密货币的过程。支持三种收款模式：[充值模式](/payments/cn/guides/get-topup-addresses)、[订单模式](/payments/cn/guides/create-orders)、[订阅模式](/payments/cn/guides/create-subscriptions)。
 
-**付款方**  
-向您支付加密货币的一方，可以是终端用户、企业客户等。在[充值模式](/payments/cn/guides/get-topup-addresses)下会为其生成专属[充值地址](/payments/cn/guides/get-topup-addresses)。
+**付款方 (Payer)**
+向您支付的一方，可以是终端用户、企业客户等。在[充值模式](/payments/cn/guides/get-topup-addresses)下会为其生成专属[充值地址](/payments/cn/guides/get-topup-addresses)。
 
-**充值模式**  
+**收款模式 (Pay-in Type)**
+收取加密货币的方式，包括充值模式、订单模式和订阅模式，适用于不同业务场景。
+
+**充值模式 (Top-up Mode)**
 为每个付款方生成固定的[充值地址](/payments/cn/guides/get-topup-addresses)，付款方可随时向该地址充值任意金额。适合 B2B、游戏充值、OTC 等场景。详见[获取充值地址](/payments/cn/guides/get-topup-addresses)。
 
-**订单模式**  
+**订单模式 (Order Mode)**
 创建带有指定金额和有效期的[支付订单](/payments/cn/guides/create-orders)，付款方需在规定时间内完成支付。支持取消订单、[退款](/payments/cn/guides/create-orders#处理退款请求)及多付、少付、晚付等异常处理。详见[创建支付订单](/payments/cn/guides/create-orders)。
 
-**订阅模式**  
+**订阅模式 (Subscription Mode)**
 通过智能合约等方式定期、自动从付款方钱包扣款，适合会员费、订阅费等固定周期收款。详见[创建订阅](/payments/cn/guides/create-subscriptions)。
 
-**充值地址**  
+**充值地址 (Top-up Address)**
 在[充值模式](/payments/cn/guides/get-topup-addresses)下，为某一付款方在指定链上生成的专属收款地址。付款方向该地址转账即视为充值。详见[获取充值地址](/payments/cn/guides/get-topup-addresses)。
 
-**支付订单（Pay-in Order）**  
+**支付订单 (Pay-in Order)**
 [订单模式](/payments/cn/guides/create-orders)下的一笔支付任务，包含应付金额、有效期、收币地址等信息。状态包括 Pending、Completed、Expired、Underpaid 等。详见[创建支付订单](/payments/cn/guides/create-orders)与[状态与事件](/payments/cn/guides/status-and-events)。
 
-**支付链接（Order Link / Payment Link）**  
+**支付链接 (Payment Link)**
 由 Cobo 生成的 URL，打开后跳转到 Cobo 托管的支付页面，付款方可在该页面选择币种与链并完成支付，无需您自建收银台。可嵌入 iFrame。详见[订单支付链接](/payments/cn/guides/payment-link)。
 
-**应付金额**  
+**应付金额 (Amount Payable)**
 付款方实际需要支付的加密货币金额。可由系统按汇率计算，或由您在[创建订单](/payments/cn/guides/create-orders)时直接指定。
 
-**定价币种（pricing_currency）/ 定价金额（pricing_amount）**  
-商品以法币计价时的币种与金额。系统可根据定价金额与汇率计算应付的加密货币金额。详见[创建支付订单](/payments/cn/guides/create-orders)。
+**订单金额 (Order Amount)**
+创建支付订单时指定的目标金额，用于确定付款方需支付的金额和结算基准。
 
-**应收币种（payable_currency）/ 应收金额（payable_amount）**  
-您计划收取的加密货币币种与金额。与 [Token ID](/payments/cn/guides/supported-chains-and-tokens) 对应（如 ETH_USDT 表示以太坊上的 USDT）。详见[创建支付订单](/payments/cn/guides/create-orders)。
+**定价币种 / 定价金额 (Pricing Currency / Pricing Amount)**
+商品以法币计价时的币种与金额。系统可根据定价金额与汇率计算应付的加密货币金额。对应 API 参数 `pricing_currency` / `pricing_amount`。详见[创建支付订单](/payments/cn/guides/create-orders)。
 
-**多付 / 少付 / 晚付**  
-- **多付**：订单有效期内实付金额超过应付金额，订单仍为 Completed，按比例结算。  
-- **少付**：有效期内实付少于应付，订单终态为 Underpaid。  
+**应收币种 / 应收金额 (Payable Currency / Payable Amount)**
+您计划收取的加密货币币种与金额。与 [Token ID](/payments/cn/guides/supported-chains-and-tokens) 对应（如 ETH_USDT 表示以太坊上的 USDT）。对应 API 参数 `payable_currency` / `payable_amount`。详见[创建支付订单](/payments/cn/guides/create-orders)。
+
+**实收金额 (Actual Received Amount)**
+付款方实际到账的加密货币金额，可能与应付金额不同（如存在多付、少付等情况）。
+
+**异常支付 (Abnormal Payment)**
+付款金额或时间与预期不符的支付，包括多付、少付和晚付。
+
+**多付 / 少付 / 晚付 (Overpayment / Underpayment / Late Payment)**
+- **多付**：订单有效期内实付金额超过应付金额，订单仍为 Completed，按比例结算。
+- **少付**：有效期内实付少于应付，订单终态为 Underpaid。
 - **晚付**：订单过期后的付款，不改变订单状态，资金按规则计入开发者账户等，并触发晚付事件。详见[创建支付订单](/payments/cn/guides/create-orders)与[状态与事件](/payments/cn/guides/status-and-events)。
 
-**退款**  
+**最终状态 (Final State)**
+订单不可再发生变更的终态，如 Completed、Expired、Underpaid 等。详见[状态与事件](/payments/cn/guides/status-and-events)。
+
+**退款 (Refund)**
 将已收款项退还给付款方的操作。可来自商户账户或开发者账户，并可设置退款手续费（开发者费用）。详见[创建支付订单](/payments/cn/guides/create-orders#处理退款请求)。
 
-**退款链接**  
+**退款链接 (Refund Link)**
 由 API 生成的一次性 URL，终端用户打开后填写接收退款的地址，由 Cobo 自动发起退款转账并通知状态。详见[创建退款链接](/payments/cn/guides/create-refund-link)。
 
-**交易对手方**  
+**退款手续费 (Refund Processing Fee)**
+退款操作中可能产生的手续费，由开发者费用设定。
+
+**交易对手方 (Counterparty)**
 在[充值模式](/payments/cn/guides/get-topup-addresses)下录入的付款方信息（个人或机构）及其钱包地址。录入后，充值记录中会展示来源地址对应的对手方名称，便于识别资金来源。详见[交易对手方](/payments/cn/guides/counterparties)。
 
 ---
 
 ## 资金转出
 
-**资金转出（Payout）**  
+**资金转出 (Payout)**
 将账户内的加密货币转出到外部地址或法币账户的操作，包括[加密货币转账](/payments/cn/guides/crypto-payouts)和[Off-Ramp 对接](/payments/cn/guides/fiat-payouts)。
 
-**加密货币转账（Crypto Payout）**  
+**加密货币转账 (Crypto Payout)**
 通过链上转账将加密货币转到外部钱包地址。可选择商户或开发者账户作为资金来源，支持[自动跨链](/payments/cn/guides/crypto-payouts)。详见[加密货币转账](/payments/cn/guides/crypto-payouts)。
 
-**Off-Ramp 对接**  
+**Off-Ramp 对接 (Fiat Off-ramp)**
 将加密货币通过 OTC 供应商兑换成法币并转入您的银行账户。需先在[转出目的地](/payments/cn/guides/destinations)中录入并审核通过银行账户。详见[Off-Ramp 对接](/payments/cn/guides/fiat-payouts)。
 
-**转出目的地**  
+**法币入金 (On-ramp)**
+将法币兑换为加密货币的过程，与 Off-Ramp（出金）相反。
+
+**转出目的地 (Destination)**
 集中管理的资金转出目标信息，包括加密货币钱包地址和银行账户。可设为白名单，限制仅能转至已录入的目的地。详见[转出目的地](/payments/cn/guides/destinations)。
 
-**白名单（转出目的地）**  
+**转出白名单 (Whitelist)**
 开启后，仅允许向已录入的[转出目的地](/payments/cn/guides/destinations)（钱包地址）发起[加密货币转账](/payments/cn/guides/crypto-payouts)，无法随意填写新地址，用于提升安全性。
 
-**批量下发（Bulk Send）**  
+**批量下发 (Bulk Send)**
 一次性向多个收款地址批量转出加密货币，适用于工资发放、返佣、合作方结算等。每条记录为一条 Bulk Send Item。详见[批量下发](/payments/cn/guides/bulk-send)。
 
-**执行模式（execution_mode）**  
-- **Strict**：任一条目校验或 KYA 不通过则整单不执行任何链上转账。  
-- **Partial**：仅对校验通过的地址执行转账，失败条目可后续单独补发。详见[批量下发](/payments/cn/guides/bulk-send)。
+**执行模式 (Execution Mode)**
+- **Strict**：任一条目校验或 KYA 不通过则整单不执行任何链上转账。
+- **Partial**：仅对校验通过的地址执行转账，失败条目可后续单独补发。对应 API 参数 `execution_mode`。详见[批量下发](/payments/cn/guides/bulk-send)。
 
-**跨链**  
+**跨链 (Cross-chain)**
 将某一公链上的资产（如 ETH 上的 USDT）转移到另一公链（如 TRON）并转出。系统支持在出金或[加密货币转账](/payments/cn/guides/crypto-payouts)时[自动跨链](/payments/cn/guides/crypto-payouts)，可能产生跨链费用。
+
+**归集 (Fund Sweeping)**
+将分散在不同地址的资金汇总到指定地址的过程。Cobo 可自动归集以方便管理与出金。
 
 ---
 
-## 合规与风控
+## 合规
 
-**合规扫描**  
-对入账或出账交易进行风险与合规检查。未通过的资金可能被隔离或冻结，需人工审核或更换地址后处理。
+**合规扫描 (Compliance Screening)**
+对入金或出金交易进行风险与合规检查。未通过的资金可能被隔离或冻结，需人工审核或更换地址后处理。
 
-**Cobo KYT**  
+**AML/KYT 扫描 (AML/KYT Screening)**
+反洗钱（AML）与了解你的交易（KYT）扫描，是合规扫描的核心环节。Cobo 通过 Cobo KYT 对交易进行风险识别。
+
+**Cobo KYT (Cobo KYT)**
 Know Your Transaction，Cobo 提供的交易合规扫描服务，用于识别和防范可疑或高风险交易。
 
-**KYA**  
+**KYA (KYA)**
 Know Your Address，对收款地址进行校验与合规验证。[批量下发](/payments/cn/guides/bulk-send)等场景下会对每个接收地址做 KYA。
 
-**Screening App**  
-Cobo 提供的合规扫描应用，您可对收到的资金进行扫描，并在应用内对隔离/冻结资金进行退款、隔离、解冻等操作。
+**人工审核 (Manual Review)**
+合规扫描标记可疑后，由人工进一步判断资金是否合规的流程。审查期间资金处于"审查中"状态。
 
-**风控**  
-Cobo Portal 中的安全策略，包括交易风控（如提币金额、审批流程）和业务风控（如邀请成员、修改角色需多人审批）。退款、提币等会触发风控规则。
+**审查中 (Under Review)**
+交易或资金正在接受合规审核的状态，期间资金不可使用。
 
-**隔离 / 冻结**  
+**隔离 / 冻结 (Isolated / Frozen)**
 合规扫描不通过时，资金可能被标记为隔离或冻结，不入账或不可转出，需在 Screening App 或联系 Cobo 支持处理。
 
 ---
 
-## 商户与权限
+## 风控与权限
 
-**商户（Merchant）**  
+**风控 (Risk Controls)**
+Cobo Portal 中的安全策略，包括交易风控（如提币金额、审批流程）和业务风控（如邀请成员、修改角色需多人审批）。退款、提币等会触发风控规则。
+
+**交易风控规则 (Transaction Policies)**
+针对链上和链下交易设置的风控规则，包括金额阈值、审批要求等。
+
+**业务风控规则 (Governance Policies)**
+针对业务操作（如成员管理、角色变更等）设置的风控规则。
+
+**审批门槛 (Approval Quorum)**
+执行某项操作所需的最低审批人数。
+
+**管理员 (Admin)**
+Cobo 支付解决方案中拥有最高权限的角色，可管理团队成员、配置 API、操作全部支付功能。
+
+**支付管理员 (Payment Admin)**
+负责支付相关配置与操作的角色，拥有除团队管理外的大部分支付权限。
+
+**支付成员 (Payment Member)**
+通常仅有查看或部分操作权限的角色。详见[角色与权限](/payments/cn/guides/roles-and-permissions)。
+
+**观察员 (Viewer)**
+仅拥有查看权限、不可执行操作的角色。
+
+---
+
+## 商户管理
+
+**商户 (Merchant)**
 在系统中代表一个独立收款实体，拥有独立的商户账户。适用于电商多店铺、多业务线、PSP 多下游商户等场景。详见[商户管理](/payments/cn/guides/merchants)。
 
-**默认商户**  
+**默认商户 (Default Merchant)**
 系统为每个 Cobo Portal 团队自动创建的、与团队同名的商户。若您直接服务付款方、无下游商户，可直接使用默认商户。
 
-**PSP（支付服务提供商）**  
+**PSP / 支付服务提供商 (Payment Service Provider)**
 为多个下游商户提供支付与结算服务的机构。通过商户管理为每个商户独立结算，并通过开发者费率实现收入分成。
 
-**独立钱包 / 共享钱包**  
-- **Shared（共享）**：多个商户共用一个钱包，地址可能同时接收多个商户的收款。  
-- **Separate（独立）**：为商户创建专属钱包，该商户的收款仅进入该钱包，实现资金隔离。
+**商户实收金额 (Merchant Actual Receipt)**
+扣除开发者费用后，实际进入商户账户的金额。
 
-**管理员 / 支付管理员 / 支付成员**  
-Cobo 支付解决方案中的角色。管理员拥有最高权限；支付管理员负责支付相关配置与操作；支付成员通常仅有查看或部分操作权限。详见[角色与权限](/payments/cn/guides/roles-and-permissions)。
+**Merchant Code / merchant_id**
+[商户](/payments/cn/guides/merchants)在 Cobo 系统中的唯一标识，由 Cobo 分配，在 API 中用于指定商户。
 
 ---
 
 ## 开发者与集成
 
-**Payments API**  
+**Payments API**
 Cobo 提供的 HTTP API，用于[创建订单](/payments/cn/guides/create-orders)、[获取充值地址](/payments/cn/guides/get-topup-addresses)、查询余额、[发起划转](/payments/cn/guides/allocate-funds)、出金、[批量下发](/payments/cn/guides/bulk-send)等。需使用 API Key 与签名认证。详见[环境准备](/payments/cn/guides/preparation)。
 
-**API Key / API Secret**  
+**API Key / API Secret**
 用于请求认证的密钥对。API Key 为公钥，在请求头中携带；API Secret 为私钥，用于对请求签名，需妥善保管。通常由 Ed25519 生成并在 Cobo Portal 注册。详见[环境准备](/payments/cn/guides/preparation)。
 
-**Webhook**  
+**Webhook**
 事件推送机制。在您配置并注册 [Webhook Endpoint](/payments/cn/guides/status-and-events) 后，当订单状态变更、充值到账、出金完成等事件发生时，Cobo 会向您的服务器 URL 发送 HTTP 请求，便于实时更新业务状态。详见[状态与事件](/payments/cn/guides/status-and-events)。
 
-**Webhook Endpoint**  
+**Webhook Endpoint**
 您提供的、用于接收 [Webhook](/payments/cn/guides/status-and-events) 请求的 URL。需在 Cobo Portal 注册并订阅需要的事件类型，建议实现签名校验与幂等处理。详见[状态与事件](/payments/cn/guides/status-and-events)。
 
-**Token ID**  
+**Callback 消息 (Callback Message)**
+系统向您的服务器发送的回调通知，用于传递交易状态变化等信息。
+
+**Token ID**
 标识「某条链上的某种代币」的 ID，如 `ETH_USDT`、`TRON_USDT`、`SOL_USDC`。用于指定收款币种、出金币种、划转代币等。详见[支持的链与代币](/payments/cn/guides/supported-chains-and-tokens)。
 
-**SDK**  
+**SDK**
 Cobo 提供的多语言客户端库（如 Python、Java、JavaScript、Go），封装 API 调用与签名逻辑，简化集成。
 
 ---
 
 ## 钱包与链
 
-**钱包**  
+**钱包 (Wallet)**
 在 Cobo 体系中指用于收款、归集、提币的一组地址与资产。Payments 场景下可为共享钱包或商户独立钱包。
 
-**全托管钱包**  
+**全托管钱包 (Custodial Wallet)**
 私钥由 Cobo 托管，无需您参与签名即可完成转账。默认启用 Cobo KYT。
 
-**MPC 钱包**  
-多方计算钱包，私钥以分片形式由多方持有，需移动端或服务端签名人参与签名才能完成提币等操作。可选开通 Cobo KYT 或使用 Screening App。
+**MPC 钱包 (MPC Wallet)**
+多方计算（Multi-Party Computation）钱包，私钥以分片形式由多方持有（如 Cobo 与您的团队），需多方参与签名才能完成提币等操作。可选开通 Cobo KYT 或使用 Screening App。
 
-**主控组 / 签名组 / 恢复组**  
-MPC 钱包中的持有者组。主控组是第一个创建的组；签名组用于日常交易签名；恢复组用于私钥分片丢失时的恢复。
-
-**私钥分片**  
-MPC 钱包中，私钥被拆成的多个分片，由不同持有者（如 Cobo 与您的团队）分别保管。签名时需达到设定数量的分片参与。
-
-**移动端签名人 / 服务端签名人**  
-MPC 钱包的签名参与方。移动端签名人通过 Cobo Guard 签名；服务端签名人通过 TSS Node 等服务器自动签名，适合大批量归集与出金。
-
-**归集**  
-将分散在不同地址的资金汇总到指定地址的过程。Cobo 可自动归集以方便管理与出金。
-
-**公链**  
+**公链 (Blockchain / Chain)**
 区块链网络，如 Ethereum、TRON、Solana、BNB Smart Chain 等。收款与出金都需指定在哪些公链上进行。详见[支持的链与代币](/payments/cn/guides/supported-chains-and-tokens)。
 
----
+**代币 (Token)**
+公链上的数字资产，如 USDT、USDC、ETH 等。在 Payments 中通过 Token ID 标识具体链上的代币。
 
-## 其他常用术语
+**稳定币 (Stablecoin)**
+与法币（如美元）挂钩的加密货币，如 USDT、USDC。因价格稳定，是加密货币支付中最常用的币种。
 
-**入账**  
-链上转账被系统识别且通过合规扫描后，资金计入商户或开发者账户的过程。
+**Gas 费 / 网络费用 (Gas Fee / Network Fee)**
+在区块链上发起交易时消耗的手续费。不同的第三方钱包有「外扣」（额外付 Gas）或「内扣」（从转账金额中扣 Gas）之分，可能影响实收金额。
 
-**出金**  
-将加密货币转出到外部地址或兑换成法币并转入银行账户的统称。
-
-**法币**  
-传统货币，如 USD、EUR、CNH。定价币种和 Off-Ramp 到账多为法币。
-
-**Gas 费 / 网络费用**  
-在区块链上发起交易时消耗的手续费。不同钱包有「外扣」（额外付 Gas）或「内扣」（从转账金额中扣 Gas）之分，可能影响实收金额。
-
-**外扣 / 内扣**  
-- **外扣**：网络费用不从转账金额中扣，收款方收到完整金额。  
+**外扣 / 内扣 (External Fee / Internal Fee)**
+- **外扣**：网络费用不从转账金额中扣，收款方收到完整金额。
 - **内扣**：网络费用从转账金额中扣，收款方实收会少于转账金额。
 
-**请求 ID（request_id）**  
-您在下发、出金等 API 请求中传入的唯一标识，用于去重与跟踪。
+**Memo / Tag**
+部分公链（如 XRP、EOS）转账时需要附带的额外标识，用于区分同一地址下的不同用户或交易。
 
-**Merchant Code / merchant_id**  
-[商户](/payments/cn/guides/merchants)在 Cobo 系统中的唯一标识，由 Cobo 分配，在 API 中用于指定商户。
+**Nonce**
+链上交易的序号值，用于确保交易按正确顺序执行和防止重放攻击。
 
 
 <Tip>欢迎您[提交反馈](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI)来帮助改进我们的文档！</Tip>

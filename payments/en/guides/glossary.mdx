@@ -1,0 +1,308 @@
+---
+title: "Glossary"
+sidebarTitle: "Glossary"
+description: "Glossary of key terms used in the Cobo payments solution with plain-language definitions."
+---
+
+This glossary lists the key terms used in the Cobo payments solution, helping you quickly understand the concepts throughout the documentation.
+
+---
+
+## Products & Platform
+
+**Cobo Payments Solution**
+A comprehensive [cryptocurrency payment](/payments/en/guides/overview) infrastructure covering [payment collection](/payments/en/guides/features#pay-in), [funds management](/payments/en/guides/amounts-and-balances), compliance screening, [merchant management](/payments/en/guides/merchants), and more — providing businesses with a secure, compliant, and efficient one-stop payment service.
+
+**Cobo Portal**
+Cobo's web-based management console. You can create organizations, manage members, [configure APIs](/payments/en/guides/preparation), install the Payments App, view wallets and reports, and more.
+
+**Payments App**
+A payment application installed within Cobo Portal that provides a web interface for payment queries, [funds management](/payments/en/guides/amounts-and-balances), [payouts](/payments/en/guides/crypto-payouts), [merchant](/payments/en/guides/merchants) and [destination](/payments/en/guides/destinations) management, and other day-to-day operations.
+
+**Cobo Guard**
+Cobo's mobile app (e.g., iOS) used for multi-factor authentication (MFA), operation approvals, transaction signing, and key share management. Operations such as withdrawals and member invitations often require confirmation on Cobo Guard.
+
+**Fee Station**
+An account within the Cobo platform for managing various fees. Fees incurred by [payouts](/payments/en/guides/crypto-payouts), refunds, and other operations are deducted from here. You need to pre-fund it with USDT or USDC. See [Fee deduction](/payments/en/guides/wallet-fee-deduction).
+
+**Development / Production**
+The [development environment](/payments/en/guides/preparation) (e.g., portal.dev.cobo.com) is used for integration and testing; the [production environment](/payments/en/guides/preparation-prod) (e.g., portal.cobo.com) is used for live operations with stricter configuration and security requirements.
+
+**Screening App**
+Cobo's compliance screening application. You can use it to scan received funds and manage isolated or frozen funds — including refunding, isolating, or unfreezing them.
+
+---
+
+## Accounts & Funds
+
+**Account**
+A virtual entity in the system's ledger, not mapped one-to-one to on-chain wallets or addresses. Every payment collection, [allocation](/payments/en/guides/allocate-funds), refund, or payout creates a ledger entry and updates the balance. See [Accounts and fund allocation](/payments/en/guides/amounts-and-balances).
+
+**Developer Account**
+A single account holding the developer balance, representing the funds you own as the payment service integrator. In multi-merchant scenarios, developer fees are settled into this account.
+
+**Merchant Account**
+Each merchant has a corresponding account holding that merchant's balance. Each merchant represents an actual business entity collecting payments (e.g., a storefront or a business line).
+
+**Merchant Balance / Developer Balance**
+The total amount of funds available in an account for [payouts](/payments/en/guides/crypto-payouts) or refunds at a given point in time. Queryable via the Payments App or API. See [Accounts and fund allocation](/payments/en/guides/amounts-and-balances).
+
+**Settlement**
+After a payment is completed, the process by which the system automatically distributes funds to the merchant account and developer account based on preset rules (e.g., developer fee rate). This occurs only within the ledger and does not generate on-chain transfers.
+
+**Settled Amount**
+The amount of funds that have completed the settlement process, i.e., already distributed to the corresponding accounts.
+
+**Allocation**
+A manual operation to transfer funds between accounts, such as from the developer account to a merchant account. It only adjusts ledger balances without generating on-chain transfers, and is generally limited to accounts within the same wallet. See [Allocate funds](/payments/en/guides/allocate-funds).
+
+**Developer Fee Rate**
+A percentage set at the merchant level, representing the proportion of each payment that is settled into the developer account. For example, 1% means 1 USDT out of every 100 USDT collected goes to the developer. Corresponds to the API parameter `developer_fee_rate`.
+
+**Developer Fee**
+The amount you charge as a platform for an order or refund, denominated in cryptocurrency or fiat currency. Determines the revenue split between you and your merchants. Corresponds to the API parameters `fee_amount` / `merchant_fee_amount`.
+
+**Collection-on-behalf-of / COBO**
+A model where the developer collects funds from payers on behalf of merchants, and distributes funds to the corresponding merchant accounts after settlement. Applicable in PSP and other multi-merchant scenarios.
+
+**Credit / Deposit Confirmation**
+The process by which funds are credited to a merchant or developer account after an on-chain transfer is recognized by the system and passes compliance screening.
+
+---
+
+## Payment Collection
+
+**Payment Collection / Pay-in**
+The process of collecting cryptocurrency from payers. Three pay-in types are supported: [top-up mode](/payments/en/guides/get-topup-addresses), [order mode](/payments/en/guides/create-orders), and [subscription mode](/payments/en/guides/create-subscriptions).
+
+**Payer**
+The party making a payment to you — can be an end user, a business client, etc. In [top-up mode](/payments/en/guides/get-topup-addresses), a dedicated [top-up address](/payments/en/guides/get-topup-addresses) is generated for each payer.
+
+**Pay-in Type**
+The method used to collect cryptocurrency, including top-up mode, order mode, and subscription mode, each suited to different business scenarios.
+
+**Top-up Mode**
+Generates a fixed [top-up address](/payments/en/guides/get-topup-addresses) for each payer, allowing them to top up any amount at any time. Suitable for B2B, gaming top-ups, OTC, and similar scenarios. See [Get top-up addresses](/payments/en/guides/get-topup-addresses).
+
+**Order Mode**
+Creates a [pay-in order](/payments/en/guides/create-orders) with a specified amount and expiration time. The payer must complete the payment within the given timeframe. Supports order cancellation, [refunds](/payments/en/guides/create-orders#handle-refund-requests), and handling of overpayments, underpayments, and late payments. See [Create pay-in orders](/payments/en/guides/create-orders).
+
+**Subscription Mode**
+Uses smart contracts or similar mechanisms to automatically debit a payer's wallet on a recurring basis. Suitable for membership fees, subscription fees, and other recurring payment scenarios. See [Create subscriptions](/payments/en/guides/create-subscriptions).
+
+**Top-up Address**
+In [top-up mode](/payments/en/guides/get-topup-addresses), a dedicated receiving address generated for a specific payer on a specified chain. Any transfer to this address is treated as a top-up. See [Get top-up addresses](/payments/en/guides/get-topup-addresses).
+
+**Pay-in Order**
+A payment task created in [order mode](/payments/en/guides/create-orders), containing the amount payable, expiration time, receiving address, and other details. Statuses include Pending, Completed, Expired, Underpaid, etc. See [Create pay-in orders](/payments/en/guides/create-orders) and [Statuses and events](/payments/en/guides/status-and-events).
+
+**Payment Link**
+A URL generated by Cobo that opens a Cobo-hosted payment page where the payer can choose a token and chain to complete the payment, without you needing to build your own checkout page. Can be embedded in an iFrame. See [Payment links](/payments/en/guides/payment-link).
+
+**Amount Payable**
+The actual amount of cryptocurrency the payer needs to pay. It can be calculated by the system based on exchange rates, or specified directly when [creating an order](/payments/en/guides/create-orders).
+
+**Order Amount**
+The target amount specified when creating a pay-in order, used to determine the amount the payer needs to pay and the settlement basis.
+
+**Pricing Currency / Pricing Amount**
+The currency and amount when goods are priced in fiat. The system can calculate the cryptocurrency amount payable based on the pricing amount and exchange rates. Corresponds to the API parameters `pricing_currency` / `pricing_amount`. See [Create pay-in orders](/payments/en/guides/create-orders).
+
+**Payable Currency / Payable Amount**
+The cryptocurrency and amount you plan to collect. Maps to a [Token ID](/payments/en/guides/supported-chains-and-tokens) (e.g., ETH_USDT for USDT on Ethereum). Corresponds to the API parameters `payable_currency` / `payable_amount`. See [Create pay-in orders](/payments/en/guides/create-orders).
+
+**Actual Received Amount**
+The actual amount of cryptocurrency received from the payer, which may differ from the amount payable (e.g., in cases of overpayment or underpayment).
+
+**Abnormal Payment**
+A payment where the amount or timing does not match expectations, including overpayments, underpayments, and late payments.
+
+**Overpayment / Underpayment / Late Payment**
+- **Overpayment**: The actual payment exceeds the amount payable within the order's validity period. The order is still marked as Completed and settled proportionally.
+- **Underpayment**: The actual payment is less than the amount payable within the validity period. The order's final state is Underpaid.
+- **Late payment**: A payment made after the order has expired. It does not change the order status. Funds are credited to the developer account per the configured rules, and a late payment event is triggered. See [Create pay-in orders](/payments/en/guides/create-orders) and [Statuses and events](/payments/en/guides/status-and-events).
+
+**Final State**
+A terminal order status that cannot be changed further, such as Completed, Expired, or Underpaid. See [Statuses and events](/payments/en/guides/status-and-events).
+
+**Refund**
+An operation to return collected funds to the payer. Funds can come from the merchant account or the developer account, and a refund processing fee (developer fee) can be applied. See [Create pay-in orders](/payments/en/guides/create-orders#handle-refund-requests).
+
+**Refund Link**
+A one-time URL generated via the API. The end user opens it, enters the address to receive the refund, and Cobo automatically initiates the refund transfer and notifies you of the status. See [Create refund links](/payments/en/guides/create-refund-link).
+
+**Refund Processing Fee**
+A fee that may be incurred during a refund operation, determined by the developer fee settings.
+
+**Counterparty**
+Payer information (individual or institution) and their wallet addresses registered in [top-up mode](/payments/en/guides/get-topup-addresses). Once registered, top-up records display the counterparty name for the source address, making it easier to identify the origin of funds. See [Counterparties](/payments/en/guides/counterparties).
+
+---
+
+## Payouts
+
+**Payout**
+An operation to transfer cryptocurrency from an account to an external address or fiat account, including [crypto payouts](/payments/en/guides/crypto-payouts) and [fiat off-ramp](/payments/en/guides/fiat-payouts).
+
+**Crypto Payout**
+An on-chain transfer of cryptocurrency to an external wallet address. You can choose the merchant or developer account as the funding source, with support for [automatic cross-chain transfers](/payments/en/guides/crypto-payouts). See [Crypto payouts](/payments/en/guides/crypto-payouts).
+
+**Fiat Off-ramp**
+Converting cryptocurrency to fiat currency through an OTC vendor and transferring it to your bank account. You need to first register and get a bank account approved in [destinations](/payments/en/guides/destinations). See [Fiat off-ramp](/payments/en/guides/fiat-payouts).
+
+**On-ramp**
+The process of converting fiat currency into cryptocurrency — the opposite of off-ramp.
+
+**Destination**
+A centralized registry of payout targets, including cryptocurrency wallet addresses and bank accounts. Can be configured as a whitelist to restrict payouts to registered destinations only. See [Destinations](/payments/en/guides/destinations).
+
+**Whitelist**
+When enabled, [crypto payouts](/payments/en/guides/crypto-payouts) can only be sent to wallet addresses registered in [destinations](/payments/en/guides/destinations). New addresses cannot be entered freely, enhancing security.
+
+**Bulk Send**
+A batch operation to send cryptocurrency to multiple recipient addresses at once. Suitable for payroll, rebates, partner settlements, and more. Each entry is a Bulk Send Item. See [Bulk send](/payments/en/guides/bulk-send).
+
+**Execution Mode**
+- **Strict**: If any item fails validation or KYA, no on-chain transfers are executed for the entire batch.
+- **Partial**: Only items that pass validation are executed. Failed items can be retried individually later. Corresponds to the API parameter `execution_mode`. See [Bulk send](/payments/en/guides/bulk-send).
+
+**Cross-chain**
+Transferring assets from one blockchain to another (e.g., USDT from Ethereum to TRON) and then executing a payout. The system supports [automatic cross-chain transfers](/payments/en/guides/crypto-payouts) during payouts, which may incur cross-chain fees.
+
+**Fund Sweeping**
+The process of consolidating funds scattered across different addresses into a designated address. Cobo can perform automatic sweeping to simplify management and payouts.
+
+---
+
+## Compliance
+
+**Compliance Screening**
+Risk and compliance checks performed on incoming or outgoing transactions. Funds that fail screening may be isolated or frozen and require manual review or an alternative address.
+
+**AML/KYT Screening**
+Anti-Money Laundering (AML) and Know Your Transaction (KYT) screening — the core component of compliance screening. Cobo uses Cobo KYT to identify transaction risks.
+
+**Cobo KYT**
+Know Your Transaction — Cobo's transaction compliance screening service for identifying and preventing suspicious or high-risk transactions.
+
+**KYA**
+Know Your Address — validation and compliance verification of receiving addresses. KYA checks are performed on each recipient address in scenarios such as [bulk send](/payments/en/guides/bulk-send).
+
+**Manual Review**
+A process where compliance-flagged transactions are reviewed by a human to determine whether the funds are compliant. During the review, funds remain in the "Under Review" status.
+
+**Under Review**
+A status indicating that a transaction or funds are undergoing compliance review and cannot be used during this period.
+
+**Isolated / Frozen**
+When compliance screening fails, funds may be marked as isolated or frozen — they are not credited or cannot be transferred out. These must be handled in the Screening App or by contacting Cobo support.
+
+---
+
+## Risk Controls & Permissions
+
+**Risk Controls**
+Security policies within Cobo Portal, including transaction risk controls (e.g., withdrawal amount limits, approval workflows) and governance controls (e.g., multi-person approval for inviting members or changing roles). Operations such as refunds and withdrawals can trigger risk control rules.
+
+**Transaction Policies**
+Risk control rules applied to on-chain and off-chain transactions, including amount thresholds, approval requirements, and more.
+
+**Governance Policies**
+Risk control rules applied to business operations such as member management and role changes.
+
+**Approval Quorum**
+The minimum number of approvals required to execute a given operation.
+
+**Admin**
+The highest-privilege role in the Cobo payments solution. Admins can manage organization members, configure APIs, and perform all payment operations.
+
+**Payment Admin**
+A role responsible for payment-related configurations and operations, with most payment permissions except organization management.
+
+**Payment Member**
+A role that typically has view-only or limited operational permissions. See [Roles and permissions](/payments/en/guides/roles-and-permissions).
+
+**Viewer**
+A role with view-only access that cannot perform any operations.
+
+---
+
+## Merchant Management
+
+**Merchant**
+An independent payment-collecting entity within the system, with its own merchant account. Suitable for e-commerce multi-store setups, multiple business lines, PSPs serving multiple downstream merchants, and similar scenarios. See [Merchant management](/payments/en/guides/merchants).
+
+**Default Merchant**
+A merchant automatically created by the system for each Cobo Portal organization, named after the organization. If you serve payers directly without downstream merchants, you can use the default merchant.
+
+**Payment Service Provider / PSP**
+An institution that provides payment and settlement services to multiple downstream merchants. Through merchant management, each merchant is settled independently, with revenue sharing via the developer fee rate.
+
+**Merchant Actual Receipt**
+The amount that actually enters a merchant's account after deducting developer fees.
+
+**Merchant Code / merchant_id**
+The unique identifier for a [merchant](/payments/en/guides/merchants) in the Cobo system, assigned by Cobo and used in APIs to specify the merchant.
+
+---
+
+## Developer & Integration
+
+**Payments API**
+Cobo's HTTP API for [creating orders](/payments/en/guides/create-orders), [getting top-up addresses](/payments/en/guides/get-topup-addresses), querying balances, [initiating allocations](/payments/en/guides/allocate-funds), making payouts, [bulk sends](/payments/en/guides/bulk-send), and more. Requires API Key and signature authentication. See [Get started](/payments/en/guides/preparation).
+
+**API Key / API Secret**
+A key pair used for request authentication. The API Key is the public key, included in request headers; the API Secret is the private key, used for signing requests and must be kept secure. Typically generated using Ed25519 and registered in Cobo Portal. See [Get started](/payments/en/guides/preparation).
+
+**Webhook**
+An event notification mechanism. After you configure and register a [Webhook Endpoint](/payments/en/guides/status-and-events), Cobo sends HTTP requests to your server URL when events occur (e.g., order status changes, top-up confirmations, payout completions), enabling real-time business status updates. See [Statuses and events](/payments/en/guides/status-and-events).
+
+**Webhook Endpoint**
+A URL you provide for receiving [Webhook](/payments/en/guides/status-and-events) requests. It must be registered in Cobo Portal with the event types you want to subscribe to. Implementing signature verification and idempotent handling is recommended. See [Statuses and events](/payments/en/guides/status-and-events).
+
+**Callback Message**
+A notification sent by the system to your server, conveying information such as transaction status changes.
+
+**Token ID**
+An identifier for a specific token on a specific chain, such as `ETH_USDT`, `TRON_USDT`, or `SOL_USDC`. Used to specify the token for payment collection, payouts, allocations, etc. See [Supported chains and tokens](/payments/en/guides/supported-chains-and-tokens).
+
+**SDK**
+Multi-language client libraries provided by Cobo (Python, Java, JavaScript, Go) that encapsulate API calls and signing logic to simplify integration.
+
+---
+
+## Wallets & Chains
+
+**Wallet**
+In the Cobo ecosystem, a collection of addresses and assets used for payment collection, fund sweeping, and withdrawals. In the Payments context, a wallet can be a shared wallet or a merchant-specific separate wallet.
+
+**Custodial Wallet**
+A wallet where private keys are held by Cobo, allowing transfers to be completed without your participation in signing. Cobo KYT is enabled by default.
+
+**MPC Wallet**
+A Multi-Party Computation wallet where private keys are split into shares held by multiple parties (e.g., Cobo and your team). Multiple parties must participate in signing to complete withdrawals and other operations. Cobo KYT or the Screening App can optionally be enabled.
+
+**Blockchain / Chain**
+A blockchain network such as Ethereum, TRON, Solana, or BNB Smart Chain. Both payment collection and payouts require specifying which chains to use. See [Supported chains and tokens](/payments/en/guides/supported-chains-and-tokens).
+
+**Token**
+A digital asset on a blockchain, such as USDT, USDC, or ETH. In Payments, tokens are identified by Token ID for specific chain-token combinations.
+
+**Stablecoin**
+A cryptocurrency pegged to a fiat currency (e.g., USD), such as USDT or USDC. Due to their price stability, stablecoins are the most commonly used tokens in cryptocurrency payments.
+
+**Gas Fee / Network Fee**
+Transaction fees consumed when initiating on-chain transactions. Different third-party wallets may handle fees as "external" (gas paid separately) or "internal" (gas deducted from the transfer amount), which can affect the actual received amount.
+
+**External Fee / Internal Fee**
+- **External fee**: Network fees are not deducted from the transfer amount; the recipient receives the full amount.
+- **Internal fee**: Network fees are deducted from the transfer amount; the recipient receives less than the transferred amount.
+
+**Memo / Tag**
+An additional identifier required by certain blockchains (e.g., XRP, EOS) when making transfers, used to distinguish different users or transactions under the same address.
+
+**Nonce**
+A sequence number for on-chain transactions, used to ensure transactions are executed in the correct order and to prevent replay attacks.
+
+
+<Tip>We welcome your [feedback](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI) to help us improve our documentation!</Tip>
