@@ -23,6 +23,7 @@
                   "payments/en/guides/features",
                   "payments/en/guides/quick-start",
                   "payments/en/guides/payments-ai-assistant",
+                  "payments/en/guides/glossary",
                   "payments/en/guides/changelog"
                 ]
               },
@@ -294,6 +295,7 @@
                   "payments/cn/guides/features",
                   "payments/cn/guides/quick-start",
                   "payments/cn/guides/payments-ai-assistant",
+                  "payments/cn/guides/glossary",
                   "payments/cn/guides/changelog"
                 ]
               },
