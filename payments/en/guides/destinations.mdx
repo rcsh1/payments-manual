@@ -5,7 +5,14 @@ lang: "en"
 
 <Note>**Disclaimer: This article contains AI translations and should only be used as reference.** Contact Cobo's support team through [help@cobo.com](mailto:help@cobo.com) if you have any questions.</Note>
 
-The **Destinations** feature is used to centrally manage payout destination information, including wallet addresses for receiving cryptocurrency and bank accounts for off-ramp.
+This guide explains how to integrate and manage **Destinations** through the Cobo Payment API.
+Destinations are receiving entities used for payouts and bulk sends, and can aggregate multiple wallet addresses or multiple bank accounts for off-ramp.
+
+Core capabilities:
+- **Destination management**: Consolidate cryptocurrency wallet addresses and fiat bank accounts under a single entity.
+- **Payout whitelist**: Use destinations as a whitelist for crypto payouts, restricting fund transfers to approved wallet addresses only.
+- **Merchant association**: Associate each merchant with a specific destination for easier payouts. Note that direct off-ramp settlement to merchant bank accounts is not currently supported.
+- **Risk control**: With Cobo Premium integrated, you can run address risk screening and identify risky wallet addresses before adding destinations or initiating payouts.
 
 - For off-ramp, you need to register a bank account with a name that matches your company's legal entity name, and it must be approved by Cobo's operations team before it can be used for payouts.
 
