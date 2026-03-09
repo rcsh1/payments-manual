@@ -24,13 +24,13 @@ with cobo_waas2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = cobo_waas2.PaymentApi(api_client)
     token_id = "ETH_USDT"
-    acquiring_type = cobo_waas2.AcquiringType("Order")
     merchant_ids = "M1001,M1002,M1003"
+    acquiring_type = cobo_waas2.AcquiringType("Order")
 
     try:
         # List merchant balances
         api_response = api_instance.list_merchant_balances(
-            token_id, acquiring_type, merchant_ids=merchant_ids
+            token_id, merchant_ids=merchant_ids, acquiring_type=acquiring_type
         )
         print("The response of PaymentApi->list_merchant_balances:\n")
         pprint(api_response)
@@ -58,11 +58,11 @@ public class Example {
     defaultClient.setPrivKey("<YOUR_PRIVATE_KEY>");
     PaymentApi apiInstance = new PaymentApi();
     String tokenId = "ETH_USDT";
-    AcquiringType acquiringType = AcquiringType.fromValue("Order");
     String merchantIds = "M1001,M1002,M1003";
+    AcquiringType acquiringType = AcquiringType.fromValue("Order");
     try {
       ListMerchantBalances200Response result =
-          apiInstance.listMerchantBalances(tokenId, acquiringType, merchantIds);
+          apiInstance.listMerchantBalances(tokenId, merchantIds, acquiringType);
       System.out.println(result);
     } catch (ApiException e) {
       System.err.println("Exception when calling PaymentApi#listMerchantBalances");
@@ -88,8 +88,8 @@ import (
 
 func main() {
 	tokenId := "ETH_USDT"
-	acquiringType := coboWaas2.AcquiringType("Order")
 	merchantIds := "M1001,M1002,M1003"
+	acquiringType := coboWaas2.AcquiringType("Order")
 
 	configuration := coboWaas2.NewConfiguration()
 	// Initialize the API client
@@ -104,8 +104,8 @@ func main() {
 	})
 	resp, r, err := apiClient.PaymentAPI.ListMerchantBalances(ctx).
 		TokenId(tokenId).
-		AcquiringType(acquiringType).
 		MerchantIds(merchantIds).
+		AcquiringType(acquiringType).
 		Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.ListMerchantBalances``: %v\n", err)
@@ -127,11 +127,11 @@ apiClient.setPrivateKey("<YOUR_PRIVATE_KEY>");
 // Call the API
 const apiInstance = new CoboWaas2.PaymentApi();
 const token_id = "ETH_USDT";
-const acquiring_type = "Order";
 const opts = {
   merchant_ids: "M1001,M1002,M1003",
+  acquiring_type: "Order",
 };
-apiInstance.listMerchantBalances(token_id, acquiring_type, opts).then(
+apiInstance.listMerchantBalances(token_id, opts).then(
   (data) => {
     console.log("API called successfully. Returned data: " + data);
   },
