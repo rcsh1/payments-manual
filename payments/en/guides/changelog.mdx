@@ -5,6 +5,17 @@ lang: "en"
 
 This document records all major updates and upcoming features for the Cobo Payments solution, helping you stay informed about product developments and upgrades.
 
+
+## March 2026
+
+| Feature | Description | Release Date |
+| ----- | ----- | ----- |
+| **Webhook** | (SDK v1.32.0) Added a Webhook trigger API `payments/webhooks/trigger`. Developers can now manually trigger Payment-related Webhook events without creating actual transactions, making integration testing easier. | 2026-03-12 |
+| **Funds Management** | (SDK v1.32.0) The `List merchant balances` endpoint now supports flexible querying. Both `token_id` and `merchant_ids` parameters are optional, allowing queries by specific token or across multiple merchants. | 2026-03-12 |
+| **Destinations** | (SDK v1.32.0) Payout Destination management enhancements:<br />・**Create destination** — Request: added `bank_accounts[].country` and `bank_accounts[].city`; `bank_accounts[].intermediary_bank_info.bank_address` is now optional<br />・**Get destination detail** — Response: added `bank_accounts[].country` and `bank_accounts[].city`<br />・**Create destination entry** — Request: added `bank_accounts[].country` and `bank_accounts[].city`; `bank_accounts[].intermediary_bank_info.bank_address` is now optional<br />・**List destination entries** — Response: added `bank_accounts[].country` and `bank_accounts[].city`<br />・**Get destination entry information** — Response: added `bank_account.country` and `bank_account.city`<br />・**Update destination entry** — Response: added `bank_account.country` and `bank_account.city`; Request: `bank_account.intermediary_bank_info.bank_address` is now optional | 2026-03-12 |
+| **Reports** | (SDK v1.32.0) The `Generate reports` endpoint now supports a new `report_types` enum value: `BulkSend`. | 2026-03-12 |
+
+
 ## February 2026
 
 | Feature | Change Description | Release Date |

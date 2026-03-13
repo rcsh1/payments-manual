@@ -3,6 +3,16 @@ title: "发布历史"
 lang: "zh-hans"
 ---
 
+## 2026 年 03 月
+
+| 功能 | 变更说明 | 发布时间 |
+| ----- | ----- | ----- |
+| **Webhook** | **(SDK v1.32.0)** 新增 Webhook 手动触发 API：`payments/webhooks/trigger` ，支持开发者在无需创建真实交易的情况下，手动触发 Payment 相关 Webhook 事件，便于集成测试 | 2026-03-12 |
+| **资金管理** | **(SDK v1.32.0)** `List merchant balances` 接口新增灵活查询支持，token\_id 与 merchant\_ids 参数现均为可选，支持按指定 token 或跨多个商户查询余额 | 2026-03-12 |
+| **转出目的地** | **(SDK v1.32.0)** Payout Destination 管理功能优化：<br />・**Create destination**：request 中新增 `bank_accounts[].country`、`bank_accounts[].city`；`bank_accounts[].intermediary_bank_info.bank_address` 变为选填<br />・**Get destination detail**：response 中新增 `bank_accounts[].country`、`bank_accounts[].city`<br />・**Create destination entry**：request 中新增 `bank_accounts[].country`、`bank_accounts[].city`；`bank_accounts[].intermediary_bank_info.bank_address` 变为选填<br />・**List destination entries**：response 中新增 `bank_accounts[].country`、`bank_accounts[].city`<br />・**Get destination entry information**：response 中新增 `bank_account.country`、`bank_account.city`<br />・**Update destination entry**：response 中新增 `bank_account.country`、`bank_account.city`；request 中 `bank_account.intermediary_bank_info.bank_address` 变为选填 | 2026-03-12 |
+| **报表** | **(SDK v1.32.0)** `Generate reports` 接口 新增报表类型枚举值 BulkSend，支持生成 Bulk Send 报表 | 2026-03-12 |
+
+
 ## 2026 年 02 月
 
 本文记录 Cobo 支付解决方案的全部重要更新与即将上线的功能，助您及时掌握产品动态与升级信息。
