@@ -1,0 +1,93 @@
+---
+title: "Cobo Payment Skill Introduction"
+sidebarTitle: "Payment Skill"
+lang: "en"
+---
+
+## What is Cobo Payment Skill?
+
+Cobo Payment Skill is a payment capability extension package designed specifically for AI coding assistants (Claude Code, Cursor, etc.), allowing you to operate the Cobo Payment API (`/payments/*`) directly using natural language — no need to manually look up documentation or write boilerplate code.
+
+## Core Capabilities
+
+### 1. Pay-in (Receiving Payments)
+
+- Create payment orders by specifying fiat currency amounts, with automatic cryptocurrency conversion based on exchange rates
+- Generate payment links that can be shared with payers to complete transactions
+- Real-time order status tracking (Pending → Processing → Completed)
+
+### 2. Refund
+
+- Initiate refunds on completed orders
+- Support direct refunds to a specified address, or use a refund link to let the payer submit their own address
+
+### 3. Payout / Settlement
+
+- Crypto payout: Transfer funds from a merchant account to an on-chain address
+- Fiat off-ramp: Settle crypto balances to a bank account
+
+### 4. Merchant Management
+
+- Create and manage multiple merchants
+- Supports two modes: Shared Wallet and Separate Wallet
+
+### 5. Balance Inquiry
+
+- Query balances for individual merchants, PSP (developer) accounts, and payment wallets
+
+### 6. Exchange Rates & Supported Tokens
+
+- Query real-time exchange rates; supports USDT / USDC on multiple chains including Tron, Ethereum, BNB Chain, Polygon, Arbitrum, and Solana
+
+## Installation
+
+**Requirements:**
+
+- Python 3.9+
+- Claude Code (recommended for best results) or Cursor
+- A Cobo Portal account with Payment functionality enabled
+
+**Installation commands:**
+
+```bash
+pip install cobo-cli
+cobo skill install all --scope global --skill cobo-payment
+```
+
+## Quick Start
+
+**Step 1: Configure environment and log in**
+
+```bash
+cobo env dev          # Select environment (dev / prod)
+cobo login -u         # OAuth login, automatically opens browser
+```
+
+**Step 2: Generate and register an API Key**
+
+```bash
+cobo keys generate --key-type API    # Generate key pair
+cobo open developer                  # Open developer console
+```
+
+<Info>In the Dev environment, you can use `cobo keys register` to register automatically.</Info>
+
+**Step 3: Verify connectivity**
+
+```bash
+cobo get /payments/orders --limit 1
+```
+
+A JSON response confirms successful configuration.
+
+## Common Task Examples
+
+Just tell the AI what you want to do in natural language:
+
+| What you say | What the Skill does |
+|---|---|
+| Create a merchant named xxx in Shared mode | `POST /payments/merchants` |
+| Generate a payment link for 1000 USDT (Tron) with a developer fee of 200 | Calls Python SDK to create a payment link |
+| Check my PSP balance | `GET /payments/balance/psp` |
+| Show all payment orders for merchant M1001 | `GET /payments/orders?merchant_id=M1001` |
+| Refund 500 USDT to 0x... | `POST /payments/refunds` |
