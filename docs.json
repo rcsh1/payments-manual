@@ -293,8 +293,8 @@
                 "pages": [
                   "payments/cn/guides/overview",
                   "payments/cn/guides/features",
-                  "payments/cn/guides/cobo-payment-skill",
                   "payments/cn/guides/quick-start",
+                  "payments/cn/guides/cobo-payment-skill",
                   "payments/cn/guides/payments-ai-assistant",
                   "payments/cn/guides/glossary",
                   "payments/cn/guides/changelog"
