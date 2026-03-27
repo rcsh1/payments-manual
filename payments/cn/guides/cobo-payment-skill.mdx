@@ -1,0 +1,92 @@
+---
+title: "Cobo Payment Skill 介绍"
+sidebarTitle: "集成指南"
+lang: "zh-hans"
+---
+
+## 什么是 Cobo Payment Skill？
+
+Cobo Payment Skill 是专为 AI 编程助手（Claude Code、Cursor 等）设计的支付能力扩展包，让你可以用自然语言直接操作 Cobo 支付 API（`/payments/*`），无需手动查阅文档或编写样板代码。
+
+## 核心能力
+
+### 1. 收款（Pay-in）
+
+- 创建收款订单，指定法币金额，自动按汇率换算加密货币
+- 生成付款链接，分享给付款方即可完成收款
+- 实时查询订单状态（Pending → Processing → Completed）
+
+### 2. 退款（Refund）
+
+- 对已完成订单发起退款
+- 支持直接退回指定地址，或通过退款链接让付款方自行提交地址
+
+### 3. 打款 / 结算（Payout）
+
+- 加密货币打款：从商户账户向链上地址转账
+- 法币出金（Off-Ramp）：将加密余额结算到银行账户
+
+### 4. 商户管理
+
+- 创建和管理多个商户，支持共享钱包（Shared）和独立钱包（Separate）两种模式
+
+### 5. 余额查询
+
+- 查询各商户余额、PSP（开发者）账户余额、支付钱包余额
+
+### 6. 汇率与支持代币
+
+- 查询实时汇率，支持 USDT / USDC 在 Tron、Ethereum、BNB Chain、Polygon、Arbitrum、Solana 等多条链上收款
+
+## 安装
+
+**环境要求：**
+
+- Python 3.9+
+- Claude Code（效果更好）或 Cursor
+- Cobo Portal 账号（已开通 Payment 功能）
+
+**安装命令：**
+
+```bash
+pip install cobo-cli
+cobo skill install all --scope global --skill cobo-payment
+```
+
+## 快速上手
+
+**第一步：配置环境与登录**
+
+```bash
+cobo env dev          # 选择环境（dev / prod）
+cobo login -u         # OAuth 登录，自动打开浏览器
+```
+
+**第二步：生成并注册 API Key**
+
+```bash
+cobo keys generate --key-type API    # 生成密钥对
+cobo open developer                  # 打开开发者控制台
+```
+
+<Info>Dev 环境可直接用 `cobo keys register` 自动注册。</Info>
+
+**第三步：验证连通性**
+
+```bash
+cobo get /payments/orders --limit 1
+```
+
+返回 JSON 即表示配置成功。
+
+## 常见任务示例
+
+直接用自然语言告诉 AI 你想做什么：
+
+| 你说的 | Skill 会做的 |
+|--------|-------------|
+| 帮我创建一个商户，名称 xxx，Shared 模式 | `POST /payments/merchants` |
+| 生成一个 1000 USDT（Tron）的付款链接，developer fee 200 | 调用 Python SDK 创建 payment link |
+| 查一下我的 PSP 余额 | `GET /payments/balance/psp` |
+| 查看 M1001 商户的所有收款订单 | `GET /payments/orders?merchant_id=M1001` |
+| 帮我退款 500 USDT 给 0x... | `POST /payments/refunds` |
