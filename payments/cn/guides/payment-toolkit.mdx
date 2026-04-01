@@ -1,0 +1,28 @@
+---
+title: "前端 React SDK"
+lang: "zh-hans"
+---
+
+如果您希望进行定制化开发，不想直接使用 Cobo 的成品页面，而是在您自己的前端页面中引入 Web3 支付能力，可以使用 Cobo 提供的 React SDK 进行开发。
+
+## 前端接入对比
+
+|              |            支付链接             |          React SDK           |
+| :----------: | :---------------------------------: | :--------------------------: |
+| **产品形态** |       成品前端页面，难以定制        |   npm 开发工具包，按需使用   |
+| **产品功能** |           完整收银台功能            |     只提供 Web3 核心能力     |
+| **支持范围** |         不依赖前端开发环境          |   前端需要使用 React 开发    |
+| **部署域名** | 固定：`https://payment-link.cobo.com` | 不固定：您自己的前端域名 |
+| **鉴权方式** |      每个订单绑定唯一的 token       |   有效期一小时的动态 token   |
+
+React SDK 提供了带汇率币种选择器、带金额二维码、**连接第三方钱包发起交易**等 Web3 核心能力，您只需专注于 Web2 业务逻辑，无需关心 Web3 支付的实现细节。
+
+React SDK 的详细接入流程，以及组件功能演示，请参阅：[React SDK 交互式文档](https://payment-toolkit.cobo.com/components)。
+
+## SDK 鉴权
+
+React SDK 需要完成鉴权才能使用，鉴权需要您的前端和后端配合完成，流程如下：
+
+1. 后端调用 [Create SDK link](/payments/en/api-references/payment/create-sdk-link) 来创建一个 SDK 专用 token
+2. 后端将 token 返回给前端
+3. 前端调用 SDK 的 `setAccessToken` 方法传入 token
