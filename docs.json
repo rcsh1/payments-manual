@@ -51,6 +51,7 @@
                     "group": "Build Checkout Page",
                     "pages": [
                       "payments/en/guides/payment-link",
+                      "payments/en/guides/payment-toolkit",
                       "payments/en/guides/third-party-wallet-support",
                       "payments/en/guides/wallet-fee-deduction"
                     ]
@@ -116,7 +117,8 @@
                       "payments/en/api-references/payment/update-pay-in-order",
                       "payments/en/api-references/payment/get-pay-in-order-information",
                       "payments/en/api-references/payment/list-all-pay-in-orders",
-                      "payments/en/api-references/payment/create-order-link"
+                      "payments/en/api-references/payment/create-order-link",
+                      "payments/en/api-references/payment/create-sdk-link"
                     ]
                   },
                   {
@@ -324,6 +326,7 @@
                     "group": "搭建收款页面",
                     "pages": [
                       "payments/cn/guides/payment-link",
+                      "payments/cn/guides/payment-toolkit",
                       "payments/cn/guides/third-party-wallet-support",
                       "payments/cn/guides/wallet-fee-deduction"
                     ]

@@ -23,7 +23,7 @@ Order mode is suitable for scenarios that require specifying a specific payment 
 
 You can create an order in two ways:
 
-- Call [Create pay-in order](/payments/en/api-references/payment/create-pay-in-order) to directly create a payment order. After a successful call, you will receive information such as the payable amount and payment address.
+- Call [Create pay-in order](/payments/en/api-references/payment/create-pay-in-order) to directly create a payment order. After a successful call, you will receive information such as the payable amount and payment address. You will need to build the frontend page yourself, or you can integrate Web3 payment capabilities using the [React SDK](/payments/en/guides/payment-toolkit).
 - Call [Create order link](/payments/en/api-references/payment/create-order-link) to generate a payment link. This link will direct users to a payment page provided by Cobo, where they can create an order and complete payment without you needing to develop the front-end interaction. You can also embed this payment page into your website or application using an iFrame.
 
 ### Prerequisites
