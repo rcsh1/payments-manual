@@ -77,6 +77,49 @@ After receiving a Bulk Send request, Cobo first validates **all** addresses in t
 - `Strict` improves financial consistency, but increases operational overhead due to “one bad address forces a full resubmission”.
 - `Partial` scales better and is more automation-friendly, but requires a retry workflow for failed items.
 
+### **1.3 Smart contract mechanism for Bulk Send**
+
+When executing a Bulk Send, Cobo uses smart contracts to perform batch transfers. Understanding this mechanism helps you correctly verify contract call information in your callback handler.
+
+#### **Approve operation (triggered when allowance is insufficient)**
+
+When the smart contract's allowance for a token is insufficient, an `approve` call is first triggered on the token contract:
+
+- **Function called**: `approve`
+- **calldata parameters**:
+  - `_spender`: The batch transfer contract address (see table below)
+  - `_value`: The transfer amount
+
+#### **Transfer operation**
+
+After the approve completes, the actual transfer calls the `sendToken` function on the batch transfer contract:
+
+- **Function called**: `sendToken`
+- **calldata parameters**:
+  - `token`: The token contract address (see table below)
+  - `recipients`: List of recipient addresses
+  - `values`: Corresponding list of transfer amounts
+
+#### **Contract address reference**
+
+Since the contract addresses are fixed for each token, it is recommended to verify the contract addresses and function call information in your callback handler to ensure the callback completes correctly.
+
+| Chain | Token ID | Token contract address | Batch transfer contract address |
+|-------|----------|------------------------|---------------------------------|
+| Ethereum | ETH_USDT | `0xdac17f958d2ee523a2206206994597c13d831ec7` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| Ethereum | ETH_USDC | `0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| Arbitrum | ARBITRUM_USDT | `0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| Arbitrum | ARBITRUM_USDCOIN | `0xaf88d065e77c8cc2239327c5edb3a432268e5831` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| Base | BASE_USDT | `0xfde4c96c8593536e31f229ea8f37b2ada2699bb2` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| Base | BASE_USDC | `0x833589fcd6edb6e08f4c7c32d4f71b54bda02913` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| Polygon | MATIC_USDT | `0xc2132d05d31c914a87c6611c10748aeb04b58e8f` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| Polygon | MATIC_USDC2 | `0x3c499c542cef5e3811e1192ce70d8cc03d5c3359` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| BNB Smart Chain | BSC_USDT | `0x55d398326f99059ff775485246999027b3197955` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| BNB Smart Chain | BSC_USDC | `0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| TRON | TRON_USDT | `TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t` | `TEmDa9FY9YBCg1HPL41RUnJorXRRV3rX7A` |
+
+---
+
 ## **2. Webhook-driven automation workflow (failure notification → query items → batch resend)**
 
 ### **2.1 Subscribe to Bulk Send status update events**
