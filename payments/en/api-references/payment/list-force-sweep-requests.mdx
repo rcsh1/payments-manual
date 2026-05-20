@@ -1,11 +1,13 @@
 ---
-openapi: get /payments/balance/psp
+openapi: get /payments/force_sweep_requests
 ---
 
 <RequestExample>
 ```python Python
 import cobo_waas2
-from cobo_waas2.models.psp_balance import PspBalance
+from cobo_waas2.models.list_forced_sweep_requests200_response import (
+    ListForcedSweepRequests200Response,
+)
 from cobo_waas2.rest import ApiException
 from pprint import pprint
 
@@ -20,15 +22,20 @@ configuration = cobo_waas2.Configuration(
 with cobo_waas2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = cobo_waas2.PaymentApi(api_client)
-    token_id = "ETH_USDT"
+    limit = 10
+    before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
+    after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
+    request_id = "random_request_id"
 
     try:
-        # Get developer balance
-        api_response = api_instance.get_psp_balance(token_id)
-        print("The response of PaymentApi->get_psp_balance:\n")
+        # List force sweep requests
+        api_response = api_instance.list_forced_sweep_requests(
+            limit=limit, before=before, after=after, request_id=request_id
+        )
+        print("The response of PaymentApi->list_forced_sweep_requests:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling PaymentApi->get_psp_balance: %s\n" % e)
+        print("Exception when calling PaymentApi->list_forced_sweep_requests: %s\n" % e)
 
 ```
 ```java Java
@@ -50,12 +57,16 @@ public class Example {
     // Replace `<YOUR_PRIVATE_KEY>` with your private key
     defaultClient.setPrivKey("<YOUR_PRIVATE_KEY>");
     PaymentApi apiInstance = new PaymentApi();
-    String tokenId = "ETH_USDT";
+    Integer limit = 10;
+    String before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1";
+    String after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk";
+    String requestId = "random_request_id";
     try {
-      PspBalance result = apiInstance.getPspBalance(tokenId);
+      ListForcedSweepRequests200Response result =
+          apiInstance.listForcedSweepRequests(limit, before, after, requestId);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling PaymentApi#getPspBalance");
+      System.err.println("Exception when calling PaymentApi#listForcedSweepRequests");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -77,7 +88,10 @@ import (
 )
 
 func main() {
-	tokenId := "ETH_USDT"
+	limit := int32(10)
+	before := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
+	after := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
+	requestId := "random_request_id"
 
 	configuration := coboWaas2.NewConfiguration()
 	// Initialize the API client
@@ -90,13 +104,22 @@ func main() {
 	ctx = context.WithValue(ctx, coboWaas2.ContextPortalSigner, crypto.Ed25519Signer{
 		Secret: "<YOUR_PRIVATE_KEY>",
 	})
-	resp, r, err := apiClient.PaymentAPI.GetPspBalance(ctx).TokenId(tokenId).Execute()
+	resp, r, err := apiClient.PaymentAPI.ListForcedSweepRequests(ctx).
+		Limit(limit).
+		Before(before).
+		After(after).
+		RequestId(requestId).
+		Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.GetPspBalance``: %v\n", err)
+		fmt.Fprintf(
+			os.Stderr,
+			"Error when calling `PaymentAPI.ListForcedSweepRequests``: %v\n",
+			err,
+		)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `GetPspBalance`: PspBalance
-	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.GetPspBalance`: %v\n", resp)
+	// response from `ListForcedSweepRequests`: ListForcedSweepRequests200Response
+	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.ListForcedSweepRequests`: %v\n", resp)
 }
 
 ```
@@ -110,8 +133,13 @@ apiClient.setEnv(CoboWaas2.Env.DEV);
 apiClient.setPrivateKey("<YOUR_PRIVATE_KEY>");
 // Call the API
 const apiInstance = new CoboWaas2.PaymentApi();
-const token_id = "ETH_USDT";
-apiInstance.getPspBalance(token_id).then(
+const opts = {
+  limit: 10,
+  before: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1",
+  after: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk",
+  request_id: "random_request_id",
+};
+apiInstance.listForcedSweepRequests(opts).then(
   (data) => {
     console.log("API called successfully. Returned data: " + data);
   },

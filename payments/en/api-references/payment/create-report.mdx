@@ -1,12 +1,12 @@
 ---
-openapi: get /payments/destination
+openapi: post /payments/reports
 ---
 
 <RequestExample>
 ```python Python
 import cobo_waas2
-from cobo_waas2.models.destination_type import DestinationType
-from cobo_waas2.models.list_destinations200_response import ListDestinations200Response
+from cobo_waas2.models.create_report_request import CreateReportRequest
+from cobo_waas2.models.report import Report
 from cobo_waas2.rest import ApiException
 from pprint import pprint
 
@@ -21,29 +21,22 @@ configuration = cobo_waas2.Configuration(
 with cobo_waas2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = cobo_waas2.PaymentApi(api_client)
-    limit = 10
-    before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
-    after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-    keyword = "keyword"
-    destination_type = cobo_waas2.DestinationType()
-    country = "USA"
-    merchant_ids = "M1001,M1002,M1003"
+    create_report_request = cobo_waas2.CreateReportRequest(
+        start_time=1764237462,
+        end_time=1764237462,
+        report_export_format="CSV",
+        report_types=["OrderIn"],
+    )
 
     try:
-        # List all destinations
-        api_response = api_instance.list_destinations(
-            limit=limit,
-            before=before,
-            after=after,
-            keyword=keyword,
-            destination_type=destination_type,
-            country=country,
-            merchant_ids=merchant_ids,
+        # Create report
+        api_response = api_instance.create_report(
+            create_report_request=create_report_request
         )
-        print("The response of PaymentApi->list_destinations:\n")
+        print("The response of PaymentApi->create_report:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling PaymentApi->list_destinations: %s\n" % e)
+        print("Exception when calling PaymentApi->create_report: %s\n" % e)
 
 ```
 ```java Java
@@ -54,6 +47,7 @@ import com.cobo.waas2.Configuration;
 import com.cobo.waas2.Env;
 import com.cobo.waas2.api.PaymentApi;
 import com.cobo.waas2.model.*;
+import java.util.Arrays;
 
 public class Example {
   public static void main(String[] args) {
@@ -65,20 +59,17 @@ public class Example {
     // Replace `<YOUR_PRIVATE_KEY>` with your private key
     defaultClient.setPrivKey("<YOUR_PRIVATE_KEY>");
     PaymentApi apiInstance = new PaymentApi();
-    Integer limit = 10;
-    String before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1";
-    String after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk";
-    String keyword = "keyword";
-    DestinationType destinationType = DestinationType.fromValue("Individual");
-    String country = "USA";
-    String merchantIds = "M1001,M1002,M1003";
+    CreateReportRequest createReportRequest =
+        new CreateReportRequest()
+            .startTime(1764237462)
+            .endTime(1764237462)
+            .reportExportFormat(ReportExportFormat.CSV)
+            .reportTypes(Arrays.asList(ReportType.ORDERIN));
     try {
-      ListDestinations200Response result =
-          apiInstance.listDestinations(
-              limit, before, after, keyword, destinationType, country, merchantIds);
+      Report result = apiInstance.createReport(createReportRequest);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling PaymentApi#listDestinations");
+      System.err.println("Exception when calling PaymentApi#createReport");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -100,13 +91,7 @@ import (
 )
 
 func main() {
-	limit := int32(10)
-	before := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
-	after := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-	keyword := "keyword"
-	destinationType := coboWaas2.DestinationType("Individual")
-	country := "USA"
-	merchantIds := "M1001,M1002,M1003"
+	createReportRequest := *coboWaas2.NewCreateReportRequest(int32(1764237462), int32(1764237462), coboWaas2.ReportExportFormat("CSV"), []coboWaas2.ReportType{coboWaas2.ReportType("Order")})
 
 	configuration := coboWaas2.NewConfiguration()
 	// Initialize the API client
@@ -119,21 +104,15 @@ func main() {
 	ctx = context.WithValue(ctx, coboWaas2.ContextPortalSigner, crypto.Ed25519Signer{
 		Secret: "<YOUR_PRIVATE_KEY>",
 	})
-	resp, r, err := apiClient.PaymentAPI.ListDestinations(ctx).
-		Limit(limit).
-		Before(before).
-		After(after).
-		Keyword(keyword).
-		DestinationType(destinationType).
-		Country(country).
-		MerchantIds(merchantIds).
+	resp, r, err := apiClient.PaymentAPI.CreateReport(ctx).
+		CreateReportRequest(createReportRequest).
 		Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.ListDestinations``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.CreateReport``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListDestinations`: ListDestinations200Response
-	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.ListDestinations`: %v\n", resp)
+	// response from `CreateReport`: Report
+	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.CreateReport`: %v\n", resp)
 }
 
 ```
@@ -148,15 +127,14 @@ apiClient.setPrivateKey("<YOUR_PRIVATE_KEY>");
 // Call the API
 const apiInstance = new CoboWaas2.PaymentApi();
 const opts = {
-  limit: 10,
-  before: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1",
-  after: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk",
-  keyword: "keyword",
-  destination_type: new CoboWaas2.DestinationType(),
-  country: "USA",
-  merchant_ids: "M1001,M1002,M1003",
+  CreateReportRequest: CoboWaas2.CreateReportRequest.constructFromObject({
+    start_time: 1764237462,
+    end_time: 1764237462,
+    report_export_format: "CSV",
+    report_types: ["OrderIn"],
+  }),
 };
-apiInstance.listDestinations(opts).then(
+apiInstance.createReport(opts).then(
   (data) => {
     console.log("API called successfully. Returned data: " + data);
   },

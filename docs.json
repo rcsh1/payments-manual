@@ -44,7 +44,8 @@
                     "pages": [
                       "payments/en/guides/get-topup-addresses",
                       "payments/en/guides/create-orders",
-                      "payments/en/guides/create-subscriptions"
+                      "payments/en/guides/create-subscriptions",
+                       "payments/en/api-references/payment/list-payer-transactions"
                     ]
                   },
                   {
@@ -222,7 +223,6 @@
                   {
                     "group": "Bank accounts and addresses (Deprecated)",
                     "pages": [
-                      "payments/en/api-references/payment/list-all-bank-accounts",
                       "payments/en/api-references/payment/create-crypto-address",
                       "payments/en/api-references/payment/delete-crypto-address",
                       "payments/en/api-references/payment/list-crypto-addresses"

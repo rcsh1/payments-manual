@@ -1,12 +1,13 @@
 ---
-openapi: get /payments/destination
+openapi: get /payments/subscriptions
 ---
 
 <RequestExample>
 ```python Python
 import cobo_waas2
-from cobo_waas2.models.destination_type import DestinationType
-from cobo_waas2.models.list_destinations200_response import ListDestinations200Response
+from cobo_waas2.models.list_subscriptions200_response import (
+    ListSubscriptions200Response,
+)
 from cobo_waas2.rest import ApiException
 from pprint import pprint
 
@@ -24,26 +25,24 @@ with cobo_waas2.ApiClient(configuration) as api_client:
     limit = 10
     before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
     after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-    keyword = "keyword"
-    destination_type = cobo_waas2.DestinationType()
-    country = "USA"
-    merchant_ids = "M1001,M1002,M1003"
+    plan_id = "123e457-e89b-12d3-a456-426614174004"
+    merchant_id = "M1001"
+    action_id = "123e457-e89b-12d3-a456-426614174004"
 
     try:
-        # List all destinations
-        api_response = api_instance.list_destinations(
+        # List subscriptions
+        api_response = api_instance.list_subscriptions(
             limit=limit,
             before=before,
             after=after,
-            keyword=keyword,
-            destination_type=destination_type,
-            country=country,
-            merchant_ids=merchant_ids,
+            plan_id=plan_id,
+            merchant_id=merchant_id,
+            action_id=action_id,
         )
-        print("The response of PaymentApi->list_destinations:\n")
+        print("The response of PaymentApi->list_subscriptions:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling PaymentApi->list_destinations: %s\n" % e)
+        print("Exception when calling PaymentApi->list_subscriptions: %s\n" % e)
 
 ```
 ```java Java
@@ -68,17 +67,15 @@ public class Example {
     Integer limit = 10;
     String before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1";
     String after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk";
-    String keyword = "keyword";
-    DestinationType destinationType = DestinationType.fromValue("Individual");
-    String country = "USA";
-    String merchantIds = "M1001,M1002,M1003";
+    String planId = "123e457-e89b-12d3-a456-426614174004";
+    String merchantId = "M1001";
+    String actionId = "123e457-e89b-12d3-a456-426614174004";
     try {
-      ListDestinations200Response result =
-          apiInstance.listDestinations(
-              limit, before, after, keyword, destinationType, country, merchantIds);
+      ListSubscriptions200Response result =
+          apiInstance.listSubscriptions(limit, before, after, planId, merchantId, actionId);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling PaymentApi#listDestinations");
+      System.err.println("Exception when calling PaymentApi#listSubscriptions");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -103,10 +100,9 @@ func main() {
 	limit := int32(10)
 	before := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
 	after := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-	keyword := "keyword"
-	destinationType := coboWaas2.DestinationType("Individual")
-	country := "USA"
-	merchantIds := "M1001,M1002,M1003"
+	planId := "123e457-e89b-12d3-a456-426614174004"
+	merchantId := "M1001"
+	actionId := "123e457-e89b-12d3-a456-426614174004"
 
 	configuration := coboWaas2.NewConfiguration()
 	// Initialize the API client
@@ -119,21 +115,20 @@ func main() {
 	ctx = context.WithValue(ctx, coboWaas2.ContextPortalSigner, crypto.Ed25519Signer{
 		Secret: "<YOUR_PRIVATE_KEY>",
 	})
-	resp, r, err := apiClient.PaymentAPI.ListDestinations(ctx).
+	resp, r, err := apiClient.PaymentAPI.ListSubscriptions(ctx).
 		Limit(limit).
 		Before(before).
 		After(after).
-		Keyword(keyword).
-		DestinationType(destinationType).
-		Country(country).
-		MerchantIds(merchantIds).
+		PlanId(planId).
+		MerchantId(merchantId).
+		ActionId(actionId).
 		Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.ListDestinations``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.ListSubscriptions``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListDestinations`: ListDestinations200Response
-	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.ListDestinations`: %v\n", resp)
+	// response from `ListSubscriptions`: ListSubscriptions200Response
+	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.ListSubscriptions`: %v\n", resp)
 }
 
 ```
@@ -151,12 +146,11 @@ const opts = {
   limit: 10,
   before: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1",
   after: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk",
-  keyword: "keyword",
-  destination_type: new CoboWaas2.DestinationType(),
-  country: "USA",
-  merchant_ids: "M1001,M1002,M1003",
+  plan_id: "123e457-e89b-12d3-a456-426614174004",
+  merchant_id: "M1001",
+  action_id: "123e457-e89b-12d3-a456-426614174004",
 };
-apiInstance.listDestinations(opts).then(
+apiInstance.listSubscriptions(opts).then(
   (data) => {
     console.log("API called successfully. Returned data: " + data);
   },
