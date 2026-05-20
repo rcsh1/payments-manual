@@ -104,10 +104,10 @@
                   {
                     "group": "Top-up Mode",
                     "pages": [
-                      "payments/en/api-references/payment/createget-top-up-address",
+                      "payments/en/api-references/payment/get-top-up-address",
                       "payments/en/api-references/payment/batch-create-top-up-addresses",
                       "payments/en/api-references/payment/update-top-up-address",
-                      "payments/en/api-references/payment/list-payers",
+                      "payments/en/api-references/payment/list-top-up-payers",
                       "payments/en/api-references/payment/list-payer-transactions"
                     ]
                   },
@@ -127,7 +127,7 @@
                     "pages": [
                       "payments/en/api-references/payment/create-refund-order",
                       "payments/en/api-references/payment/create-refund-link",
-                      "payments/en/api-references/payment/update-refund-order",
+                      "payments/en/api-references/payment/update-refund-order-information",
                       "payments/en/api-references/payment/cancel-refund-order",
                       "payments/en/api-references/payment/get-refund-order-information",
                       "payments/en/api-references/payment/list-all-refund-orders"
@@ -162,7 +162,7 @@
                     "group": "Balances",
                     "pages": [
                       "payments/en/api-references/payment/list-merchant-balances",
-                      "payments/en/api-references/payment/get-developer-balance",
+                      "payments/en/api-references/payment/get-psp-balance",
                       "payments/en/api-references/payment/get-withdrawable-balances",
                       "payments/en/api-references/payment/list-payment-wallet-balances"
                     ]
@@ -172,7 +172,7 @@
                     "pages": [
                       "payments/en/api-references/payment/get-available-allocation-amount",
                       "payments/en/api-references/payment/create-batch-allocation",
-                      "payments/en/api-references/payment/get-batch-allocation-information",
+                      "payments/en/api-references/payment/get-batch-allocation-by-id",
                       "payments/en/api-references/payment/list-all-batch-allocations",
                       "payments/en/api-references/payment/list-all-allocation-items"
                     ]
@@ -203,7 +203,7 @@
                       "payments/en/api-references/payment/create-destination",
                       "payments/en/api-references/payment/list-all-destinations",
                       "payments/en/api-references/payment/get-destination-information",
-                      "payments/en/api-references/payment/update-destination",
+                      "payments/en/api-references/payment/update-destination-information",
                       "payments/en/api-references/payment/delete-destination",
                       "payments/en/api-references/payment/create-destination-entry",
                       "payments/en/api-references/payment/list-destination-entries",
@@ -217,7 +217,7 @@
                     "pages": [
                       "payments/en/api-references/payment/get-exchange-rate",
                       "payments/en/api-references/payment/batch-get-exchange-rates",
-                      "payments/en/api-references/payment/estimate-fees"
+                      "payments/en/api-references/payment/payment-estimate-fee"
                     ]
                   },
                   {
@@ -231,8 +231,8 @@
                   {
                     "group": "Forced Sweeps (Deprecated)",
                     "pages": [
-                      "payments/en/api-references/payment/create-forced-sweep",
-                      "payments/en/api-references/payment/list-forced-sweeps"
+                      "payments/en/api-references/payment/create-force-sweep-request",
+                      "payments/en/api-references/payment/list-force-sweep-requests"
                     ]
                   }
                 ]
@@ -248,7 +248,7 @@
               {
                 "group": "Reports",
                 "pages": [
-                  "payments/en/api-references/payment/generate-reports",
+                  "payments/en/api-references/payment/create-report",
                   "payments/en/api-references/payment/list-all-reports"
                 ]
               }
