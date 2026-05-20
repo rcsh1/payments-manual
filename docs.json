@@ -44,8 +44,7 @@
                     "pages": [
                       "payments/en/guides/get-topup-addresses",
                       "payments/en/guides/create-orders",
-                      "payments/en/guides/create-subscriptions",
-                       "payments/en/api-references/payment/list-payer-transactions"
+                      "payments/en/guides/create-subscriptions"
                     ]
                   },
                   {
@@ -108,7 +107,8 @@
                       "payments/en/api-references/payment/createget-top-up-address",
                       "payments/en/api-references/payment/batch-create-top-up-addresses",
                       "payments/en/api-references/payment/update-top-up-address",
-                      "payments/en/api-references/payment/list-payers"
+                      "payments/en/api-references/payment/list-payers",
+                      "payments/en/api-references/payment/list-payer-transactions"
                     ]
                   },
                   {
