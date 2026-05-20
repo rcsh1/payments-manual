@@ -1,0 +1,6 @@
+.idea/
+.DS_Store
+build_scripts/*
+.venv
+.history/
+settings.local.json
