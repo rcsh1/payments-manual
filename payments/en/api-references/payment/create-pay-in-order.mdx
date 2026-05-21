@@ -63,13 +63,13 @@ public class Example {
     PaymentApi apiInstance = new PaymentApi();
     CreatePaymentOrderRequest createPaymentOrderRequest =
         new CreatePaymentOrderRequest()
-            .merchantId("1001")
+           .merchantId("1001")
            .merchantOrderCode("M20240201001")
-            .pspOrderCode("P20240201001")
+           .pspOrderCode("P20240201001")
            .pricingCurrency("USD")
            .pricingAmount("100.00")
            .payableCurrency("ETH_USDT")
-            .feeAmount("2.00");
+           .feeAmount("2.00");
     try {
       Order result = apiInstance.createPaymentOrder(createPaymentOrderRequest);
       System.out.println(result);
@@ -102,7 +102,7 @@ func main() {
 	createPaymentOrderRequest.SetPricingAmount("100.00")
 	createPaymentOrderRequest.SetPayableCurrency("ETH_USDT")
 	createPaymentOrderRequest.SetFeeAmount("2.00")
-
+  
 	configuration := coboWaas2.NewConfiguration()
 	// Initialize the API client
 	apiClient := coboWaas2.NewAPIClient(configuration)

@@ -26,9 +26,9 @@ with cobo_waas2.ApiClient(configuration) as api_client:
     limit = 10
     before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
     after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-    entry_type = cobo_waas2.EntryType()
+    entry_type = "Address"
     counterparty_id = "5b0ed293-f728-40b4-b1f6-86b88cd51384"
-    chain_ids = "BTC,ETH"
+    chain_ids = "ETH"
     wallet_address = "0x1234567890abcdef..."
 
     try:
@@ -72,7 +72,7 @@ public class Example {
     String after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk";
     EntryType entryType = EntryType.fromValue("Address");
     String counterpartyId = "5b0ed293-f728-40b4-b1f6-86b88cd51384";
-    String chainIds = "BTC,ETH";
+    String chainIds = "ETH";
     String walletAddress = "0x1234567890abcdef...";
     try {
       ListCounterpartyEntries200Response result =
@@ -107,7 +107,7 @@ func main() {
 	after := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
 	entryType := coboWaas2.EntryType("Address")
 	counterpartyId := "5b0ed293-f728-40b4-b1f6-86b88cd51384"
-	chainIds := "BTC,ETH"
+	chainIds := "ETH"
 	walletAddress := "0x1234567890abcdef..."
 
 	configuration := coboWaas2.NewConfiguration()
@@ -157,9 +157,9 @@ const opts = {
   limit: 10,
   before: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1",
   after: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk",
-  entry_type: new CoboWaas2.EntryType(),
+  entry_type: "Address",
   counterparty_id: "5b0ed293-f728-40b4-b1f6-86b88cd51384",
-  chain_ids: "BTC,ETH",
+  chain_ids: "ETH",
   wallet_address: "0x1234567890abcdef...",
 };
 apiInstance.listCounterpartyEntries(opts).then(

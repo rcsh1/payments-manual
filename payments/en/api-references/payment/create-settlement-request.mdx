@@ -24,7 +24,7 @@ with cobo_waas2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = cobo_waas2.PaymentApi(api_client)
     create_settlement_request_request = cobo_waas2.CreateSettlementRequestRequest(
-        request_id="SETTLEMENT123",
+        request_id="SETTLEMENT123", 
         settlement_type="Merchant",
         payout_channel="Crypto",
         settlements=[
@@ -147,9 +147,9 @@ apiClient.setPrivateKey("<YOUR_PRIVATE_KEY>");
 // Call the API
 const apiInstance = new CoboWaas2.PaymentApi();
 const opts = {
-  CreateSettlementRequestRequest:
+  CreateSettlementRequestRequest: 
     CoboWaas2.CreateSettlementRequestRequest.constructFromObject({
-      request_id: "SETTLEMENT123",
+      request_id: "SETTLEMENT123",  
       settlement_type: "Merchant",
       payout_channel: "Crypto",
       settlements: [{

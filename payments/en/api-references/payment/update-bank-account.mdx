@@ -1,15 +1,13 @@
 ---
-openapi: get /payments/subscription_actions
+openapi: put /payments/bank_accounts/{bank_account_id}
 ---
 
 <RequestExample>
 ```python Python
 import cobo_waas2
-from cobo_waas2.models.list_subscription_actions200_response import (
-    ListSubscriptionActions200Response,
-)
-from cobo_waas2.models.payment_subscription_action_type import (
-    PaymentSubscriptionActionType,
+from cobo_waas2.models.bank_account import BankAccount
+from cobo_waas2.models.update_bank_account_by_id_request import (
+    UpdateBankAccountByIdRequest,
 )
 from cobo_waas2.rest import ApiException
 from pprint import pprint
@@ -25,31 +23,28 @@ configuration = cobo_waas2.Configuration(
 with cobo_waas2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = cobo_waas2.PaymentApi(api_client)
-    limit = 10
-    before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
-    after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-    plan_id = "123e457-e89b-12d3-a456-426614174004"
-    merchant_id = "M1001"
-    subscription_id = "123e457-e89b-12d3-a456-426614174004"
-    request_id = "random_request_id"
-    action_type = cobo_waas2.PaymentSubscriptionActionType()
+    bank_account_id = "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+    update_bank_account_by_id_request = cobo_waas2.UpdateBankAccountByIdRequest(
+        info={
+            "beneficiary_name": "John Doe",
+            "beneficiary_address": "123 Main St, Anytown, USA",
+            "account_number": "4111111111111111",
+            "bank_name": "ABC Bank",
+            "bank_address": "456 Bank Ave, Cityville, USA",
+            "swift_or_bic": "ABCDEFGH",
+        }
+    )
 
     try:
-        # List subscription actions
-        api_response = api_instance.list_subscription_actions(
-            limit=limit,
-            before=before,
-            after=after,
-            plan_id=plan_id,
-            merchant_id=merchant_id,
-            subscription_id=subscription_id,
-            request_id=request_id,
-            action_type=action_type,
+        # Update bank account
+        api_response = api_instance.update_bank_account_by_id(
+            bank_account_id,
+            update_bank_account_by_id_request=update_bank_account_by_id_request,
         )
-        print("The response of PaymentApi->list_subscription_actions:\n")
+        print("The response of PaymentApi->update_bank_account_by_id:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling PaymentApi->list_subscription_actions: %s\n" % e)
+        print("Exception when calling PaymentApi->update_bank_account_by_id: %s\n" % e)
 
 ```
 ```java Java
@@ -71,21 +66,14 @@ public class Example {
     // Replace `<YOUR_PRIVATE_KEY>` with your private key
     defaultClient.setPrivKey("<YOUR_PRIVATE_KEY>");
     PaymentApi apiInstance = new PaymentApi();
-    Integer limit = 10;
-    String before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1";
-    String after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk";
-    String planId = "123e457-e89b-12d3-a456-426614174004";
-    String merchantId = "M1001";
-    String subscriptionId = "123e457-e89b-12d3-a456-426614174004";
-    String requestId = "random_request_id";
-    PaymentSubscriptionActionType actionType = PaymentSubscriptionActionType.fromValue("Create");
+    UUID bankAccountId = UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479");
+    UpdateBankAccountByIdRequest updateBankAccountByIdRequest = new UpdateBankAccountByIdRequest();
     try {
-      ListSubscriptionActions200Response result =
-          apiInstance.listSubscriptionActions(
-              limit, before, after, planId, merchantId, subscriptionId, requestId, actionType);
+      BankAccount result =
+          apiInstance.updateBankAccountById(bankAccountId, updateBankAccountByIdRequest);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling PaymentApi#listSubscriptionActions");
+      System.err.println("Exception when calling PaymentApi#updateBankAccountById");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -107,14 +95,8 @@ import (
 )
 
 func main() {
-	limit := int32(10)
-	before := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
-	after := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-	planId := "123e457-e89b-12d3-a456-426614174004"
-	merchantId := "M1001"
-	subscriptionId := "123e457-e89b-12d3-a456-426614174004"
-	requestId := "random_request_id"
-	actionType := coboWaas2.PaymentSubscriptionActionType("Create")
+	bankAccountId := "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+	updateBankAccountByIdRequest := *coboWaas2.NewUpdateBankAccountByIdRequest(map[string]interface{}{"key": interface{}(123)})
 
 	configuration := coboWaas2.NewConfiguration()
 	// Initialize the API client
@@ -127,26 +109,15 @@ func main() {
 	ctx = context.WithValue(ctx, coboWaas2.ContextPortalSigner, crypto.Ed25519Signer{
 		Secret: "<YOUR_PRIVATE_KEY>",
 	})
-	resp, r, err := apiClient.PaymentAPI.ListSubscriptionActions(ctx).
-		Limit(limit).
-		Before(before).
-		After(after).
-		PlanId(planId).
-		MerchantId(merchantId).
-		SubscriptionId(subscriptionId).
-		RequestId(requestId).
-		ActionType(actionType).
+	resp, r, err := apiClient.PaymentAPI.UpdateBankAccountById(ctx, bankAccountId).
+		UpdateBankAccountByIdRequest(updateBankAccountByIdRequest).
 		Execute()
 	if err != nil {
-		fmt.Fprintf(
-			os.Stderr,
-			"Error when calling `PaymentAPI.ListSubscriptionActions``: %v\n",
-			err,
-		)
+		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.UpdateBankAccountById``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListSubscriptionActions`: ListSubscriptionActions200Response
-	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.ListSubscriptionActions`: %v\n", resp)
+	// response from `UpdateBankAccountById`: BankAccount
+	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.UpdateBankAccountById`: %v\n", resp)
 }
 
 ```
@@ -160,17 +131,21 @@ apiClient.setEnv(CoboWaas2.Env.DEV);
 apiClient.setPrivateKey("<YOUR_PRIVATE_KEY>");
 // Call the API
 const apiInstance = new CoboWaas2.PaymentApi();
+const bank_account_id = "f47ac10b-58cc-4372-a567-0e02b2c3d479";
 const opts = {
-  limit: 10,
-  before: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1",
-  after: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk",
-  plan_id: "123e457-e89b-12d3-a456-426614174004",
-  merchant_id: "M1001",
-  subscription_id: "123e457-e89b-12d3-a456-426614174004",
-  request_id: "random_request_id",
-  action_type: new CoboWaas2.PaymentSubscriptionActionType(),
+  UpdateBankAccountByIdRequest:
+    CoboWaas2.UpdateBankAccountByIdRequest.constructFromObject({
+      info: {
+        beneficiary_name: "John Doe",
+        beneficiary_address: "123 Main St, Anytown, USA",
+        account_number: "4111111111111111",
+        bank_name: "ABC Bank",
+        bank_address: "456 Bank Ave, Cityville, USA",
+        swift_or_bic: "ABCDEFGH",
+      },
+    }),
 };
-apiInstance.listSubscriptionActions(opts).then(
+apiInstance.updateBankAccountById(bank_account_id, opts).then(
   (data) => {
     console.log("API called successfully. Returned data: " + data);
   },

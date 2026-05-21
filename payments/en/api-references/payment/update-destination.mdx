@@ -27,7 +27,7 @@ with cobo_waas2.ApiClient(configuration) as api_client:
     )
 
     try:
-        # Update destination information
+        # Update destination
         api_response = api_instance.update_destination(
             destination_id, update_destination_request=update_destination_request
         )

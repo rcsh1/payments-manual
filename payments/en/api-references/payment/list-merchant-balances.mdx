@@ -131,7 +131,7 @@ const opts = {
   merchant_ids: "M1001,M1002,M1003",
   acquiring_type: "Order",
 };
-apiInstance.listMerchantBalances(opts).then(
+apiInstance.listMerchantBalances(token_id, opts).then(
   (data) => {
     console.log("API called successfully. Returned data: " + data);
   },

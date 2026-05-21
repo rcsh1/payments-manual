@@ -1,16 +1,11 @@
 ---
-openapi: post /payments/webhooks/trigger
+openapi: get /payments/topup/payers
 ---
 
 <RequestExample>
 ```python Python
 import cobo_waas2
-from cobo_waas2.models.trigger_test_payment_webhook_event_response import (
-    TriggerTestPaymentWebhookEventResponse,
-)
-from cobo_waas2.models.trigger_test_payments_webhook_event_request import (
-    TriggerTestPaymentsWebhookEventRequest,
-)
+from cobo_waas2.models.list_top_up_payers200_response import ListTopUpPayers200Response
 from cobo_waas2.rest import ApiException
 from pprint import pprint
 
@@ -25,24 +20,25 @@ configuration = cobo_waas2.Configuration(
 with cobo_waas2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = cobo_waas2.PaymentApi(api_client)
-    trigger_test_payments_webhook_event_request = (
-        cobo_waas2.TriggerTestPaymentsWebhookEventRequest(
-            event_type="wallets.transaction.created"
-        )
-    )
+    limit = 10
+    before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
+    after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
+    merchant_id = "M1001"
+    payer_id = "P20250619T0310056d7aa"
 
     try:
-        # Trigger test webhook event
-        api_response = api_instance.trigger_test_payments_webhook_event(
-            trigger_test_payments_webhook_event_request=trigger_test_payments_webhook_event_request
+        # List payers
+        api_response = api_instance.list_top_up_payers(
+            limit=limit,
+            before=before,
+            after=after,
+            merchant_id=merchant_id,
+            payer_id=payer_id,
         )
-        print("The response of PaymentApi->trigger_test_payments_webhook_event:\n")
+        print("The response of PaymentApi->list_top_up_payers:\n")
         pprint(api_response)
     except Exception as e:
-        print(
-            "Exception when calling PaymentApi->trigger_test_payments_webhook_event: %s\n"
-            % e
-        )
+        print("Exception when calling PaymentApi->list_top_up_payers: %s\n" % e)
 
 ```
 ```java Java
@@ -64,15 +60,17 @@ public class Example {
     // Replace `<YOUR_PRIVATE_KEY>` with your private key
     defaultClient.setPrivKey("<YOUR_PRIVATE_KEY>");
     PaymentApi apiInstance = new PaymentApi();
-    TriggerTestPaymentsWebhookEventRequest triggerTestPaymentsWebhookEventRequest =
-        new TriggerTestPaymentsWebhookEventRequest()
-            .eventType(WebhookEventType.WALLETS.TRANSACTION.CREATED);
+    Integer limit = 10;
+    String before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1";
+    String after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk";
+    String merchantId = "M1001";
+    String payerId = "P20250619T0310056d7aa";
     try {
-      TriggerTestPaymentWebhookEventResponse result =
-          apiInstance.triggerTestPaymentsWebhookEvent(triggerTestPaymentsWebhookEventRequest);
+      ListTopUpPayers200Response result =
+          apiInstance.listTopUpPayers(limit, before, after, merchantId, payerId);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling PaymentApi#triggerTestPaymentsWebhookEvent");
+      System.err.println("Exception when calling PaymentApi#listTopUpPayers");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -94,7 +92,11 @@ import (
 )
 
 func main() {
-	triggerTestPaymentsWebhookEventRequest := *coboWaas2.NewTriggerTestPaymentsWebhookEventRequest(coboWaas2.WebhookEventType("wallets.transaction.created"))
+	limit := int32(10)
+	before := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
+	after := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
+	merchantId := "M1001"
+	payerId := "P20250619T0310056d7aa"
 
 	configuration := coboWaas2.NewConfiguration()
 	// Initialize the API client
@@ -107,19 +109,19 @@ func main() {
 	ctx = context.WithValue(ctx, coboWaas2.ContextPortalSigner, crypto.Ed25519Signer{
 		Secret: "<YOUR_PRIVATE_KEY>",
 	})
-	resp, r, err := apiClient.PaymentAPI.TriggerTestPaymentsWebhookEvent(ctx).
-		TriggerTestPaymentsWebhookEventRequest(triggerTestPaymentsWebhookEventRequest).
+	resp, r, err := apiClient.PaymentAPI.ListTopUpPayers(ctx).
+		Limit(limit).
+		Before(before).
+		After(after).
+		MerchantId(merchantId).
+		PayerId(payerId).
 		Execute()
 	if err != nil {
-		fmt.Fprintf(
-			os.Stderr,
-			"Error when calling `PaymentAPI.TriggerTestPaymentsWebhookEvent``: %v\n",
-			err,
-		)
+		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.ListTopUpPayers``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `TriggerTestPaymentsWebhookEvent`: TriggerTestPaymentWebhookEventResponse
-	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.TriggerTestPaymentsWebhookEvent`: %v\n", resp)
+	// response from `ListTopUpPayers`: ListTopUpPayers200Response
+	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.ListTopUpPayers`: %v\n", resp)
 }
 
 ```
@@ -134,12 +136,13 @@ apiClient.setPrivateKey("<YOUR_PRIVATE_KEY>");
 // Call the API
 const apiInstance = new CoboWaas2.PaymentApi();
 const opts = {
-  TriggerTestPaymentsWebhookEventRequest:
-    CoboWaas2.TriggerTestPaymentsWebhookEventRequest.constructFromObject({
-      event_type: "wallets.transaction.created",
-    }),
+  limit: 10,
+  before: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1",
+  after: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk",
+  merchant_id: "M1001",
+  payer_id: "P20250619T0310056d7aa",
 };
-apiInstance.triggerTestPaymentsWebhookEvent(opts).then(
+apiInstance.listTopUpPayers(opts).then(
   (data) => {
     console.log("API called successfully. Returned data: " + data);
   },
