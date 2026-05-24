@@ -299,8 +299,7 @@
                   "payments/cn/guides/quick-start",
                   "payments/cn/guides/cobo-payment-skill",
                   "payments/cn/guides/payments-ai-assistant",
-                  "payments/cn/guides/glossary",
-                  "payments/cn/guides/changelog"
+                  "payments/cn/guides/glossary"
                 ]
               },
               {
@@ -354,10 +353,13 @@
               {
                 "group": "索引信息",
                 "pages": [
+                  "payments/cn/guides/packages",
+                  "payments/cn/guides/billing",
                   "payments/cn/guides/supported-chains-and-tokens",
                   "payments/cn/guides/status-and-events",
                   "payments/cn/guides/roles-and-permissions",
-                  "payments/cn/guides/error-codes"
+                  "payments/cn/guides/error-codes",
+                  "payments/cn/guides/changelog"
                 ]
               }
             ]
