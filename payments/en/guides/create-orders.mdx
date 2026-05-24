@@ -23,7 +23,7 @@ Order mode is suitable for scenarios that require specifying a specific payment 
 
 You can create an order in two ways:
 
-- Call [Create pay-in order](/payments/en/api-references/payment/create-pay-in-order) to directly create a payment order. After a successful call, you will receive information such as the payable amount and payment address.
+- Call [Create pay-in order](/payments/en/api-references/payment/create-pay-in-order) to directly create a payment order. After a successful call, you will receive information such as the payable amount and payment address. You will need to build the frontend page yourself, or you can integrate Web3 payment capabilities using the [React SDK](/payments/en/guides/payment-toolkit).
 - Call [Create order link](/payments/en/api-references/payment/create-order-link) to generate a payment link. This link will direct users to a payment page provided by Cobo, where they can create an order and complete payment without you needing to develop the front-end interaction. You can also embed this payment page into your website or application using an iFrame.
 
 ### Prerequisites
@@ -78,9 +78,9 @@ You have completed all the steps mentioned in [Preparation](/payments/en/guides/
       The fiat price of the goods, denominated in the currency specified by `pricing_currency`.\
       This field is optional and is not required if your goods are priced in cryptocurrency.
     - **Payable Currency (**`payable_currency`**)**:\
-      The cryptocurrency you intend to collect from the payer. For supported cryptocurrencies, please refer to [Supported Currencies and Blockchains](/payments/en/guides/supported-chains-and-tokens).
+      The cryptocurrency the payer needs to pay. For supported cryptocurrencies, please refer to [Supported Currencies and Blockchains](/payments/en/guides/supported-chains-and-tokens).
     - **Payable Amount (**`payable_amount`**)**:\
-      The amount of cryptocurrency you intend to collect from the payer, denominated in the currency specified by `payable_currency`.\
+      The amount of cryptocurrency the payer needs to pay, denominated in the currency specified by `payable_currency`.\
       This field is optional:
       - If `payable_amount` is specified, the system will use this value directly as the amount the payer needs to pay.
       - If `payable_amount` is not specified, the system will calculate the payable amount using the real-time exchange rate:\
@@ -90,10 +90,10 @@ You have completed all the steps mentioned in [Preparation](/payments/en/guides/
       If you are a platform serving multiple downstream merchants and need to distribute revenue between yourself and those merchants, you can configure this fee to achieve revenue sharing.\
       This fee is denominated in the cryptocurrency specified by `payable_currency`.\
       The actual developer fee received is calculated as:\
-      Actual Developer Fee = (Configured Developer Fee / Payable Amount) × Actual Collected Amount.For more details, please refer to [Accounts and Fund Allocation](/payments/en/guides/amounts-and-balances).
+      Actual Developer Fee = (Configured Developer Fee / Payable Amount) × Actual Collected Amount. For more details, please refer to [Accounts and Fund Allocation](/payments/en/guides/amounts-and-balances).
 
     <Info>
-      If you are a merchant (serving users directly), you typically don't need to set the developer fee.
+      If you are a merchant (serving users directly), you typically do not need to set the developer fee.
     </Info>
     The table below shows how the payable amount is determined in four different configuration scenarios:
 
@@ -121,9 +121,7 @@ You have completed all the steps mentioned in [Preparation](/payments/en/guides/
 You can subscribe to the following webhook events to receive real-time update notifications of order status. Refer to [Webhook reference](/payments/en/guides/status-and-events) to understand the trigger time and returned data structure of each event.
 
 - `payment.status.updated`
-- `payment.transaction.created`
 - `payment.transaction.late`
-- `payment.transaction.held`
 - `payment.transaction.completed`
 
 You can also actively query order status through Payments App or Payments API.
@@ -237,7 +235,7 @@ You can also actively query refund order status through Payments App or Payments
 
 ### Compliance screening failure
 
-When a transaction receives the `payment.transaction.held` event but does not receive the `payment.transaction.completed` event for a long time, this indicates that the transaction has failed to pass compliance screening by Cobo KYT or Screening App. In this case, you need to follow these steps to handle it:
+When a transaction receives the `payment.transaction.failed` event , this indicates that the transaction has failed to pass compliance screening by Cobo KYT or Screening App. In this case, you need to follow these steps to handle it:
 
 - If the transaction subsequently passes manual review:
   - If the order has not expired: The funds will be counted towards the order's actual received amount, and the order status will be updated accordingly based on the actual received amount
@@ -252,6 +250,8 @@ For isolated or frozen funds:
 - Cobo KYT: Please contact the Cobo support team through [help@cobo.com](mailto:help@cobo.com) for handling
 - Screening App: You can evaluate and handle it yourself within the application
 
-<Tip>
-  Feel free to [share your feedback](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI) to improve our documentation!
-</Tip>
+### Minimum Deposit Threshold
+
+- To optimize your account costs and prevent situations where the collection fee exceeds the transaction value, a minimum deposit threshold is applied. Transactions with a value below **0.05 USDT** (or equivalent) will not be processed for automatic credit.\
+  _Note: If you need to manually recover accumulated funds below this threshold, please contact Cobo Support for assistance in extracting them from the consolidation addresses._
+

@@ -45,25 +45,25 @@ User roles consist of predefined rules that can be used to assign specific permi
 
 For more details, see [User roles and permissions](https://manuals.cobo.com/en/portal/organization/roles-and-permissions).
 
-#### Transaction policies
+#### Transaction Policies
 
-Transaction policies are one of the important security safeguards for your team. It is recommended that you strictly configure transaction policy rules, especially in large-amount withdrawal scenarios. Special attention should be paid to token transfer policies in off-chain transaction policies to avoid high-risk situations such as:
+Transaction Policies are one of the important security safeguards for your team. It is recommended that you strictly configure Transaction Policies rules, especially in large-amount withdrawal scenarios. Special attention should be paid to token transfer policies in off-chain Transaction Policies to avoid high-risk situations such as:
 - No risk control rules are set
-- There are transactions not covered by transaction policies
+- There are transactions not covered by Transaction Policies
 - All transactions are automatically approved
 - The same role can both withdraw and approve
 
-For more details, see [Introduction to transaction policies](https://manuals.cobo.com/en/portal/risk-controls/tx-policies-overview).
+For more details, see [Introduction to Transaction Policies](https://manuals.cobo.com/en/portal/risk-controls/tx-policies-overview).
 
-#### Governance policies
+#### Governance Policies
 
-Governance policies determine the approval rules on which an operation is approved or rejected.
+Governance Policies determine the approval rules on which an operation is approved or rejected.
 
 The following operations are important operations in Cobo Portal. It is recommended that you configure 2 or more [admins](https://manuals.cobo.com/en/portal/organization/roles-and-permissions) for approval.
 - Invite members
 - Change member user roles
-- Edit governance policies
-- Manage transaction policies
+- Edit Governance Policies
+- Manage Transaction Policies
 - Manage addresses in the Address List
 - Cobo Portal Apps authorization
 - Change Cobo Portal Apps permissions
@@ -71,7 +71,7 @@ The following operations are important operations in Cobo Portal. It is recommen
 - Manage API keys
 - Edit custom user roles
 
-For more details, see [Introduction to governance policies](https://manuals.cobo.com/en/portal/organization/governance-intro).
+For more details, see [Introduction to Governance Policies](https://manuals.cobo.com/en/portal/organization/governance-intro).
 
 ### Admin identity authentication
 To improve security and reduce the risk of account theft, it is strongly recommended that all admins enable at least two authentication methods, with Cobo Guard being one of them.
@@ -112,12 +112,14 @@ The following diagram shows a Main Group with two key share holders. Cobo holds 
 
 Follow these steps to create a Main Group in Cobo Portal:
 1. Log in to Cobo Portal [production environment](https://portal.cobo.com/login).
-2. Click <img src="/payments/en/images/guides/wallets-icon.svg" className="icon"></img> > **MPC Wallets**.
+2. Click <img src="/payments/en/images/guides/wallets-icon.svg" className="icon" alt="Wallets icon"></img> > **MPC Wallets**.
 3. Click **Create Vault**. Follow the on-screen instructions to complete Vault creation.
 4. After creating the Vault, the **Generate Main Group key shares** dialog box will automatically pop up. In the dialog box, navigate to the **Key share holder 2** section and configure the holder. For detailed information about signer types and their setup, see the [**Signer Type** table](https://manuals.cobo.com/en/portal/mpc-wallets/ocw/holder-group-main-group).
 
     - Using Mobile Co-Signer: Select a holder from the drop-down list. The **TSS Node ID** field will be automatically filled. Click **Confirm**.
     - Using Server Co-Signer: Enter the holder name, fill in the TSS Node ID, and click **Confirm**.
+
+<Note>A large number of fund sweeping transactions may occur before payouts, and transaction times are often concentrated. We recommend that you deploy a Server Co-Signer ([TSS Node server](https://www.cobo.com/developers/v2/guides/mpc-wallets/server-co-signer/tss-node-overview)) in advance to achieve automated signing.</Note>
 
 5. Confirm in your Cobo Guard application that you initiated this request.
 
@@ -129,7 +131,7 @@ After creating the Main Group, the next critical step is to generate key shares.
   - Wait for the pop-up message **1 key share needs to be generated** to appear on Cobo Guard (this may take a few seconds).
   - Click the pop-up message to open the key generation interface.
   - Follow the on-screen instructions to complete the key share generation process.
-  - We recommend that you back up your key shares at this time for added security. However, you can also choose to do this step after completing this guide.
+  - It is recommended to back up your key shares at this time for added security. However, you can also choose to do this step after completing this guide.
 
 * For Server Co-Signer:
   * Make sure to bring the TSS Node server online within 24 hours. When the server comes online, the key share generation process will automatically start.
@@ -153,5 +155,4 @@ For more details, see [Mobile Co-Signer backup key shares instructions](https://
 
 
 
-<Tip>Feel free to [share your feedback](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI) to improve our documentation!</Tip>
 

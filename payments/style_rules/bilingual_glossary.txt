@@ -131,15 +131,19 @@
 | Receiving address                | 收款地址           | |
 | Top-up address                   | 充值地址           | |
 | Deposit transaction              | 充币交易           | |
-| Cross-chain                      | 跨链               | |
+| Bridging                         | 跨链               | |
 | Crypto payouts                | 加密货币转账       | Also can be "提币" in wallet context |
+| Bulk Send                     | 批量下发           | Batch crypto transfers to multiple addresses |
+| Counterparty                  | 交易对手方         | Payer info registered in top-up mode |
 
 # Merchants & Developers
 | Merchant                         | 商户               | Institutions providing goods or services to payers |
+| Merchant account                 | 商户账户           | Account holding merchant balance |
 | Merchant actual receipt          | 商户实收金额       | |
 | Merchant balance                 | 商户余额           | |
 | Merchant funds                   | 商户资金           | |
 | Developer                        | 开发者             | Institutions integrating the payment solution |
+| Developer account                | 开发者账户         | Account holding developer balance |
 | Developer balance                | 开发者余额         | |
 | Developer fee                    | 开发者费用         | |
 | Developer fee rate               | 开发者费率         | |
@@ -159,6 +163,7 @@
 | fund sweeping                    | 资金归集           | Preferred term for fund consolidation |
 | Sweeping                         | 归集               | Short form of "fund sweeping" |
 | Idle funds                       | 闲置资金           | |
+| Allocation                       | 划转               | Manual fund transfer between accounts |
 | Collection-on-behalf-of (COBO)           | 代收款             | Collecting payments on behalf of merchants |
 | Settlement                       | 结算               | |
 | Settlement request               | 结算请求           | |
@@ -168,6 +173,7 @@
 | Refund order                     | 退款订单           | |
 | Refund processing fee            | 退款手续费         | |
 | Refunded amount                  | 已退款金额         | |
+| Refund link                      | 退款链接           | One-time URL for end users to submit refund address |
 
 # Compliance & Review
 | AML/KYT screening                 | AML/KYT 扫描       | Use "扫描" for AML/KYT context |

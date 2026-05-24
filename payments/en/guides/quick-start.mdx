@@ -33,7 +33,7 @@ The following table lists typical requirements for different business types and 
     <tr>
       <td rowspan="4"><strong>Merchants</strong></td>
       <td><strong>Independent online stores</strong><br/>Customers browse products, add to cart, and checkout</td>
-      <td><a href="/payments/en/guides/create-orders">Order mode</a> + <a href="/payments/en/guides/payment-link">Payment link</a> (optional) + <a href="/payments/en/guides/fiat-payouts">Off-ramp</a></td>
+      <td><a href="/payments/en/guides/create-orders">Order mode</a> + <a href="/payments/en/guides/payment-link">Payment link</a> / <a href="/payments/en/guides/payment-toolkit">React SDK</a> (optional) + <a href="/payments/en/guides/fiat-payouts">Off-ramp</a></td>
     </tr>
     <tr>
       <td><strong>Gaming/entertainment platforms</strong><br/>Users purchase in-game points and items</td>
@@ -65,7 +65,7 @@ The following table lists typical requirements for different business types and 
 
 As a payment service provider (PSP), you need to provide payment collection services for multiple merchants and achieve automated revenue sharing. A typical integration process is as follows:
 
-  1. Development environment setup: Complete [Prerequisites](/payments/en/guides/preparation) (create account, configure API Key and Webhook Endpoint, deposit to Fee Station)
+  1. Development environment setup: Complete [Prerequisites](/payments/en/guides/preparation) (create account, configure API key and webhook endpoint, deposit to Fee Station)
 
   2. Merchant management and fund configuration: [Create merchants](/payments/en/guides/merchants) for each downstream merchant to achieve independent revenue and expense management.
 
@@ -73,6 +73,7 @@ As a payment service provider (PSP), you need to provide payment collection serv
   
      - When creating orders, set developer fees to achieve automated revenue sharing with merchants.
      - (Optional) Use [Payment links](/payments/en/guides/payment-link) to quickly build payment pages for merchants.
+     - (Optional) Use [React SDK](/payments/en/guides/payment-toolkit) for customized development.
  
   4. Fund management: Use the [Allocate funds](/payments/en/guides/allocate-funds) feature to adjust allocation between accounts (such as collecting developer fees or handling overpayment, underpayment, late payment, and other abnormal situations).
 
@@ -84,7 +85,7 @@ As a payment service provider (PSP), you need to provide payment collection serv
 
 As a gaming platform, you directly serve end-user players, with the main revenue source being player top-ups. A typical integration process is as follows:
 
-  1. Development environment setup: Complete [Prerequisites](/payments/en/guides/preparation) (create account, configure API Key and Webhook Endpoint, deposit to Fee Station)
+  1. Development environment setup: Complete [Prerequisites](/payments/en/guides/preparation) (create account, configure API key and webhook endpoint, deposit to Fee Station)
 
   2. Merchant configuration: **No need to create new merchants**, just use the default merchant automatically created by the system (same name as your Cobo Portal team).
 
@@ -99,5 +100,4 @@ As a gaming platform, you directly serve end-user players, with the main revenue
   5. Production environment launch: After testing is complete, refer to [Production environment preparation](/payments/en/guides/preparation-prod) to complete configuration and go live
 
 
-<Tip>Feel free to [share your feedback](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI) to improve our documentation!</Tip>
 

@@ -1,0 +1,28 @@
+---
+title: "Frontend React SDK"
+lang: "en"
+---
+
+If you prefer customized development and don’t want to use Cobo’s ready-made pages, you can integrate Web3 payment capabilities into your own frontend by using React SDK provided by Cobo.
+
+## Frontend Integration Comparison
+
+|  | Payment Link | React SDK |
+| :-: | :-: | :-: |
+| **Form** | Ready-made front-end page, limited customization | npm package, use as needed |
+| **Features** | Full checkout experience | Web3 core capabilities only |
+| **Requirements** | No front-end dev environment needed | Requires a React front-end |
+| **Domain** | Fixed: `https://payment-link.cobo.com` | Flexible: your own front-end domain |
+| **Auth** | Unique token per order | Dynamic token valid for one hour |
+
+React SDK provides core Web3 capabilities such as token selector with exchange rate, QR code with amount, and **connecting third-party wallet to submit transaction**. You can focus on Web2 business logic without implementing Web3 payment details yourself.
+
+For integration steps and component demos, see the [React SDK interactive documentation](https://payment-toolkit.cobo.com/en-US/components).
+
+## SDK Authentication
+
+React SDK must be authenticated before use. Authentication requires your frontend and backend to work together, as follows:
+
+1. The backend calls [Create SDK link](/payments/en/api-references/payment/create-sdk-link) to create an SDK-only token.
+2. The backend returns the token to the frontend.
+3. The frontend passes the token to the SDK using the `setAccessToken` method.

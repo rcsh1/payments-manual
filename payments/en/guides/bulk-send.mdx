@@ -32,7 +32,7 @@ curl -X POST "https://api.example.com/v1/payments/bulk_sends" \
   -d '{
     "source_account": "M1001",
     "execution_mode": "Partial",
-    "description": "january salary"，
+    "description": "january salary",
     "payout_params": [
       {
         "token_id": "ETH_USDT",
@@ -72,10 +72,53 @@ After receiving a Bulk Send request, Cobo first validates **all** addresses in t
   - Rebates/rewards airdrops (mixed address quality)
   - Tips/revenue distribution for content platforms; merchant payout distribution for e-commerce/ads platforms (retry is acceptable)
 
-**Impact summary：**
+**Impact summary:**
 
 - `Strict` improves financial consistency, but increases operational overhead due to “one bad address forces a full resubmission”.
 - `Partial` scales better and is more automation-friendly, but requires a retry workflow for failed items.
+
+### **1.3 Smart contract mechanism for Bulk Send**
+
+When executing a Bulk Send, Cobo uses smart contracts to perform batch transfers. Understanding this mechanism helps you correctly verify contract call information in your callback handler.
+
+#### **Approve operation (triggered when allowance is insufficient)**
+
+When the smart contract's allowance for a token is insufficient, an `approve` call is first triggered on the token contract:
+
+- **Function called**: `approve`
+- **calldata parameters**:
+  - `_spender`: The batch transfer contract address (see table below)
+  - `_value`: The transfer amount
+
+#### **Transfer operation**
+
+After the approve completes, the actual transfer calls the `sendToken` function on the batch transfer contract:
+
+- **Function called**: `sendToken`
+- **calldata parameters**:
+  - `token`: The token contract address (see table below)
+  - `recipients`: List of recipient addresses
+  - `values`: Corresponding list of transfer amounts
+
+#### **Contract address reference**
+
+Since the contract addresses are fixed for each token, it is recommended to verify the contract addresses and function call information in your callback handler to ensure the callback completes correctly.
+
+| Chain | Token ID | Token contract address | Batch transfer contract address |
+|-------|----------|------------------------|---------------------------------|
+| Ethereum | ETH_USDT | `0xdac17f958d2ee523a2206206994597c13d831ec7` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| Ethereum | ETH_USDC | `0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| Arbitrum | ARBITRUM_USDT | `0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| Arbitrum | ARBITRUM_USDCOIN | `0xaf88d065e77c8cc2239327c5edb3a432268e5831` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| Base | BASE_USDT | `0xfde4c96c8593536e31f229ea8f37b2ada2699bb2` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| Base | BASE_USDC | `0x833589fcd6edb6e08f4c7c32d4f71b54bda02913` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| Polygon | MATIC_USDT | `0xc2132d05d31c914a87c6611c10748aeb04b58e8f` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| Polygon | MATIC_USDC2 | `0x3c499c542cef5e3811e1192ce70d8cc03d5c3359` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| BNB Smart Chain | BSC_USDT | `0x55d398326f99059ff775485246999027b3197955` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| BNB Smart Chain | BSC_USDC | `0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d` | `0x3d963e23a9229d2acd25e9ffc358be1a35460ecc` |
+| TRON | TRON_USDT | `TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t` | `TEmDa9FY9YBCg1HPL41RUnJorXRRV3rX7A` |
+
+---
 
 ## **2. Webhook-driven automation workflow (failure notification → query items → batch resend)**
 
@@ -101,11 +144,11 @@ Webhook payload example (**Bulk Send Notification**):
 }
 ```
 
-Status can be one of:：
+Status can be one of:
 
 - Pending
 - Validating
-- Transfering
+- Transferring
 - Completed
 - PartiallyCompleted
 - Failed
@@ -119,11 +162,11 @@ Recommendations
 
 After receiving a PartiallyCompleted or Failed webhook, call **List bulk send items** to query the status of each bulk send item:
 
-- Path parameter：bulk_send_id
-- Operation：list_bulk_send_items
-- Summary：List bulk send items
+- Path parameter: bulk_send_id
+- Operation: list_bulk_send_items
+- Summary: List bulk send items
 
-（Example pseudo endpoint）
+(Example pseudo endpoint)
 
 ```shell
 curl -X GET "https://api.example.com/v1/payments/bulk_sends/{bulk_send_id}/items" \
@@ -132,13 +175,13 @@ curl -X GET "https://api.example.com/v1/payments/bulk_sends/{bulk_send_id}/items
 
 Each item includes two key status fields:
 
-- status（execution status of the item）
-- validation_status（address/compliance validation status）
+- status (execution status of the item)
+- validation_status (address/compliance validation status)
 
 Rules to focus on:
 
 - If status = **Failed** or  **NotExecuted** → the item failed
-- If  validation_status 为 **ValidationFailed** → the address did not pass Cobo KYA validation
+- If validation_status = **ValidationFailed** → the address did not pass Cobo KYA validation
 
 For both cases, **replacing the address is recommended.**
 
@@ -151,7 +194,7 @@ Resend strategy depends on execution_mode:
 - Under `Strict`, if any address has an issue, **no** on-chain transfer is executed for the entire batch.
 - Therefore, on retry (resubmission), you must include **all** items (not only the failed ones).
 
-Steps：
+Steps:
 
 1. Query items and identify those with ValidationFailed or Failed/NotExecuted
 2. Replace the addresses for those items (or fix other parameters causing failures)
@@ -162,7 +205,7 @@ Steps：
 - Under `Partial`, successful items have already been transferred.
 - Therefore, on retry, submit **only failed items** (reduces the risk of duplicate transfers).
 
-Steps：
+Steps:
 
 1. Query items and filter failed items (`status=Failed/NotExecuted` or `validation_status=ValidationFailed`)
 2. Replace the addresses for failed items

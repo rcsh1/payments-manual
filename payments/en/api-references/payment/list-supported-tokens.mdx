@@ -1,13 +1,11 @@
 ---
-openapi: get /payments/destination/wallet_address
+openapi: get /payments/supported_tokens
 ---
 
 <RequestExample>
 ```python Python
 import cobo_waas2
-from cobo_waas2.models.list_destination_wallet_addresses200_response import (
-    ListDestinationWalletAddresses200Response,
-)
+from cobo_waas2.models.supported_token import SupportedToken
 from cobo_waas2.rest import ApiException
 from pprint import pprint
 
@@ -22,29 +20,15 @@ configuration = cobo_waas2.Configuration(
 with cobo_waas2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = cobo_waas2.PaymentApi(api_client)
-    limit = 10
-    before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
-    after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-    destination_id = "46beeab4-6a8e-476e-bc69-99b89aacbc6f"
-    chain_ids = "ETH"
-    wallet_address = "0x1234567890abcdef..."
 
     try:
-        # List destination wallet addresses
-        api_response = api_instance.list_destination_wallet_addresses(
-            limit=limit,
-            before=before,
-            after=after,
-            destination_id=destination_id,
-            chain_ids=chain_ids,
-            wallet_address=wallet_address,
-        )
-        print("The response of PaymentApi->list_destination_wallet_addresses:\n")
+        # List supported tokens
+        api_response = api_instance.list_payment_supported_tokens()
+        print("The response of PaymentApi->list_payment_supported_tokens:\n")
         pprint(api_response)
     except Exception as e:
         print(
-            "Exception when calling PaymentApi->list_destination_wallet_addresses: %s\n"
-            % e
+            "Exception when calling PaymentApi->list_payment_supported_tokens: %s\n" % e
         )
 
 ```
@@ -67,19 +51,11 @@ public class Example {
     // Replace `<YOUR_PRIVATE_KEY>` with your private key
     defaultClient.setPrivKey("<YOUR_PRIVATE_KEY>");
     PaymentApi apiInstance = new PaymentApi();
-    Integer limit = 10;
-    String before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1";
-    String after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk";
-    String destinationId = "46beeab4-6a8e-476e-bc69-99b89aacbc6f";
-    String chainIds = "ETH";
-    String walletAddress = "0x1234567890abcdef...";
     try {
-      ListDestinationWalletAddresses200Response result =
-          apiInstance.listDestinationWalletAddresses(
-              limit, before, after, destinationId, chainIds, walletAddress);
+      List<SupportedToken> result = apiInstance.listPaymentSupportedTokens();
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling PaymentApi#listDestinationWalletAddresses");
+      System.err.println("Exception when calling PaymentApi#listPaymentSupportedTokens");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -101,12 +77,6 @@ import (
 )
 
 func main() {
-	limit := int32(10)
-	before := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
-	after := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-	destinationId := "46beeab4-6a8e-476e-bc69-99b89aacbc6f"
-	chainIds := "ETH"
-	walletAddress := "0x1234567890abcdef..."
 
 	configuration := coboWaas2.NewConfiguration()
 	// Initialize the API client
@@ -119,24 +89,17 @@ func main() {
 	ctx = context.WithValue(ctx, coboWaas2.ContextPortalSigner, crypto.Ed25519Signer{
 		Secret: "<YOUR_PRIVATE_KEY>",
 	})
-	resp, r, err := apiClient.PaymentAPI.ListDestinationWalletAddresses(ctx).
-		Limit(limit).
-		Before(before).
-		After(after).
-		DestinationId(destinationId).
-		ChainIds(chainIds).
-		WalletAddress(walletAddress).
-		Execute()
+	resp, r, err := apiClient.PaymentAPI.ListPaymentSupportedTokens(ctx).Execute()
 	if err != nil {
 		fmt.Fprintf(
 			os.Stderr,
-			"Error when calling `PaymentAPI.ListDestinationWalletAddresses``: %v\n",
+			"Error when calling `PaymentAPI.ListPaymentSupportedTokens``: %v\n",
 			err,
 		)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListDestinationWalletAddresses`: ListDestinationWalletAddresses200Response
-	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.ListDestinationWalletAddresses`: %v\n", resp)
+	// response from `ListPaymentSupportedTokens`: []SupportedToken
+	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.ListPaymentSupportedTokens`: %v\n", resp)
 }
 
 ```
@@ -150,15 +113,7 @@ apiClient.setEnv(CoboWaas2.Env.DEV);
 apiClient.setPrivateKey("<YOUR_PRIVATE_KEY>");
 // Call the API
 const apiInstance = new CoboWaas2.PaymentApi();
-const opts = {
-  limit: 10,
-  before: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1",
-  after: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk",
-  destination_id: "46beeab4-6a8e-476e-bc69-99b89aacbc6f",
-  chain_ids: "ETH",
-  wallet_address: "0x1234567890abcdef...",
-};
-apiInstance.listDestinationWalletAddresses(opts).then(
+apiInstance.listPaymentSupportedTokens().then(
   (data) => {
     console.log("API called successfully. Returned data: " + data);
   },

@@ -17,7 +17,7 @@ lang: "zh-hans"
 
 您可以通过两种方式创建订单：
 
-- 调用 [Create pay-in order](/payments/en/api-references/payment/create-pay-in-order) 直接创建一个支付订单。调用成功后，您将得到应付金额、付款地址等信息；
+- 调用 [Create pay-in order](/payments/en/api-references/payment/create-pay-in-order) 直接创建一个支付订单。调用成功后，您将得到应付金额、付款地址等信息。您需要自行搭建前端页面，也可借助 [React SDK](/payments/cn/guides/payment-toolkit) 引入 Web3 支付能力；
 - 调用 [Create order link](/payments/en/api-references/payment/create-order-link) 创建一个订单支付链接。该链接会跳转到由 Cobo 提供的支付页面，付款方可在该页面创建订单并完成支付，无需您自行开发前端交互流程。您还可以通过 iFrame 方式将该支付页面嵌入到您的网站或应用中。
 
 ### 前提条件
@@ -54,10 +54,10 @@ lang: "zh-hans"
 
     创建订单时，您需要在以下两种方式中**选择一种适合业务的金额参数组合**：
 
-    - **方式一：**原订单商品以法币定价，您需要收取数字货币金额
+    - \*\*方式一：\*\*原订单商品以法币定价，您需要收取数字货币金额
       - 填写：`pricing_currency`、`pricing_amount`、`payable_currency`；
       - 不填：`payable_amount`
-    - **方式二：**原订单商品以数币定价，您直接按原币种收取数字货币金额
+    - \*\*方式二：\*\*原订单商品以数币定价，您直接按原币种收取数字货币金额
       - 填写：`payable_currency`、`payable_amount`；
       - 不填：`pricing_currency`、`pricing_amount`
 
@@ -67,11 +67,11 @@ lang: "zh-hans"
 
     - **定价币种**（`pricing_currency`）：商品法币计价单位，目前支持设置法币币种请参考 [支持的币种与公链](/payments/cn/guides/supported-chains-and-tokens)。该字段为可选字段，如果您商品定价为数字货币则无需填写。
     - **定价金额**（`pricing_amount`）：商品法币计价金额，以 `pricing_currency` 指定的法币为单位。该字段为可选字段，如果您商品定价为数字货币则无需填写。
-    - **应收币种**（`payable_currency`）： 您计划收取的数字货币币种，目前支持数字货币币种请参考 [支持的币种与公链](/payments/cn/guides/supported-chains-and-tokens)
-    - **应收金额**（`payable_amount`）：您计划向付款方收取的数币货币金额，以`payable_currency` 指定的加密货币为单位。该字段为可选字段：
+    - **应付币种**（`payable_currency`）： 付款方需要支付的数字货币币种，目前支持数字货币币种请参考 [支持的币种与公链](/payments/cn/guides/supported-chains-and-tokens)
+    - **应付金额**（`payable_amount`）：付款方需要支付的数字货币金额，以`payable_currency` 指定的加密货币为单位。该字段为可选字段：
       - 如果您指定了 `payable_amount`，则系统直接使用该值作为付款方需支付的金额。
       - 如果您未指定 `payable_amount`，系统将使用实时汇率计算：**应付金额 =（订单金额 + 开发者费用）/ 汇率**。汇率以创建订单时调用 [Get exchange rate](/payments/en/api-references/payment/get-exchange-rate) 操作返回的汇率为准。
-    - **开发者费用**（`fee_amount`）：如果您是服务多个下游商户的平台机构，需要在您和下游商户之间分配收入，可以通过设置该费用来实现。此费用以`payable_currency` 指定的加密货币为单位。实际分成的开发者费用=开发者费用/应收金额\*实际收款金额，更多信息请参考[账户与资金分配](/payments/cn/guides/amounts-and-balances)。
+    - **开发者费用**（`fee_amount`）：如果您是服务多个下游商户的平台机构，需要在您和下游商户之间分配收入，可以通过设置该费用来实现。此费用以`payable_currency` 指定的加密货币为单位。实际分成的开发者费用=开发者费用/应付金额\*实际收款金额，更多信息请参考[账户与资金分配](/payments/cn/guides/amounts-and-balances)。
 
     <Info>
       如果您是商户（直接服务于付款方），通常无需设置开发者费用。
@@ -102,9 +102,7 @@ lang: "zh-hans"
 您可以订阅以下 Webhook 事件，以获取订单状态的实时更新通知。请参考 [Webhook reference](/payments/cn/guides/status-and-events) 了解每个事件的触发时间和返回的数据结构。
 
 - `payment.status.updated`
-- `payment.transaction.created`
 - `payment.transaction.late`
-- `payment.transaction.held`
 - `payment.transaction.completed`
 
 您也可以通过 Payments App 或 Payments API 主动查询订单状态。
@@ -114,7 +112,7 @@ lang: "zh-hans"
     1. 登录 Cobo Portal [开发环境](https://portal.dev.cobo.com/login)或[生产环境](https://portal.cobo.com/login)。
     2. 在左侧导航栏中点击 **Apps**，然后点击 **Payments** 卡片，启动 App。
     3. 在 App 的左侧导航栏中点击**收款** \> **订单**。您可以在此页面查看所有订单的详细信息，如订单 ID、商户信息、支付金额、订单状态等。
-    4. 当付款方完成支付、且交易通过合规扫描后，订单状态会流转为**已完成**。
+    4. 当付款方完成支付、且交易通过合规筛查后，订单状态会流转为**已完成**。
 
     <img
       src="/payments/cn/images/payments/view-orders.png"
@@ -237,9 +235,9 @@ sequenceDiagram
   </Tab>
 </Tabs>
 
-### 合规扫描不通过
+### 合规筛查不通过
 
-当某笔交易收到 `payment.transaction.held` 事件，但长期未收到 `payment.transaction.completed` 事件时，这表明该笔交易未能通过 Cobo KYT 或 Screening App 的合规扫描。这种情况下，您需要按照以下步骤进行处理：
+当某笔交易收到 `payment.transaction.failed` 事件时，这表明该笔交易未能通过 Cobo KYT 或 Screening App 的合规筛查。这种情况下，您需要按照以下步骤进行处理：
 
 - 若该笔交易后续通过人工审核：
   - 如果订单未过期：该笔资金将计入订单实收金额，订单状态将根据实收金额相应更新
@@ -247,13 +245,15 @@ sequenceDiagram
 - 若该笔交易最终未通过人工审核：
   - 资金将被冻结，不会被计入订单实收金额
   - 订单状态将保持不变
-  - 付款方需要在订单有效期内重新充入足额资金并通过合规扫描，订单才能转为 `Completed` 状态
+  - 付款方需要在订单有效期内重新充入足额资金并通过合规筛查，订单才能转为 `Completed` 状态
 
 对于被隔离或冻结的资金：
 
 - Cobo KYT：请通过 [help@cobo.com](mailto:help@cobo.com) 联系 Cobo 支持团队处理
 - Screening App：您可以在应用内自行评估和处理
 
-<Tip>
-  欢迎您[提交反馈](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI)来帮助改进我们的文档！
-</Tip>
+### 最小入账金额限制
+
+为优化您的账户成本，避免因粉尘金额产生的入账手续费高于交易金额，系统设定了最小入账阈值。当单笔交易金额低于 **0.05 USDT**（或等值币种）时，系统将不自动进行入账处理。\
+_注：若您需要对此类低于阈值的累积资金进行手动处理，请联系 Cobo 客服或技术支持，我们将协助您从归集地址提取。_
+

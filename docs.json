@@ -107,7 +107,8 @@
                       "payments/en/api-references/payment/createget-top-up-address",
                       "payments/en/api-references/payment/batch-create-top-up-addresses",
                       "payments/en/api-references/payment/update-top-up-address",
-                      "payments/en/api-references/payment/list-payers"
+                      "payments/en/api-references/payment/list-payers",
+                      "payments/en/api-references/payment/list-payer-transactions"
                     ]
                   },
                   {
@@ -222,7 +223,6 @@
                   {
                     "group": "Bank accounts and addresses (Deprecated)",
                     "pages": [
-                      "payments/en/api-references/payment/list-all-bank-accounts",
                       "payments/en/api-references/payment/create-crypto-address",
                       "payments/en/api-references/payment/delete-crypto-address",
                       "payments/en/api-references/payment/list-crypto-addresses"

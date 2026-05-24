@@ -44,19 +44,19 @@ lang: "zh-hans"
   </Tab>
   <Tab title="Payments API" icon="code">
     1. 在创建出金请求前，您可以调用 [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) 或 [Get developer balance](/payments/en/api-references/payment/get-developer-balance) 分别查询商户和开发者余额，用于确定可出金的最大金额。
-    3. 调用 [Create Payout ](creat)创建出金请求。
+    3. 调用 [Create payout](/payments/en/api-references/payment/create-payout) 创建出金请求。
 
     **基础参数**
 
     - `request_id`：您提供的唯一请求 ID，用于跟踪出金请求
-    - `source_account`付款来源账户。当从商户账户出金时，传入 Merchant code；当从开发者账户出金时，设置为 developer
+    - `source_account`：付款来源账户。当从商户账户出金时，传入 Merchant Code；当从开发者账户出金时，设置为 `developer`。
     - `payout_channel`：设置为 `OffRamp`， Off-Ramp 对接
 
-    **`详情参数（payout items  recipient_info数组）`**
+    **详情参数（payout_params & recipient_info）**
 
     | 参数组                | 相关参数                         |
     | :----------------- | :--------------------------- |
-    | **payout items**   | `amount`、`token_id`          |
+    | **payout_params**  | `amount`、`token_id`          |
     | **recipient_info** | `currency`、`bank_account_id` |
 
     **参数说明：**
@@ -73,12 +73,12 @@ lang: "zh-hans"
 在创建出金请求后，基于您的提交方式、风控设置等因素，需要完成以下操作：
 
 - 二次确认：如您通过 Payments App 进行 Off-Ramp 对接，则需要在 Cobo Guard 上确认该出金请求。
-- 风控审核：如果您设置了交易风控，则可能需要审核人在 Cobo Guard 上批准该出金请求。
+- 风控审核：如果您设置了交易风控，则可能需要审批员在 Cobo Guard 上批准该出金请求。
 - 交易签名：如果您使用的是 MPC 钱包，则需要移动端签名人或服务端签名人签名，方可最终完成出金操作。
 
 ### 3. 跟进出金状态
 
-您可以订阅 `payment.settlement.status.updated` 事件，获取 Off-Ramp 对接状态的实时更新。请参考 [Webhook reference](/payments/cn/guides/status-and-events) 了解每个事件的详细触发条件和返回的数据结构。
+您可以订阅 `payment.payout.status.updated` 事件，获取 Off-Ramp 对接状态的实时更新。请参考 [Webhook reference](/payments/cn/guides/status-and-events) 了解每个事件的详细触发条件和返回的数据结构。
 
 您也可以通过 Payments App 或 Payments API 主动查询出金请求状态。
 
@@ -97,6 +97,3 @@ lang: "zh-hans"
   </Tab>
 </Tabs>
 
-<Tip>
-  欢迎您[提交反馈](https://forms.zohopublic.com/cobo/form/DocumentFeedbackForm/formperma/QvLOhxJv1_JMsJ-1dleZ8Itb_7rzN-LtgvsDdxosoVI)来帮助改进我们的文档！
-</Tip>
