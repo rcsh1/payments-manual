@@ -188,6 +188,7 @@
                       "payments/en/api-references/payment/create-bulk-send",
                       "payments/en/api-references/payment/get-bulk-send-information",
                       "payments/en/api-references/payment/list-bulk-send-items",
+                      "payments/en/api-references/payment/list-bulk-sends",
                       {
                         "group": "Legacy Payouts (Deprecated)",
                         "pages": [
