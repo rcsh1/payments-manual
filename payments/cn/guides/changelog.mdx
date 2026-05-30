@@ -3,10 +3,28 @@ title: "发布历史"
 lang: "zh-hans"
 ---
 
+## 2026 年 05 月
+
+| 功能 | 变更说明 | 发布时间 |
+| ----- | ----- | ----- |
+| **资金管理** | (SDK v1.36.0) Bulk Send 功能增强：<br />・[Create bulk send](/payments/en/api-references/payment/create-bulk-send)：新增可选字段 `request_id`，用于幂等控制，防止重复提交。响应中同步返回 `request_id`。<br />・新增 [List all bulk sends](/payments/en/api-references/payment/list-bulk-sends) 操作，支持查询批量下发记录，可按 `request_id` 过滤。 | 2026-05-26 |
+| **资金管理（不兼容变更）** | (SDK v1.35.0) 以下已废弃的银行账户 API 操作已被永久移除，请改用[转出目的地](/payments/en/api-references/payment/create-destination)相关操作：<br />  - 查询银行账户列表（`GET /payments/bank_accounts`）<br />  - 更新银行账户（`PUT /payments/bank_accounts/{bank_account_id}`） | 2026-05-12 |
+| **收款** | (SDK v1.35.0) 充值模式付款方功能增强：<br />・[List payers](/payments/en/api-references/payment/list-payers) 响应新增 `custom_payer_id` 字段，即商户侧的用户唯一标识。<br />・新增 [List payer transactions](/payments/en/api-references/payment/list-payer-transactions) 操作，支持分页查询指定付款方的链上充值交易记录，可按 `custom_payer_id`、`merchant_id`、`token_id`、`transaction_hash` 等过滤。[List payers](/payments/en/api-references/payment/list-payers) 响应中的 `transactions` 字段已废弃，将在未来版本中移除。当前版本起，该字段最多返回最近 200 条交易，不再返回全部记录。 | 2026-05-12 |
+
+
+## 2026 年 04 月
+
+| 功能 | 变更说明 | 发布时间 |
+| ----- | ----- | ----- |
+| **资金管理** | (SDK v1.34.0) OffRamp 转出新增虚拟账户（VA）路由支持：<br />・[Estimate fees](/payments/en/api-references/payment/estimate-fees)：请求体新增 `transfer_via_va` 字段。设置为 `true` 表示通过虚拟账户转出至银行账户，`false` 表示直接转入银行账户。<br />・`RecipientInfo` Schema：转出响应中新增 `transfer_via_va` 字段，标识该笔转出是否通过虚拟账户路由。 | 2026-04-07 |
+| **退款** | (SDK v1.34.0) [Create refund link](/payments/en/api-references/payment/create-refund-link) 新增可选字段 `order_id`。您现在可以通过 `order_id` 或 `transaction_id` 指定要退款的订单；此前仅支持 `transaction_id`。 | 2026-04-07 |
+
+
 ## 2026 年 03 月
 
 | 功能 | 变更说明 | 发布时间 |
 | ----- | ----- | ----- |
+| **支付链接** | (SDK v1.33.0) 新增 [Create SDK link](/payments/en/api-references/payment/create-sdk-link) 操作，用于生成前端 SDK 初始化所需的 token 和 URL，便于开发者将 Cobo 支付界面嵌入 Web 应用中。 | 2026-03-24 |
 | **Webhook** | **(SDK v1.32.0)** 新增 Webhook 手动触发 API：`payments/webhooks/trigger` ，支持开发者在无需创建真实交易的情况下，手动触发 Payment 相关 Webhook 事件，便于集成测试 | 2026-03-12 |
 | **资金管理** | **(SDK v1.32.0)** `List merchant balances` 接口新增灵活查询支持，token\_id 与 merchant\_ids 参数现均为可选，支持按指定 token 或跨多个商户查询余额 | 2026-03-12 |
 | **转出目的地** | **(SDK v1.32.0)** Payout Destination 管理功能优化：<br />・**Create destination**：request 中新增 `bank_accounts[].country`、`bank_accounts[].city`；`bank_accounts[].intermediary_bank_info.bank_address` 变为选填<br />・**Get destination detail**：response 中新增 `bank_accounts[].country`、`bank_accounts[].city`<br />・**Create destination entry**：request 中新增 `bank_accounts[].country`、`bank_accounts[].city`；`bank_accounts[].intermediary_bank_info.bank_address` 变为选填<br />・**List destination entries**：response 中新增 `bank_accounts[].country`、`bank_accounts[].city`<br />・**Get destination entry information**：response 中新增 `bank_account.country`、`bank_account.city`<br />・**Update destination entry**：response 中新增 `bank_account.country`、`bank_account.city`；request 中 `bank_account.intermediary_bank_info.bank_address` 变为选填 | 2026-03-12 |

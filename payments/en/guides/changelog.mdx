@@ -6,10 +6,28 @@ lang: "en"
 This document records all major updates and upcoming features for the Cobo Payments solution, helping you stay informed about product developments and upgrades.
 
 
+## May 2026
+
+| Feature | Description | Release Date |
+| ----- | ----- | ----- |
+| **Funds Management** | (SDK v1.36.0) Bulk Send improvements:<br />・[Create bulk send](/payments/en/api-references/payment/create-bulk-send): added optional `request_id` field for idempotency — a caller-supplied unique key to prevent duplicate submissions. The `request_id` is also returned in the response.<br />・Added [List all bulk sends](/payments/en/api-references/payment/list-bulk-sends) operation for querying bulk send records, with optional filtering by `request_id`. | 2026-05-26 |
+| **Funds Management (Breaking Change)** | (SDK v1.35.0) The following deprecated bank account API operations have been permanently removed. Use the [Destination](/payments/en/api-references/payment/create-destination) related operations instead:<br />  - List bank accounts (`GET /payments/bank_accounts`)<br />  - Update bank account (`PUT /payments/bank_accounts/{bank_account_id}`) | 2026-05-12 |
+| **Pay-in** | (SDK v1.35.0) Top-up payer enhancements:<br />・[List payers](/payments/en/api-references/payment/list-payers) response now includes the `custom_payer_id` field — the merchant-side unique identifier for the payer.<br />・Added [List payer transactions](/payments/en/api-references/payment/list-payer-transactions) operation for paginated retrieval of on-chain transactions for a specific payer, filterable by `custom_payer_id`, `merchant_id`, `token_id`, and `transaction_hash`. The `transactions` inline field in [List payers](/payments/en/api-references/payment/list-payers) is now deprecated and will be removed in a future version. Starting from this release, the field returns at most the 200 most recent transactions and no longer returns all records. | 2026-05-12 |
+
+
+## April 2026
+
+| Feature | Description | Release Date |
+| ----- | ----- | ----- |
+| **Funds Management** | (SDK v1.34.0) OffRamp payout routing via virtual account (VA) is now supported:<br />・[Estimate fees](/payments/en/api-references/payment/estimate-fees): added `transfer_via_va` field to the request body. Set to `true` to estimate fees for routing the payout via a virtual account; `false` for direct bank transfer.<br />・`RecipientInfo` schema: added `transfer_via_va` field in payout responses, indicating whether the payout was routed through a virtual account. | 2026-04-07 |
+| **Refunds** | (SDK v1.34.0) [Create refund link](/payments/en/api-references/payment/create-refund-link): added optional `order_id` field. You can now specify the order to refund using either `order_id` or `transaction_id`; previously only `transaction_id` was accepted. | 2026-04-07 |
+
+
 ## March 2026
 
 | Feature | Description | Release Date |
 | ----- | ----- | ----- |
+| **Payment Link** | (SDK v1.33.0) Added [Create SDK link](/payments/en/api-references/payment/create-sdk-link) operation. Generates an SDK link token and URL for initializing the Cobo Payments frontend SDK, enabling developers to embed the payment interface in web applications. | 2026-03-24 |
 | **Webhook** | (SDK v1.32.0) Added a Webhook trigger API `payments/webhooks/trigger`. Developers can now manually trigger Payment-related Webhook events without creating actual transactions, making integration testing easier. | 2026-03-12 |
 | **Funds Management** | (SDK v1.32.0) The `List merchant balances` endpoint now supports flexible querying. Both `token_id` and `merchant_ids` parameters are optional, allowing queries by specific token or across multiple merchants. | 2026-03-12 |
 | **Destinations** | (SDK v1.32.0) Payout Destination management enhancements:<br />・**Create destination** — Request: added `bank_accounts[].country` and `bank_accounts[].city`; `bank_accounts[].intermediary_bank_info.bank_address` is now optional<br />・**Get destination detail** — Response: added `bank_accounts[].country` and `bank_accounts[].city`<br />・**Create destination entry** — Request: added `bank_accounts[].country` and `bank_accounts[].city`; `bank_accounts[].intermediary_bank_info.bank_address` is now optional<br />・**List destination entries** — Response: added `bank_accounts[].country` and `bank_accounts[].city`<br />・**Get destination entry information** — Response: added `bank_account.country` and `bank_account.city`<br />・**Update destination entry** — Response: added `bank_account.country` and `bank_account.city`; Request: `bank_account.intermediary_bank_info.bank_address` is now optional | 2026-03-12 |
