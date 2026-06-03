@@ -136,6 +136,7 @@ Webhook payload example (**Bulk Send Notification**):
 {
     "data_type": "PaymentBulkSend",
     "bulk_send_id": "8ecf2933-5ef2-4f1d-9b59-3f4ff017d16a",
+    "request_id": "SendBatch-001",
     "source_account": "M1001",
     "execution_mode": "Partial",
     "status": "Completed",
@@ -184,6 +185,10 @@ Rules to focus on:
 - If validation_status = **ValidationFailed** → the address did not pass Cobo KYA validation
 
 For both cases, **replacing the address is recommended.**
+
+<Note>
+  Transaction hash (`tx_hash`) is not currently available through the public Payments API endpoints or webhooks. If your integration requires transaction hashes, please contact Cobo support.
+</Note>
 
 ### **2.3 Automated retry: replace addresses and resend in batch**
 
