@@ -3,6 +3,13 @@ title: "发布历史"
 lang: "zh-hans"
 ---
 
+## 2026 年 06 月
+
+| 功能 | 变更说明 | 发布时间 |
+| ----- | ----- | ----- |
+| **资金管理** | (SDK v1.37.0) 新增 [List balance changes](/payments/en/api-references/payment/list-balance-changes) 操作，用于查询指定来源账户的余额变动记录。<br /><br />Bulk Send 功能增强：<br />・[List bulk send items](/payments/en/api-references/payment/list-bulk-send-items)：响应中新增 `tx_hash` 字段，返回每条批量下发记录对应的链上交易哈希。<br />・[List all bulk sends](/payments/en/api-references/payment/list-bulk-sends)、[Get bulk send information](/payments/en/api-references/payment/get-bulk-send-information) 响应及 Bulk Send Webhook 通知（`payment.bulk_send.status.updated`）数据中新增 `commission_fee` 字段，返回本次批量下发所收取的手续费信息。 | 2026-06-09 |
+
+
 ## 2026 年 05 月
 
 | 功能 | 变更说明 | 发布时间 |
