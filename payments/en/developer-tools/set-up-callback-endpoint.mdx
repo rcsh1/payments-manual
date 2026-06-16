@@ -31,7 +31,7 @@ Cobo sends an HTTP POST request to your registered callback endpoint. The reques
 | `status` | string | Yes | The current status of the callback message. Possible values: `Approved`, `Denied`, `Failed`. |
 | `result` | string | No | The result returned by your endpoint. Possible values: `ok`, `deny`. |
 
-The `data` object contains the following key fields:
+The `data` object contains the following fields:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
@@ -46,10 +46,26 @@ The `data` object contains the following key fields:
 | `updated_timestamp` | integer | Yes | The time when the transaction was last updated, in Unix timestamp format, measured in milliseconds. |
 | `cobo_id` | string | No | The Cobo ID of the transaction. |
 | `request_id` | string | No | The request ID of the transaction. |
+| `sub_status` | string | No | The sub-status of the transaction. |
+| `failed_reason` | string | No | The reason the transaction failed, if applicable. |
 | `chain_id` | string | No | The chain ID. |
 | `token_id` | string | No | The token ID. |
+| `asset_id` | string | No | The asset ID. |
+| `result` | object | No | The transaction signature result. |
+| `fee` | object | No | The transaction fee information. |
+| `initiator` | string | No | The transaction initiator. |
+| `confirmed_num` | integer | No | The number of block confirmations. |
+| `confirming_threshold` | integer | No | The minimum number of confirmations required. |
 | `transaction_hash` | string | No | The transaction hash. |
+| `block_info` | object | No | The block information. |
+| `raw_tx_info` | object | No | The raw transaction information. |
+| `replacement` | object | No | The replacement transaction data, if this transaction was replaced. |
+| `fueling_info` | object | No | The gas fueling information. |
+| `category` | array of strings | No | The user-defined transaction categories. |
+| `cobo_category` | array of strings | No | The Cobo-defined transaction categories. |
 | `description` | string | No | For Bulk Send transactions, this field contains the Bulk Send `request_id`. You can use it to identify which Bulk Send triggered this callback. |
+| `is_loop` | boolean | No | Whether the transaction is a Cobo Loop transfer. Defaults to `false`. |
+| `extra` | array of strings | No | Additional information. |
 
 ### Verify the signature
 

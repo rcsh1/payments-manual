@@ -31,7 +31,7 @@ Cobo 向您注册的 Callback Endpoint 发送 HTTP POST 请求，请求正文包
 | `status` | string | 是 | Callback 消息的当前状态。可能的值：`Approved`、`Denied`、`Failed`。 |
 | `result` | string | 否 | 您的 Endpoint 返回的结果。可能的值：`ok`、`deny`。 |
 
-`data` 对象包含以下主要字段：
+`data` 对象包含以下字段：
 
 | 字段 | 类型 | 是否必填 | 描述 |
 |------|------|----------|------|
@@ -46,10 +46,26 @@ Cobo 向您注册的 Callback Endpoint 发送 HTTP POST 请求，请求正文包
 | `updated_timestamp` | integer | 是 | 交易最近更新时间，Unix 时间戳格式，单位为毫秒。 |
 | `cobo_id` | string | 否 | 交易的 Cobo ID。 |
 | `request_id` | string | 否 | 交易的请求 ID。 |
+| `sub_status` | string | 否 | 交易的子状态。 |
+| `failed_reason` | string | 否 | 交易失败原因（如适用）。 |
 | `chain_id` | string | 否 | 链 ID。 |
 | `token_id` | string | 否 | 代币 ID。 |
+| `asset_id` | string | 否 | 资产 ID。 |
+| `result` | object | 否 | 交易签名结果。 |
+| `fee` | object | 否 | 交易手续费信息。 |
+| `initiator` | string | 否 | 交易发起方。 |
+| `confirmed_num` | integer | 否 | 区块确认数。 |
+| `confirming_threshold` | integer | 否 | 所需最小确认数。 |
 | `transaction_hash` | string | 否 | 交易哈希。 |
+| `block_info` | object | 否 | 区块信息。 |
+| `raw_tx_info` | object | 否 | 原始交易信息。 |
+| `replacement` | object | 否 | 替换交易数据（如果该交易被替换）。 |
+| `fueling_info` | object | 否 | Gas 代付信息。 |
+| `category` | array of strings | 否 | 用户自定义的交易类别。 |
+| `cobo_category` | array of strings | 否 | Cobo 定义的交易类别。 |
 | `description` | string | 否 | 对于批量下发交易，此字段包含批量下发的 `request_id`，可用于判断该 Callback 是否由某笔批量下发触发。 |
+| `is_loop` | boolean | 否 | 是否为 Cobo Loop 转账。默认值为 `false`。 |
+| `extra` | array of strings | 否 | 附加信息。 |
 
 ### 验证签名
 
