@@ -121,16 +121,24 @@ Cobo 向您注册的 Callback Endpoint 发送 HTTP POST 请求，请求正文即
     {"result": "deny"}
     ```
 
-如果您的 Endpoint 未能及时响应或返回其他响应，Callback 消息的状态将变为 `Failed`。您可以在 **Cobo Portal** > **开发者** > **Callback** > **Callback 消息**中重试失败的 Callback 消息。
+如果您的 Endpoint 未能及时响应或返回其他响应，Callback 消息的状态将变为 `Failed`。
 
 ## 注册 Endpoint
 
-实现并部署 Endpoint 后，在 Cobo 上注册 Endpoint，以便 Cobo 知道向何处发送 Callback 消息。
+回调地址在 Cobo Portal 创建 API 密钥时注册，与 API 密钥绑定。Cobo 会将使用该 API 密钥发起的所有操作的 Callback 消息发送到该地址。
 
-1. 前往 **Cobo Portal** > **开发者** > **Callbacks**。
-2. 点击**注册 Callback Endpoint**。
-3. 输入您的 Endpoint URL 和可选的描述信息（最多 30 个字符）。
-4. 点击**注册**。
+1. 前往 **Cobo Portal** > **开发者** > **API Keys**。
+2. 点击**注册 API Key**。
+3. 在**回调地址**部分，点击**添加回调地址**。
+4. 输入您的 Endpoint URL 和可选的描述信息。
+5. 点击**注册**保存回调地址。
+6. 点击**注册密钥**完成 API 密钥注册。
+
+<Note>
+- 未配置回调地址时，所有提币请求将被自动批准。建议至少配置一个。
+- 所有已配置的回调地址必须返回 `ok`，请求才会继续执行。任一地址返回 `deny` 将立即阻断该交易。
+- 每个 API 密钥最多可关联 3 个回调地址。
+</Note>
 
 ## 注意事项
 

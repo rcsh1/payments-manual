@@ -121,16 +121,24 @@ Your endpoint must respond within 10 seconds. Return a JSON body with a `result`
     {"result": "deny"}
     ```
 
-If your endpoint does not respond in time or returns any other response, the callback message status becomes `Failed`. You can retry a failed callback message from **Cobo Portal** > **Developer** > **Callbacks** > **Callback Messages**.
+If your endpoint does not respond in time or returns any other response, the callback message status becomes `Failed`.
 
 ## Register the endpoint
 
-After you implement and deploy your endpoint, register it with Cobo so that Cobo knows where to send callback messages.
+You register a callback URL when creating an API key in Cobo Portal. The callback URL is associated with the API key and Cobo sends callback messages to it for all operations initiated using that API key.
 
-1. Go to **Cobo Portal** > **Developer** > **Callbacks**.
-2. Click **Register Callback Endpoint**.
-3. Enter your endpoint URL and an optional description (max 30 characters).
-4. Click **Register**.
+1. Go to **Cobo Portal** > **Developer** > **API Keys**.
+2. Click **Register API Key**.
+3. In the **Callback URLs** section, click **Add Callback URLs**.
+4. Enter your endpoint URL and an optional description.
+5. Click **Register** to save the callback URL.
+6. Click **Register Key** to complete the API key registration.
+
+<Note>
+- Without a callback URL, all withdrawal requests are auto-approved. It is recommended to configure at least one.
+- All configured callback URLs must return `ok` for a request to proceed. Any URL returning `deny` immediately blocks the transaction.
+- You can associate up to 3 callback URLs with a single API key.
+</Note>
 
 ## Important notes
 
