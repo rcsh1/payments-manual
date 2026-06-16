@@ -1,0 +1,119 @@
+---
+title: "设置 Callback Endpoint"
+lang: "zh-hans"
+sidebarTitle: "设置 Callback Endpoint"
+---
+
+本指南介绍如何创建和注册 Callback Endpoint，用于接收和处理来自 Cobo 支付服务的 Callback 消息。
+
+## 创建 Endpoint
+
+选择支持接收和处理 HTTP POST 请求的服务器环境，例如 AWS、Google Cloud 等云服务或自托管服务器。在您的服务器上定义一个 Endpoint URL，Cobo 将向该地址发送 Callback 消息。
+
+## 实现处理逻辑
+
+创建 Endpoint 后，在您的服务器上实现处理 Callback 消息的逻辑。
+
+### 解析 Callback 请求
+
+Cobo 向您注册的 Callback Endpoint 发送 HTTP POST 请求，请求正文包含以下字段：
+
+| 字段 | 类型 | 是否必填 | 描述 |
+|------|------|----------|------|
+| `id` | string (UUID) | 是 | Callback 消息 ID。 |
+| `created_timestamp` | integer | 是 | Callback 消息的创建时间，Unix 时间戳格式，单位为毫秒。 |
+| `updated_timestamp` | integer | 是 | Callback 消息的最近更新时间，Unix 时间戳格式，单位为毫秒。 |
+| `request_id` | string | 是 | 交易的请求 ID。 |
+| `transaction_id` | string | 是 | 交易 ID。 |
+| `wallet_id` | string | 否 | 钱包 ID。 |
+| `url` | string | 是 | 接收本条消息的 Callback Endpoint URL。 |
+| `data` | object | 是 | 完整的交易对象，包含智能合约调用数据。使用此字段验证合约地址和函数调用信息。 |
+| `status` | string | 是 | Callback 消息的当前状态。可能的值：`Approved`、`Denied`、`Failed`。 |
+| `result` | string | 否 | 您的 Endpoint 返回的结果。可能的值：`ok`、`deny`。 |
+
+### 验证签名
+
+为防止未经授权的访问，请通过验证签名来确认每条 Callback 请求的真实性。
+
+验证步骤如下：
+
+1. 获取请求包体的原始数据和时间戳。
+
+    从请求 Payload 中提取包体的原始字符串，并从请求头中提取时间戳。
+
+    ```python
+    raw_body = request.body().decode('utf8')
+    timestamp = request.headers.get("BIZ_TIMESTAMP")
+    ```
+
+2. 获取签名。
+
+    从请求头中获取签名值。
+
+    ```python
+    signature = request.headers.get('BIZ_RESP_SIGNATURE')
+    ```
+
+3. 拼接消息并对其进行哈希处理。
+
+    ```python
+    import hashlib
+
+    # Concatenate raw body and timestamp to form the message.
+    message = "raw_body|timestamp"
+
+    # Compute double SHA-256 hash.
+    sha256_hash = hashlib.sha256(hashlib.sha256(message.encode()).digest()).digest()
+    ```
+
+4. 选择 Cobo 的公钥。
+
+    根据您使用的环境，选择相应的公钥进行验证：
+    - 开发环境：`a04ea1d5fa8da71f1dcfccf972b9c4eba0a2d8aba1f6da26f49977b08a0d2718`
+    - 生产环境：`8d4a482641adb2a34b726f05827dba9a9653e5857469b8749052bf4458a86729`
+
+5. 使用 Ed25519 算法验证签名。
+
+    ```python
+    import ed25519
+
+    # Obtain the verifying key from Cobo's public key.
+    vk = ed25519.VerifyingKey(bytes.fromhex(public_key))
+
+    # Verify the signature against the computed message hash.
+    vk.verify(bytes.fromhex(signature), sha256_hash)
+    ```
+
+### 响应 Callback 请求
+
+您的 Endpoint 必须在 2 秒内响应。返回包含 `result` 字段的 JSON 正文：
+
+- 批准操作：
+
+    ```json
+    {"result": "ok"}
+    ```
+
+- 拒绝操作：
+
+    ```json
+    {"result": "deny"}
+    ```
+
+如果您的 Endpoint 未能及时响应或返回其他响应，Callback 消息的状态将变为 `Failed`。您可以在 **Cobo Portal** > **开发者** > **Callback** > **Callback 消息**中重试失败的 Callback 消息。
+
+## 注册 Endpoint
+
+实现并部署 Endpoint 后，在 Cobo 上注册 Endpoint，以便 Cobo 知道向何处发送 Callback 消息。
+
+1. 前往 **Cobo Portal** > **开发者** > **Callback**。
+2. 点击**创建 Callback Endpoint**。
+3. 输入您的 Endpoint URL 和可选的描述信息。
+4. 点击**确认**。
+
+## 注意事项
+
+<Warning>
+- 您的 Endpoint 必须快速响应。请立即返回 `ok` 或 `deny` 响应，然后异步执行其他处理逻辑，以避免超时。
+- 由于重试机制的存在，您的 Endpoint 可能多次收到同一条 Callback 消息。为防止重复处理，请记录已处理的 Callback 消息的 `id` 或 `request_id`，并跳过已记录的消息。
+</Warning>

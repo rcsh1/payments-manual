@@ -1,0 +1,119 @@
+---
+title: "Set up a callback endpoint"
+lang: "en"
+sidebarTitle: "Set up a callback endpoint"
+---
+
+This guide explains how to create and register a callback endpoint for receiving and processing callback messages from the Cobo payments service.
+
+## Create an endpoint
+
+Choose a server environment that supports receiving and processing HTTP POST requests, such as a cloud service like AWS or Google Cloud, or a self-hosted server. Define an endpoint URL on your server where Cobo will send callback messages.
+
+## Implement handling logic
+
+After you create the endpoint, implement the logic on your server to handle callback messages.
+
+### Parse the callback request
+
+Cobo sends an HTTP POST request to your registered callback endpoint. The request body contains the following fields:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `id` | string (UUID) | Yes | The callback message ID. |
+| `created_timestamp` | integer | Yes | The time when the callback message was created, in Unix timestamp format, measured in milliseconds. |
+| `updated_timestamp` | integer | Yes | The time when the callback message was last updated, in Unix timestamp format, measured in milliseconds. |
+| `request_id` | string | Yes | The request ID of the transaction. |
+| `transaction_id` | string | Yes | The transaction ID. |
+| `wallet_id` | string | No | The wallet ID. |
+| `url` | string | Yes | The callback endpoint URL that this message was sent to. |
+| `data` | object | Yes | The full transaction object, including the smart contract call data. Use this to verify the contract address and function call information. |
+| `status` | string | Yes | The current status of the callback message. Possible values: `Approved`, `Denied`, `Failed`. |
+| `result` | string | No | The result returned by your endpoint. Possible values: `ok`, `deny`. |
+
+### Verify the signature
+
+To prevent unauthorized access, verify the authenticity of each callback request by checking its signature.
+
+The verification steps are as follows:
+
+1. Retrieve the raw body and timestamp.
+
+    Extract the original body string from the request payload and the timestamp from the request headers.
+
+    ```python
+    raw_body = request.body().decode('utf8')
+    timestamp = request.headers.get("BIZ_TIMESTAMP")
+    ```
+
+2. Retrieve the signature.
+
+    Fetch the signature value from the request header.
+
+    ```python
+    signature = request.headers.get('BIZ_RESP_SIGNATURE')
+    ```
+
+3. Concatenate and hash the message.
+
+    ```python
+    import hashlib
+
+    # Concatenate raw body and timestamp to form the message.
+    message = "raw_body|timestamp"
+
+    # Compute double SHA-256 hash.
+    sha256_hash = hashlib.sha256(hashlib.sha256(message.encode()).digest()).digest()
+    ```
+
+4. Select Cobo's public key.
+
+    Depending on the environment you use, select the corresponding public key for verification:
+    - Development environment: `a04ea1d5fa8da71f1dcfccf972b9c4eba0a2d8aba1f6da26f49977b08a0d2718`
+    - Production environment: `8d4a482641adb2a34b726f05827dba9a9653e5857469b8749052bf4458a86729`
+
+5. Verify the signature using the Ed25519 algorithm.
+
+    ```python
+    import ed25519
+
+    # Obtain the verifying key from Cobo's public key.
+    vk = ed25519.VerifyingKey(bytes.fromhex(public_key))
+
+    # Verify the signature against the computed message hash.
+    vk.verify(bytes.fromhex(signature), sha256_hash)
+    ```
+
+### Respond to the callback request
+
+Your endpoint must respond within 2 seconds. Return a JSON body with a `result` field:
+
+- To approve the operation:
+
+    ```json
+    {"result": "ok"}
+    ```
+
+- To deny the operation:
+
+    ```json
+    {"result": "deny"}
+    ```
+
+If your endpoint does not respond in time or returns any other response, the callback message status becomes `Failed`. You can retry a failed callback message from **Cobo Portal** > **Developer** > **Callbacks** > **Callback Messages**.
+
+## Register the endpoint
+
+After you implement and deploy your endpoint, register it with Cobo so that Cobo knows where to send callback messages.
+
+1. Go to **Cobo Portal** > **Developer** > **Callbacks**.
+2. Click **Create Callback Endpoint**.
+3. Enter your endpoint URL and an optional description.
+4. Click **Confirm**.
+
+## Important notes
+
+<Warning>
+- Your endpoint must respond quickly. Return your `ok` or `deny` response immediately, then perform any additional processing asynchronously to avoid timeouts.
+- Due to the retry mechanism, your endpoint may receive the same callback message more than once. To prevent duplicate processing, log the `id` or `request_id` of each callback message you have already processed and skip any that are already logged.
+</Warning>

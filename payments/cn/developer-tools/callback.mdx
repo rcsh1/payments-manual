@@ -1,0 +1,31 @@
+---
+title: "Callback 介绍"
+lang: "zh-hans"
+sidebarTitle: "介绍"
+---
+
+Callback 是 Cobo 支付服务在执行敏感操作前向您请求确认的一种机制。当触发需要 Callback 确认的操作时，Cobo 会向您注册的 Callback Endpoint 发送请求。您的 Endpoint 必须返回批准或拒绝的响应，Cobo 才会继续执行。
+
+Callback 与 Webhook 的区别如下：
+
+- **Webhook** 在事件发生后通知您的 App。
+- **Callback** 在操作执行前请求您的 App 批准或拒绝。
+
+目前，仅**批量下发（Bulk Send）**会触发 Callback 确认。在批量下发过程中，Cobo 会对每个智能合约操作（`approve` 和 `sendToken`）调用您的 Callback Endpoint，以便您在批准执行前验证合约地址和函数调用数据。有关您将收到的合约调用数据的详情，请参阅[批量下发的智能合约机制](/payments/cn/guides/bulk-send#smart-contract-mechanism-for-bulk-send)。
+
+## 处理 Callback 消息
+
+按照以下步骤处理 Cobo 支付服务发送的 Callback 消息：
+
+1. 创建 Callback Endpoint。
+    - 选择服务器环境。
+    - 定义 Endpoint URL。
+2. 在服务器端实现处理逻辑。
+    - 解析 Callback 请求。
+    - 验证签名。
+    - 批准或拒绝操作。
+3. 在 Cobo Portal 上注册 Endpoint。
+
+要创建 Endpoint 并实现处理逻辑，请参阅[设置 Callback Endpoint](/payments/cn/developer-tools/set-up-callback-endpoint)。
+
+要注册 Endpoint，请前往 **Cobo Portal** > **开发者** > **Callback** > **创建 Callback Endpoint**。

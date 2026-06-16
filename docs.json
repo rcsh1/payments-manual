@@ -284,6 +284,13 @@
                   "payments/en/developer-tools/webhook",
                   "payments/en/developer-tools/set-up-endpoint"
                 ]
+              },
+              {
+                "group": "Callbacks",
+                "pages": [
+                  "payments/en/developer-tools/callback",
+                  "payments/en/developer-tools/set-up-callback-endpoint"
+                ]
               }
             ]
           }
@@ -404,6 +411,13 @@
                 "pages": [
                   "payments/cn/developer-tools/webhook",
                   "payments/cn/developer-tools/set-up-endpoint"
+                ]
+              },
+              {
+                "group": "Callbacks",
+                "pages": [
+                  "payments/cn/developer-tools/callback",
+                  "payments/cn/developer-tools/set-up-callback-endpoint"
                 ]
               }
             ]
