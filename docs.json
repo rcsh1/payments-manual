@@ -166,7 +166,8 @@
                       "payments/en/api-references/payment/list-merchant-balances",
                       "payments/en/api-references/payment/get-developer-balance",
                       "payments/en/api-references/payment/get-withdrawable-balances",
-                      "payments/en/api-references/payment/list-payment-wallet-balances"
+                      "payments/en/api-references/payment/list-payment-wallet-balances",
+                      "payments/en/api-references/payment/list-balance-changes"
                     ]
                   },
                   {
