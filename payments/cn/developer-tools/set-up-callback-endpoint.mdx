@@ -16,22 +16,7 @@ sidebarTitle: "设置 Callback Endpoint"
 
 ### 解析 Callback 请求
 
-Cobo 向您注册的 Callback Endpoint 发送 HTTP POST 请求，请求正文包含以下字段：
-
-| 字段 | 类型 | 是否必填 | 描述 |
-|------|------|----------|------|
-| `id` | string (UUID) | 是 | Callback 消息 ID。 |
-| `created_timestamp` | integer | 是 | Callback 消息的创建时间，Unix 时间戳格式，单位为毫秒。 |
-| `updated_timestamp` | integer | 是 | Callback 消息的最近更新时间，Unix 时间戳格式，单位为毫秒。 |
-| `request_id` | string | 是 | 交易的请求 ID。 |
-| `transaction_id` | string | 是 | 交易 ID。 |
-| `wallet_id` | string | 否 | 钱包 ID。 |
-| `url` | string | 是 | 接收本条消息的 Callback Endpoint URL。 |
-| `data` | object | 是 | 交易对象，字段见下表。 |
-| `status` | string | 是 | Callback 消息的当前状态。可能的值：`Approved`、`Denied`、`Failed`。 |
-| `result` | string | 否 | 您的 Endpoint 返回的结果。可能的值：`ok`、`deny`。 |
-
-`data` 对象包含以下字段：
+Cobo 向您注册的 Callback Endpoint 发送 HTTP POST 请求，请求正文即交易对象，包含以下字段：
 
 | 字段 | 类型 | 是否必填 | 描述 |
 |------|------|----------|------|

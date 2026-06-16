@@ -16,22 +16,7 @@ After you create the endpoint, implement the logic on your server to handle call
 
 ### Parse the callback request
 
-Cobo sends an HTTP POST request to your registered callback endpoint. The request body contains the following fields:
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `id` | string (UUID) | Yes | The callback message ID. |
-| `created_timestamp` | integer | Yes | The time when the callback message was created, in Unix timestamp format, measured in milliseconds. |
-| `updated_timestamp` | integer | Yes | The time when the callback message was last updated, in Unix timestamp format, measured in milliseconds. |
-| `request_id` | string | Yes | The request ID of the transaction. |
-| `transaction_id` | string | Yes | The transaction ID. |
-| `wallet_id` | string | No | The wallet ID. |
-| `url` | string | Yes | The callback endpoint URL that this message was sent to. |
-| `data` | object | Yes | The transaction object. Fields are listed below. |
-| `status` | string | Yes | The current status of the callback message. Possible values: `Approved`, `Denied`, `Failed`. |
-| `result` | string | No | The result returned by your endpoint. Possible values: `ok`, `deny`. |
-
-The `data` object contains the following fields:
+Cobo sends an HTTP POST request to your registered callback endpoint. The request body is the transaction object and contains the following fields:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
