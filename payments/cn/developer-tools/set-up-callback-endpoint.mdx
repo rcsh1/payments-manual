@@ -27,7 +27,7 @@ Cobo 向您注册的 Callback Endpoint 发送 HTTP POST 请求，请求正文包
 | `transaction_id` | string | 是 | 交易 ID。 |
 | `wallet_id` | string | 否 | 钱包 ID。 |
 | `url` | string | 是 | 接收本条消息的 Callback Endpoint URL。 |
-| `data` | object | 是 | 交易对象。主要字段见下表。 |
+| `data` | object | 是 | 交易对象，字段见下表。 |
 | `status` | string | 是 | Callback 消息的当前状态。可能的值：`Approved`、`Denied`、`Failed`。 |
 | `result` | string | 否 | 您的 Endpoint 返回的结果。可能的值：`ok`、`deny`。 |
 
