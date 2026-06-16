@@ -11,7 +11,7 @@ Callback 与 Webhook 的区别如下：
 - **Webhook** 在事件发生后通知您的 App。
 - **Callback** 在操作执行前请求您的 App 批准或拒绝。
 
-目前，仅**批量下发（Bulk Send）**会触发 Callback 确认。在批量下发过程中，Cobo 会对每个智能合约操作（`approve` 和 `sendToken`）调用您的 Callback Endpoint，以便您在批准执行前验证合约地址和函数调用数据。有关您将收到的合约调用数据的详情，请参阅[批量下发的智能合约机制](/payments/cn/guides/bulk-send#smart-contract-mechanism-for-bulk-send)。
+目前，仅**批量下发（Bulk Send）**会触发 Callback 确认。在批量下发过程中，无论底层使用智能合约还是普通转账，Cobo 都会对每笔操作调用您的 Callback Endpoint，以便您在批准执行前检查交易详情。
 
 ## 处理 Callback 消息
 

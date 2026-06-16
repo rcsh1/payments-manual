@@ -27,9 +27,29 @@ Cobo sends an HTTP POST request to your registered callback endpoint. The reques
 | `transaction_id` | string | Yes | The transaction ID. |
 | `wallet_id` | string | No | The wallet ID. |
 | `url` | string | Yes | The callback endpoint URL that this message was sent to. |
-| `data` | object | Yes | The full transaction object, including the smart contract call data. Use this to verify the contract address and function call information. |
+| `data` | object | Yes | The transaction object. Key fields are listed below. |
 | `status` | string | Yes | The current status of the callback message. Possible values: `Approved`, `Denied`, `Failed`. |
 | `result` | string | No | The result returned by your endpoint. Possible values: `ok`, `deny`. |
+
+The `data` object contains the following key fields:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `transaction_id` | string | Yes | The transaction ID. |
+| `wallet_id` | string | Yes | The wallet ID. |
+| `type` | string | Yes | The transaction type. |
+| `status` | string | Yes | The transaction status. |
+| `initiator_type` | string | Yes | The type of the transaction initiator. |
+| `source` | object | Yes | The transaction source. |
+| `destination` | object | Yes | The transaction destination. |
+| `created_timestamp` | integer | Yes | The time when the transaction was created, in Unix timestamp format, measured in milliseconds. |
+| `updated_timestamp` | integer | Yes | The time when the transaction was last updated, in Unix timestamp format, measured in milliseconds. |
+| `cobo_id` | string | No | The Cobo ID of the transaction. |
+| `request_id` | string | No | The request ID of the transaction. |
+| `chain_id` | string | No | The chain ID. |
+| `token_id` | string | No | The token ID. |
+| `transaction_hash` | string | No | The transaction hash. |
+| `description` | string | No | For Bulk Send transactions, this field contains the Bulk Send `request_id`. You can use it to identify which Bulk Send triggered this callback. |
 
 ### Verify the signature
 

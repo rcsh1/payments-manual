@@ -11,7 +11,7 @@ Callbacks differ from webhooks in an important way:
 - **Webhooks** notify your application after an event has occurred.
 - **Callbacks** ask your application to approve or deny an operation before it is executed.
 
-Currently, only **Bulk Send** triggers callback confirmation. During a Bulk Send, Cobo calls your callback endpoint for each smart contract operation (`approve` and `sendToken`) so that you can verify the contract addresses and function call data before approving execution. For details on the contract call data you will receive, see [Smart contract mechanism for Bulk Send](/payments/en/guides/bulk-send#smart-contract-mechanism-for-bulk-send).
+Currently, only **Bulk Send** triggers callback confirmation. For each operation in a Bulk Send — whether it uses smart contracts or regular transfers — Cobo calls your callback endpoint so that you can inspect the transaction details and approve or deny before Cobo proceeds.
 
 ## Handle callback messages
 
