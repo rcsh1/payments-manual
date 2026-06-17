@@ -30,5 +30,54 @@ To register the endpoint, see [Register a webhook endpoint](https://manuals.cobo
 
 To learn more about event types and event data types, see [Events and status](/payments/en/guides/status-and-events).
 
+## Webhook request body
 
+When an event is triggered, the Cobo payments service sends an HTTP POST request to your registered endpoint. The request body is a JSON object with the following structure.
 
+### Required fields
+
+| Field | Type | Description |
+|:------|:-----|:------------|
+| `event_id` | string (UUID) | The unique identifier of the event. Use `event_id` to deduplicate retried deliveries. |
+| `url` | string | The registered webhook endpoint URL. |
+| `created_timestamp` | integer (int64) | The time when the event was triggered, in Unix timestamp format (milliseconds). This value remains unchanged across retries. |
+| `type` | string | The event type. See [Events and status](/payments/en/guides/status-and-events) for all event types and their trigger conditions. |
+| `data` | object | The event-specific payload. The schema depends on the `type` field — see [Events and status](/payments/en/guides/status-and-events) for per-event schemas. |
+
+### Optional fields
+
+| Field | Type | Description |
+|:------|:-----|:------------|
+| `status` | string | The delivery status of the event. One of: `Success`, `Retrying`, `Failed`. |
+| `next_retry_timestamp` | integer (int64) | The scheduled time of the next retry attempt, in Unix timestamp format (milliseconds). Only present when `status` is `Retrying`. |
+| `retries_left` | integer | The number of retry attempts remaining. Only present when `status` is `Retrying`. |
+
+### Example request body
+
+```json
+{
+  "event_id": "8f2e919a-6a7b-4a9b-8c1a-4c0b3f5b8b1f",
+  "url": "https://example.com/webhook",
+  "created_timestamp": 1701396866000,
+  "type": "payment.order.status.updated",
+  "data": {
+    "data_type": "PaymentOrder",
+    "order_id": "O20250304-M1001-1001",
+    "merchant_id": "1001",
+    "psp_order_code": "P20240201001",
+    "pricing_currency": "USD",
+    "pricing_amount": "100.00",
+    "fee_amount": "2.00",
+    "payable_currency": "ETH_USDT",
+    "chain_id": "ETH",
+    "payable_amount": "103.03",
+    "exchange_rate": "0.99",
+    "receive_address": "0x1234567890abcdef1234567890abcdef12345678",
+    "status": "Completed",
+    "received_token_amount": "103.0305",
+    "created_timestamp": 1744689600,
+    "updated_timestamp": 1744689600
+  },
+  "status": "Success"
+}
+```
