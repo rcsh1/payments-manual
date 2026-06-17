@@ -51,7 +51,7 @@ lang: "zh-hans"
 |---|---|---|---|
 | 2001 | 400 | 执行此操作前需要完成 MFA 验证。 | 在 Cobo Portal 中完成 MFA 验证，然后重试请求。 |
 | 4001 | 403 | 禁止访问请求的资源。 | 检查与您的 API Key 关联的权限。详情请参见[角色与权限](/payments/cn/guides/roles-and-permissions)。 |
-| 4002 | 400 | 您的组织状态不允许执行此操作。 | 在 Cobo Portal 的**设置** > **组织**下检查您的组织状态。您的账户可能正在审核中或受到限制。 |
+| 4002 | 400 | 您的组织状态不允许执行此操作。您的开发者账户可能尚未完成激活或处于审核中。 | 确认您的开发者入驻流程已全部完成。如问题持续，您的账户可能受到限制——请查看 Cobo Portal 中的相关通知。 |
 | 10000 | 400 | 您的组织在 Cobo Portal 中具有只读权限，无法执行写操作。 | 请联系您的组织管理员，在 Cobo Portal 中审查账户权限。 |
 
 #### 配额与资源限制错误
@@ -78,10 +78,10 @@ lang: "zh-hans"
 | 30024 | 400 | 未提供 `to_address` 或 `to_wallet_id`，两者中至少需要提供一个。 | 在请求中包含 `to_address` 或 `to_wallet_id` 中的一个。 |
 | 30028 | 400 | `request_id` 参数缺失或格式错误。 | 在请求中包含有效的 `request_id`。该值必须为非空字符串。 |
 | 30030 | 400 | 此 token 的提现和充值服务暂时不可用。 | 查看 Cobo 状态页面了解当前服务公告。等待暂停解除后重试。 |
-| 30031 | 400 | 该 token 未在您的组织中启用。 | 在 Cobo Portal 的**钱包** > 选择您的钱包 > **Token** 中启用该 token，然后重试。 |
-| 30036 | 400 | Fee Station 余额不足。在转账继续进行之前，需要为 Fee Station 充值。 | 在 Cobo Portal 的 **Fee Station** 下为您的 Fee Station 钱包充值。 |
-| 30038 | 400 | Fee Station 的 token 余额不足以支付此交易的 gas 费用。 | 为 Fee Station 充值所需的手续费 token。 |
-| 30039 | 400 | Cobo 的 Fee Station 余额不足以支付 gas 费用。 | 为 Cobo 的 Fee Station 充值。前往 Cobo Portal 的 **Fee Station**，添加所需的 gas token。 |
+| 30031 | 400 | 该 token 未在您的组织中启用。 | 调用[获取支持的 token 列表](/payments/cn/api-references/payment/list-supported-tokens)，验证该 token 是否对您的账户可用。如果列表中没有该 token，则表示该 token 尚未为您的组织激活。 |
+| 30036 | 400 | Fee Station 余额不足。在转账继续进行之前，需要为 Fee Station 充值。 | 将所需的 gas token 充入该链对应的 Fee Station 充值地址，然后重试转账。 |
+| 30038 | 400 | Fee Station 的 token 余额不足以支付此交易的 gas 费用。 | 将所需的 gas token 充入该链对应的 Fee Station 充值地址，然后重试转账。 |
+| 30039 | 400 | Cobo 的 gas station 余额暂时不足以支付 gas 费用。 | 短暂等待后重试。此问题由 Cobo 自动处理。 |
 
 #### 交易操作错误
 

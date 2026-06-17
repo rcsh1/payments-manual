@@ -51,7 +51,7 @@ Payment-specific validation failures — such as a resource not being found or a
 |---|---|---|---|
 | 2001 | 400 | MFA verification is required before this action can be performed. | Complete MFA verification in Cobo Portal, then retry the request. |
 | 4001 | 403 | Forbidden access to the requested resource. | Check the permissions associated with your API key. Refer to [Roles and permissions](/payments/en/guides/roles-and-permissions) for details. |
-| 4002 | 400 | Your organization status does not permit this action. | Check your organization status in Cobo Portal under **Settings** > **Organization**. Your account may be under review or restricted. |
+| 4002 | 400 | Your organization status does not permit this action. Your developer account may be under review or not fully activated. | Verify that your developer onboarding is complete. If the error persists, your account may have been restricted — check for any notifications in Cobo Portal. |
 | 10000 | 400 | Your organization has read-only permissions in Cobo Portal and cannot perform write operations. | Contact your organization admin to review the account permissions in Cobo Portal. |
 
 #### Quota and resource limits
@@ -78,10 +78,10 @@ These error codes are returned when initiating transfers, settlements, or withdr
 | 30024 | 400 | Neither `to_address` nor `to_wallet_id` was provided. One of the two is required. | Include either `to_address` or `to_wallet_id` in your request. |
 | 30028 | 400 | The `request_id` parameter is missing or malformed. | Include a valid `request_id` in your request. The value must be a non-empty string. |
 | 30030 | 400 | Withdrawal and deposit services for this token are temporarily unavailable. | Check the Cobo status page for active service notices. Retry after the suspension is lifted. |
-| 30031 | 400 | The token is not enabled for your organization. | Enable the token in Cobo Portal under **Wallets** > select your wallet > **Tokens**, then retry. |
-| 30036 | 400 | The fee station balance is insufficient. The fee station needs to be recharged before transfers can proceed. | Add funds to your fee station wallet in Cobo Portal under **Fee Station**. |
-| 30038 | 400 | The fee station token balance is insufficient to cover the gas fee for this transaction. | Recharge the fee station with the required fee token. |
-| 30039 | 400 | Cobo's fee station balance is insufficient to cover the gas fee. | Recharge Cobo's fee station. Go to Cobo Portal under **Fee Station** and add the required gas token. |
+| 30031 | 400 | The token is not enabled for your organization. | Call [List supported tokens](/payments/en/api-references/payment/list-supported-tokens) to verify that the token is available for your account. If it does not appear, the token has not been activated for your organization. |
+| 30036 | 400 | The fee station balance is insufficient. The fee station needs to be recharged before transfers can proceed. | Deposit the required gas token to your fee station deposit address for the chain, then retry the transfer. |
+| 30038 | 400 | The fee station token balance is insufficient to cover the gas fee for this transaction. | Deposit the required gas token to your fee station deposit address for the chain, then retry the transfer. |
+| 30039 | 400 | Cobo's gas station balance is temporarily insufficient to cover the gas fee. | Retry the transfer after a short wait. This condition is resolved by Cobo automatically. |
 
 #### Transaction operation errors
 
