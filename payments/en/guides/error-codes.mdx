@@ -79,9 +79,9 @@ These error codes are returned when initiating transfers, settlements, or withdr
 | 30028 | 400 | The `request_id` parameter is missing or malformed. | Include a valid `request_id` in your request. The value must be a non-empty string. |
 | 30030 | 400 | Withdrawal and deposit services for this token are temporarily unavailable. | Check the Cobo status page for active service notices. Retry after the suspension is lifted. |
 | 30031 | 400 | The token is not enabled for your organization. | Call [List supported tokens](/payments/en/api-references/payment/list-supported-tokens) to verify that the token is available for your account. If it does not appear, the token has not been activated for your organization. |
-| 30036 | 400 | The fee station balance is insufficient. The fee station needs to be recharged before transfers can proceed. | Deposit the required gas token to your fee station deposit address for the chain, then retry the transfer. |
-| 30038 | 400 | The fee station token balance is insufficient to cover the gas fee for this transaction. | Deposit the required gas token to your fee station deposit address for the chain, then retry the transfer. |
-| 30039 | 400 | Cobo's gas station balance is temporarily insufficient to cover the gas fee. | Retry the transfer after a short wait. This condition is resolved by Cobo automatically. |
+| 30036 | 400 | The fee station balance is insufficient to cover the transaction fee. | Top up your fee station with a supported token (for example, USDT or USDC) to ensure sufficient balance for transaction fees, then retry. |
+| 30038 | 400 | The fee station token balance is insufficient to cover the transaction fee. | Top up your fee station with a supported token (for example, USDT or USDC) to ensure sufficient balance for transaction fees, then retry. |
+| 30039 | 400 | Cobo's fee station balance is temporarily insufficient. | Retry the transfer after a short wait. This condition is resolved by Cobo automatically. |
 
 #### Transaction operation errors
 

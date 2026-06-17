@@ -79,9 +79,9 @@ lang: "zh-hans"
 | 30028 | 400 | `request_id` 参数缺失或格式错误。 | 在请求中包含有效的 `request_id`。该值必须为非空字符串。 |
 | 30030 | 400 | 此 token 的提现和充值服务暂时不可用。 | 查看 Cobo 状态页面了解当前服务公告。等待暂停解除后重试。 |
 | 30031 | 400 | 该 token 未在您的组织中启用。 | 调用[获取支持的 token 列表](/payments/cn/api-references/payment/list-supported-tokens)，验证该 token 是否对您的账户可用。如果列表中没有该 token，则表示该 token 尚未为您的组织激活。 |
-| 30036 | 400 | Fee Station 余额不足。在转账继续进行之前，需要为 Fee Station 充值。 | 将所需的 gas token 充入该链对应的 Fee Station 充值地址，然后重试转账。 |
-| 30038 | 400 | Fee Station 的 token 余额不足以支付此交易的 gas 费用。 | 将所需的 gas token 充入该链对应的 Fee Station 充值地址，然后重试转账。 |
-| 30039 | 400 | Cobo 的 gas station 余额暂时不足以支付 gas 费用。 | 短暂等待后重试。此问题由 Cobo 自动处理。 |
+| 30036 | 400 | Fee Station 余额不足，无法支付本次交易的手续费。 | 向您的 Fee Station 充入支持的代币（例如 USDT 或 USDC），确保余额足以支付手续费，然后重试。 |
+| 30038 | 400 | Fee Station 中的 token 余额不足，无法支付本次交易的手续费。 | 向您的 Fee Station 充入支持的代币（例如 USDT 或 USDC），确保余额足以支付手续费，然后重试。 |
+| 30039 | 400 | Cobo 的 Fee Station 余额暂时不足。 | 短暂等待后重试。此问题由 Cobo 自动处理。 |
 
 #### 交易操作错误
 
