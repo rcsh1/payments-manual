@@ -1,0 +1,31 @@
+---
+title: "Introduction to Callbacks"
+lang: "en"
+sidebarTitle: "Introduction"
+---
+
+Callbacks are a confirmation mechanism that the Cobo payments service uses to request your approval before executing a sensitive operation. When an operation that requires callback confirmation is triggered, Cobo sends a request to your registered callback endpoint. Your endpoint must respond with an approval or denial before Cobo proceeds.
+
+Callbacks differ from webhooks in an important way:
+
+- **Webhooks** notify your application after an event has occurred.
+- **Callbacks** ask your application to approve or deny an operation before it is executed.
+
+Currently, only **Bulk Send** triggers callback confirmation. For each operation in a Bulk Send — whether it uses smart contracts or regular transfers — Cobo calls your callback endpoint so that you can inspect the transaction details and approve or deny before Cobo proceeds.
+
+## Handle callback messages
+
+Follow the steps below to handle callback messages from the Cobo payments service:
+
+1. Create a callback endpoint.
+    - Choose a server environment.
+    - Define an endpoint URL.
+2. Implement the handling logic on the server side.
+    - Parse the callback request.
+    - Verify the signature.
+    - Approve or deny the operation.
+3. Register the endpoint on Cobo Portal.
+
+To create an endpoint and implement the handling logic, see [Set up a callback endpoint](/payments/en/developer-tools/set-up-callback-endpoint).
+
+To register the endpoint, see [Set up a callback endpoint](/payments/en/developer-tools/set-up-callback-endpoint#register-the-endpoint).

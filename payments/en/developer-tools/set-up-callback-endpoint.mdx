@@ -1,0 +1,148 @@
+---
+title: "Set up a callback endpoint"
+lang: "en"
+sidebarTitle: "Set up a callback endpoint"
+---
+
+This guide explains how to create and register a callback endpoint for receiving and processing callback messages from the Cobo payments service.
+
+## Create an endpoint
+
+Choose a server environment that supports receiving and processing HTTP POST requests, such as a cloud service like AWS or Google Cloud, or a self-hosted server. Define an endpoint URL on your server where Cobo will send callback messages.
+
+## Implement handling logic
+
+After you create the endpoint, implement the logic on your server to handle callback messages.
+
+### Parse the callback request
+
+Cobo sends an HTTP POST request to your registered callback endpoint. The request body is the transaction object and contains the following fields:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `transaction_id` | string | Yes | The transaction ID. |
+| `wallet_id` | string | Yes | The wallet ID. |
+| `type` | string | Yes | The transaction type. |
+| `status` | string | Yes | The transaction status. |
+| `initiator_type` | string | Yes | The type of the transaction initiator. |
+| `source` | object | Yes | The transaction source. |
+| `destination` | object | Yes | The transaction destination. |
+| `created_timestamp` | integer | Yes | The time when the transaction was created, in Unix timestamp format, measured in milliseconds. |
+| `updated_timestamp` | integer | Yes | The time when the transaction was last updated, in Unix timestamp format, measured in milliseconds. |
+| `cobo_id` | string | No | The Cobo ID of the transaction. |
+| `request_id` | string | No | The request ID of the transaction. |
+| `sub_status` | string | No | The sub-status of the transaction. |
+| `failed_reason` | string | No | The reason the transaction failed, if applicable. |
+| `chain_id` | string | No | The chain ID. |
+| `token_id` | string | No | The token ID. |
+| `asset_id` | string | No | The asset ID. |
+| `result` | object | No | The transaction signature result. |
+| `fee` | object | No | The transaction fee information. |
+| `initiator` | string | No | The transaction initiator. |
+| `confirmed_num` | integer | No | The number of block confirmations. |
+| `confirming_threshold` | integer | No | The minimum number of confirmations required. |
+| `transaction_hash` | string | No | The transaction hash. |
+| `block_info` | object | No | The block information. |
+| `raw_tx_info` | object | No | The raw transaction information. |
+| `replacement` | object | No | The replacement transaction data, if this transaction was replaced. |
+| `fueling_info` | object | No | The gas fueling information. |
+| `category` | array of strings | No | The user-defined transaction categories. |
+| `cobo_category` | array of strings | No | The Cobo-defined transaction categories. |
+| `description` | string | No | For Bulk Send transactions, this field contains the Bulk Send `request_id`. You can use it to identify which Bulk Send triggered this callback. |
+| `is_loop` | boolean | No | Whether the transaction is a Cobo Loop transfer. Defaults to `false`. |
+| `extra` | array of strings | No | Additional information. |
+
+### Verify the signature
+
+To prevent unauthorized access, verify the authenticity of each callback request by checking its signature.
+
+The verification steps are as follows:
+
+1. Retrieve the raw body and timestamp.
+
+    Extract the original body string from the request payload and the timestamp from the request headers.
+
+    ```python
+    raw_body = request.body().decode('utf8')
+    timestamp = request.headers.get("BIZ_TIMESTAMP")
+    ```
+
+2. Retrieve the signature.
+
+    Fetch the signature value from the request header.
+
+    ```python
+    signature = request.headers.get('BIZ_RESP_SIGNATURE')
+    ```
+
+3. Concatenate and hash the message.
+
+    ```python
+    import hashlib
+
+    # Concatenate raw body and timestamp to form the message.
+    message = "raw_body|timestamp"
+
+    # Compute double SHA-256 hash.
+    sha256_hash = hashlib.sha256(hashlib.sha256(message.encode()).digest()).digest()
+    ```
+
+4. Select Cobo's public key.
+
+    Depending on the environment you use, select the corresponding public key for verification:
+    - Development environment: `a04ea1d5fa8da71f1dcfccf972b9c4eba0a2d8aba1f6da26f49977b08a0d2718`
+    - Production environment: `8d4a482641adb2a34b726f05827dba9a9653e5857469b8749052bf4458a86729`
+
+5. Verify the signature using the Ed25519 algorithm.
+
+    ```python
+    import ed25519
+
+    # Obtain the verifying key from Cobo's public key.
+    vk = ed25519.VerifyingKey(bytes.fromhex(public_key))
+
+    # Verify the signature against the computed message hash.
+    vk.verify(bytes.fromhex(signature), sha256_hash)
+    ```
+
+### Respond to the callback request
+
+Your endpoint must respond within 10 seconds. Return a JSON body with a `result` field:
+
+- To approve the operation:
+
+    ```json
+    {"result": "ok"}
+    ```
+
+- To deny the operation:
+
+    ```json
+    {"result": "deny"}
+    ```
+
+If your endpoint does not respond in time or returns any other response, the callback message status becomes `Failed`.
+
+## Register the endpoint
+
+You register a callback URL when creating an API key in Cobo Portal. The callback URL is associated with the API key and Cobo sends callback messages to it for all operations initiated using that API key.
+
+1. Go to **Cobo Portal** > **Developer** > **API Keys**.
+2. Click **Register API Key**.
+3. In the **Callback URLs** section, click **Add Callback URLs**.
+4. Enter your endpoint URL and an optional description.
+5. Click **Register** to save the callback URL.
+6. Click **Register Key** to complete the API key registration.
+
+<Note>
+- Without a callback URL, all withdrawal requests are auto-approved.
+- All configured callback URLs must return `ok` for a request to proceed. Any URL returning `deny` immediately blocks the transaction.
+- You can associate up to 3 callback URLs with a single API key.
+</Note>
+
+## Important notes
+
+<Warning>
+- Your endpoint must respond quickly. Return your `ok` or `deny` response immediately, then perform any additional processing asynchronously to avoid timeouts.
+- Due to the retry mechanism, your endpoint may receive the same callback message more than once. To prevent duplicate processing, log the `id` or `request_id` of each callback message you have already processed and skip any that are already logged.
+</Warning>
