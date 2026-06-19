@@ -8689,7 +8689,10 @@ components:
           example: 15
         transaction_hash:
           type: string
-          description: The transaction hash.
+          description: |
+            The transaction hash (on-chain transaction identifier, also referred to as `txid`).
+
+            This property is populated only after the transaction is broadcast on-chain, so it may be `null` or absent before broadcast. In contrast, `transaction_id` (the Cobo internal transaction ID) is assigned at creation and is always present.
           example: 239861be9a4afe080c359b7fe4a1d035945ec46256b1a0f44d1267c71de8ec28
         block_info:
           $ref: '#/components/schemas/TransactionBlockInfo'
@@ -18339,7 +18342,7 @@ components:
       example: Strict
       description: |
         The execution mode of the bulk send.
-        - `Strict`: The bulk send is executed in strict mode, which means all bulk send items should be successfully executed or all failed.
+        - `Strict`: The bulk send is executed in strict mode. All-or-nothing is enforced at the validation stage: if any item fails validation, the entire batch is rejected and no items are sent. Note that this all-or-nothing guarantee applies at validation only, not at execution. After validation passes, individual items may still be rejected by risk control or fail during on-chain execution, which can result in a `PartiallyCompleted` bulk send status.
         - `Partial`: The bulk send is executed in partial mode, which means some bulk send items can be successfully executed and some can be failed.
     PaymentBulkSendItemStatus:
       type: string

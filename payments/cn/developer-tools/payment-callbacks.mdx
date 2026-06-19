@@ -1,0 +1,29 @@
+---
+title: "支付回调"
+lang: "zh-hans"
+sidebarTitle: "回调"
+---
+
+Cobo 支付服务通过两种机制与您的 App 通信：webhook 和 callback。本页介绍这些消息的推送方式，以及如何将它们与您的 API 调用进行关联。
+
+## Webhook
+
+Webhook 是异步的事件通知。当事件发生时，Cobo 支付服务会向您注册的 webhook endpoint 发送消息，您的 Endpoint 以 HTTP 200 确认接收。Webhook 推送为异步，不会阻塞产生该事件的操作。有关全部 webhook 事件及其消息体，请参阅[事件与状态](/payments/cn/guides/status-and-events)。要设置并注册 webhook endpoint，请参阅 [Webhook 介绍](/payments/cn/developer-tools/webhook)。
+
+## Callback
+
+Bulk Send 在 webhook 通知之外还使用 callback。有关 Bulk Send 的流程，请参阅[批量下发](/payments/cn/guides/bulk-send)。
+
+## 使用 `request_id` 关联通知
+
+当您在调用 API 操作时携带自己的 `request_id`，该标识符会在相关事件数据中回传给您。您提供的 `request_id` 会包含在 settlement、refund、payout 和 bulk_send 事件的事件数据中，因此您可以将每条通知与发起该操作的 API 调用相匹配。请保存您发送的 `request_id`，并与消息体中的值进行比对，以便在您的系统中进行对账。
+
+## 推送与重试
+
+Webhook 推送为异步，并包含自动重试：
+
+- Cobo 期望您的 Endpoint 在约 10 秒内响应。如果您的 Endpoint 未在规定时间内响应或返回非成功状态，该次推送将被视为失败。
+- 失败的推送会以约 60 秒的间隔自动重试。
+- 您可以在 **Cobo Portal** > **开发者** > **Webhook 事件** 中手动触发某条 webhook 事件的重新推送。
+
+请实现签名校验和幂等处理，因为同一事件可能被多次推送。

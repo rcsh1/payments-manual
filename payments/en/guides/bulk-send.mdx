@@ -9,6 +9,7 @@ Bulk Send enables one-time batch crypto transfers to multiple recipient addresse
 Before you start, make sure you have completed the following:
 
 - Ensure the **source_account** has sufficient balance.
+- Configure a Fee Station and make sure it is sufficiently funded before you create a Bulk Send. If the Fee Station is not configured or does not have enough balance, the request is rejected before any transfer is initiated (for example, with `fee_station_not_configured` or `fee_station_insufficient`). ERC-20 token transfers are executed through a smart contract and require a funded Fee Station to cover the transaction fees; smart-contract transfers on TRON do not require a Fee Station.
 - (Recommended) Configure a **Webhook Endpoint** to receive Bulk Send status updates and drive an automated retry workflow.
 
 ## **1. How to send in batch**
@@ -60,6 +61,10 @@ After receiving a Bulk Send request, Cobo first validates **all** addresses in t
 | -------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
 | Strict         | If **any** bulk send item has an invalid address        | **No** on-chain transfers will be initiated (the entire batch is not executed)            | Replace the problematic address(es) and resubmit the **entire** Bulk Send (must include **all** items |
 | Partial        | Allows some invalid addresses                        | Transfers will be executed for **all validated** items; invalid items will be **skipped** | Query failed items, replace addresses, and resend **only** the failed items                           |
+
+<Note>
+  In `Strict` mode, the all-or-nothing guarantee applies at the validation stage only. If any item fails validation, no on-chain transfers are initiated; if all items pass validation, every transfer is initiated together. After validation passes, an individual transfer can still fail during risk-control checks or on-chain execution, so a `Strict` batch can still finish with the `PartiallyCompleted` status. Handle `PartiallyCompleted` for `Strict` batches the same way as described in the retry workflow below.
+</Note>
 
 #### **Recommended scenarios**
 

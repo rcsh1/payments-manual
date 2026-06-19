@@ -30,5 +30,12 @@ To register the endpoint, see [Register a webhook endpoint](https://manuals.cobo
 
 To learn more about event types and event data types, see [Events and status](/payments/en/guides/status-and-events).
 
+To understand how callbacks differ from webhooks, see [Payment callbacks](/payments/en/developer-tools/payment-callbacks).
 
+## Transaction identifiers
+
+Webhook payloads that describe a transaction include two different identifiers:
+
+- `transaction_id`: Cobo's internal identifier for the transaction. It is assigned when the transaction is created and is always present in the payload.
+- `transaction_hash`: The on-chain transaction hash, commonly referred to as the `txid`. It is populated only after the transaction is broadcast on-chain. Before broadcast, this field is null or absent, so do not rely on it being present in every payload.
 

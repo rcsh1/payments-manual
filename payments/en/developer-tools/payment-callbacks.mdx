@@ -1,0 +1,29 @@
+---
+title: "Payment callbacks"
+lang: "en"
+sidebarTitle: "Callbacks"
+---
+
+The Cobo payments service communicates with your application through two mechanisms: webhooks and callbacks. This page explains how these messages are delivered and how to correlate them with your API calls.
+
+## Webhooks
+
+Webhooks are asynchronous event notifications. When an event occurs, the Cobo payments service sends a message to your registered webhook endpoint, and your endpoint acknowledges receipt with an HTTP 200 response. Webhook delivery is asynchronous and does not block the operation that produced the event. For the full list of webhook events and their payloads, see [Events and status](/payments/en/guides/status-and-events). To set up and register a webhook endpoint, see [Introduction to Webhooks](/payments/en/developer-tools/webhook).
+
+## Callbacks
+
+Bulk Send uses a callback in addition to webhook notifications. For the Bulk Send workflow, see [Bulk send](/payments/en/guides/bulk-send).
+
+## Correlate notifications with `request_id`
+
+When you call an API operation with your own `request_id`, that identifier is carried back to you in the related event data. The `request_id` you provide is included in the event data for settlement, refund, payout, and bulk_send events, so you can match each notification to the originating API call. Store the `request_id` you send and compare it against the value in the payload to reconcile operations in your system.
+
+## Delivery and retries
+
+Webhook delivery is asynchronous and includes automatic retries:
+
+- Cobo expects your endpoint to respond within approximately 10 seconds. If your endpoint does not respond in time or returns a non-success status, the attempt is treated as failed.
+- Failed deliveries are retried automatically at approximately 60-second intervals.
+- You can manually trigger redelivery of a webhook event from **Cobo Portal** > **Developer** > **Webhook Events**.
+
+Implement signature verification and idempotency handling, because the same event may be delivered more than once.
