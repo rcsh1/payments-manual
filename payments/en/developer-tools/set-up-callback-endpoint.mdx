@@ -144,5 +144,5 @@ You register a callback URL when creating an API key in Cobo Portal. The callbac
 
 <Warning>
 - Your endpoint must respond quickly. Return your `ok` or `deny` response immediately, then perform any additional processing asynchronously to avoid timeouts.
-- Due to the retry mechanism, your endpoint may receive the same callback message more than once. To prevent duplicate processing, log the `id` or `request_id` of each callback message you have already processed and skip any that are already logged.
+- Due to the retry mechanism, your endpoint may receive the same callback message more than once. To prevent duplicate processing, log the `transaction_id` of each callback message you have already processed and skip any that are already logged.
 </Warning>

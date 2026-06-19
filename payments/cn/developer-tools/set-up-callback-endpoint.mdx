@@ -144,5 +144,5 @@ Cobo 向您注册的 Callback Endpoint 发送 HTTP POST 请求，请求正文即
 
 <Warning>
 - 您的 Endpoint 必须快速响应。请立即返回 `ok` 或 `deny` 响应，然后异步执行其他处理逻辑，以避免超时。
-- 由于重试机制的存在，您的 Endpoint 可能多次收到同一条 Callback 消息。为防止重复处理，请记录已处理的 Callback 消息的 `id` 或 `request_id`，并跳过已记录的消息。
+- 由于重试机制的存在，您的 Endpoint 可能多次收到同一条 Callback 消息。为防止重复处理，请记录已处理的 Callback 消息的 `transaction_id`，并跳过已记录的消息。
 </Warning>
