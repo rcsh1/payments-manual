@@ -58,6 +58,38 @@ The following stablecoin and chain combinations are available for Starter Live a
 | Widest compatibility | Ethereum | Most widely supported |
 | Off-Ramp ready (no bridging fee) | Ethereum (ETH_USDC, ETH_USDT), TRON (TRON_USDT) | No additional bridging fees required |
 
+## Chain identifiers
+
+Each supported chain is identified by a `chain_id`, which is a string identifier (for example, `ETH` or `TRON`), not a numeric ID. The `token_id` used throughout the Payments API combines the chain identifier with the token symbol in the format `{chain_id}_{token_symbol}` (for example, `ETH_USDC` or `TRON_USDT`).
+
+Some chain identifiers themselves contain underscores (for example, `AVALANCHE_C`), and some token symbols are not the plain ticker. Always use the exact `token_id` values listed in the supported tokens table above rather than constructing them by hand.
+
+The following table maps each `chain_id` to its full chain name and network. These chains are supported for payment collection on the Starter Live and Enterprise plans.
+
+| chain_id | Chain | Network |
+|----------|-------|---------|
+| `ETH` | Ethereum | Mainnet |
+| `ARBITRUM` | Arbitrum | Mainnet |
+| `BASE` | Base | Mainnet |
+| `MATIC` | Polygon | Mainnet |
+| `BSC` | BNB Smart Chain | Mainnet |
+| `SOL` | Solana | Mainnet |
+| `AVALANCHE_C` | Avalanche C-Chain | Mainnet |
+| `MORPH` | Morph | Mainnet |
+| `APT` | Aptos | Mainnet |
+| `TRON` | TRON | Mainnet |
+| `TON` | TON | Mainnet |
+
+To retrieve the live set of supported chains and tokens programmatically, use the List supported chains and [List supported tokens](/payments/en/api-references/payment/list-supported-tokens) operations.
+
+## Token decimals
+
+Each supported token has a `decimal` value — the number of decimal places used to convert between the token's smallest on-chain base unit and its human-readable display value. For example, a token with a `decimal` of 6 represents one display unit as `1000000` base units on-chain. `TRON_USDT` uses a `decimal` of 6, which is the USDT standard.
+
+Payments API order and transaction amounts are expressed as decimal strings in display units (for example, `10.5`), not base units, so you do not need to apply `decimal` when you create orders or read amounts from the Payments API. The `decimal` value matters mainly when you reconcile Payment activity against raw on-chain base-unit amounts.
+
+The `decimal` value for each token is returned in the `decimal` field of the [List supported tokens](/payments/en/api-references/payment/list-supported-tokens) operation. Decimal precision can differ between chains for the same stablecoin, so always read the authoritative value from this operation rather than assuming a fixed value.
+
 ## <a name="pricing-currency"></a>Supported pricing currencies
 
 When creating a payment order, you can use the following fiat currencies as the pricing currency (`pricing_currency`). The system will automatically calculate the payable amount based on the real-time exchange rate of the currency.
