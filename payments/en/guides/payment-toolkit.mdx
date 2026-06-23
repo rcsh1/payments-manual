@@ -1,27 +1,29 @@
 ---
-title: "Frontend React SDK"
+title: "Frontend React SDK / Vue SDK"
 lang: "en"
 ---
 
-If you prefer customized development and don’t want to use Cobo’s ready-made pages, you can integrate Web3 payment capabilities into your own frontend by using React SDK provided by Cobo.
+If you prefer customized development and don’t want to use Cobo’s ready-made pages, you can integrate Web3 payment capabilities into your own frontend by using React SDK / Vue SDK provided by Cobo.
 
 ## Frontend Integration Comparison
 
-|  | Payment Link | React SDK |
+|  | Payment Link | React SDK / Vue SDK |
 | :-: | :-: | :-: |
 | **Form** | Ready-made front-end page, limited customization | npm package, use as needed |
 | **Features** | Full checkout experience | Web3 core capabilities only |
-| **Requirements** | No front-end dev environment needed | Requires a React front-end |
+| **Requirements** | No front-end dev environment needed | Requires a React / Vue front-end |
 | **Domain** | Fixed: `https://payment-link.cobo.com` | Flexible: your own front-end domain |
 | **Auth** | Unique token per order | Dynamic token valid for one hour |
 
-React SDK provides core Web3 capabilities such as token selector with exchange rate, QR code with amount, and **connecting third-party wallet to submit transaction**. You can focus on Web2 business logic without implementing Web3 payment details yourself.
+React SDK / Vue SDK provides core Web3 capabilities such as token selector with exchange rate, QR code with amount, and **connecting third-party wallet to submit transaction**. You can focus on Web2 business logic without implementing Web3 payment details yourself.
 
 For integration steps and component demos, see the [React SDK interactive documentation](https://payment-toolkit.cobo.com/en-US/components).
 
+Vue SDK documentation is not yet complete. Please contact Cobo support team for assistance.
+
 ## SDK Authentication
 
-React SDK must be authenticated before use. Authentication requires your frontend and backend to work together, as follows:
+React SDK / Vue SDK must be authenticated before use. Authentication requires your frontend and backend to work together, as follows:
 
 1. The backend calls [Create SDK link](/payments/en/api-references/payment/create-sdk-link) to create an SDK-only token.
 2. The backend returns the token to the frontend.
