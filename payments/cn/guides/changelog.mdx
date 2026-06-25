@@ -8,7 +8,6 @@ lang: "zh-hans"
 | 功能 | 变更说明 | 发布时间 |
 | ----- | ----- | ----- |
 | **Webhook** | (SDK v1.38.0) 新增 Webhook 事件 `payment.account.balance.updated`（`PaymentAccountBalanceUpdate`），当支付账户某币种的可用余额发生变动时触发。负载包含账户信息（`source_account`、`source_id`、`source_type`）、`token_id`、变动金额 `amount`、`balance_before` / `balance_after`、`flow_direction` 及 `update_time`。详见 [Status and events](/payments/cn/guides/status-and-events)。<br />在 `payment.address.updated` Webhook 负载中新增 `merchant_id` 字段。 | 2026-06-25 |
-| **资金管理** | (SDK v1.38.0)<br />・支付交易对象中新增 `merchant_id`、`subscription_id`、`action_id` 字段。<br />・[Create payout](/payments/en/api-references/payment/create-payout)：明确 `recipient_info.bank_account_id` 仅当 payout channel 为 `OffRamp` 时必填。<br />・[List bulk send items](/payments/en/api-references/payment/list-bulk-send-items)：明确批量下发项 `Failed` 与 `NotExecuted` 终态的含义。 | 2026-06-25 |
 | **资金管理** | (SDK v1.37.0) 新增 [List balance changes](/payments/en/api-references/payment/list-balance-changes) 操作，用于查询指定来源账户的余额变动记录。<br /><br />Bulk Send 功能增强：<br />・[List bulk send items](/payments/en/api-references/payment/list-bulk-send-items)：响应中新增 `tx_hash` 字段，返回每条批量下发记录对应的链上交易哈希。<br />・[List all bulk sends](/payments/en/api-references/payment/list-bulk-sends)、[Get bulk send information](/payments/en/api-references/payment/get-bulk-send-information) 响应及 Bulk Send Webhook 通知（`payment.bulk_send.status.updated`）数据中新增 `commission_fee` 字段，返回本次批量下发所收取的手续费信息。 | 2026-06-09 |
 
 
