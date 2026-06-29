@@ -1,15 +1,14 @@
 ---
-openapi: get /payments/reports
+openapi: post /payments/reports
 ---
 
-<Note>For `report_types`, report scope, exported field differences, and report-specific usage notes, see [Reports](/payments/en/guides/reports).</Note>
+<Note>有关 `report_types`、报表范围、导出字段差异和报表专属使用说明，请参见 [报表](/payments/cn/guides/reports)。</Note>
 
 <RequestExample>
 ```python Python
 import cobo_waas2
-from cobo_waas2.models.get_reports200_response import GetReports200Response
-from cobo_waas2.models.report_status import ReportStatus
-from cobo_waas2.models.report_type import ReportType
+from cobo_waas2.models.create_report_request import CreateReportRequest
+from cobo_waas2.models.report import Report
 from cobo_waas2.rest import ApiException
 from pprint import pprint
 
@@ -24,25 +23,22 @@ configuration = cobo_waas2.Configuration(
 with cobo_waas2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = cobo_waas2.PaymentApi(api_client)
-    limit = 10
-    before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
-    after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-    report_type = "Order"
-    report_status = "Completed"
+    create_report_request = cobo_waas2.CreateReportRequest(
+        start_time=1764237462,
+        end_time=1764237462,
+        report_export_format="CSV",
+        report_types=["Order"],
+    )
 
     try:
-        # List all reports
-        api_response = api_instance.get_reports(
-            limit=limit,
-            before=before,
-            after=after,
-            report_type=report_type,
-            report_status=report_status,
+        # Generate reports
+        api_response = api_instance.create_report(
+            create_report_request=create_report_request
         )
-        print("The response of PaymentApi->get_reports:\n")
+        print("The response of PaymentApi->create_report:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling PaymentApi->get_reports: %s\n" % e)
+        print("Exception when calling PaymentApi->create_report: %s\n" % e)
 
 ```
 ```java Java
@@ -53,6 +49,7 @@ import com.cobo.waas2.Configuration;
 import com.cobo.waas2.Env;
 import com.cobo.waas2.api.PaymentApi;
 import com.cobo.waas2.model.*;
+import java.util.Arrays;
 
 public class Example {
   public static void main(String[] args) {
@@ -64,17 +61,17 @@ public class Example {
     // Replace `<YOUR_PRIVATE_KEY>` with your private key
     defaultClient.setPrivKey("<YOUR_PRIVATE_KEY>");
     PaymentApi apiInstance = new PaymentApi();
-    Integer limit = 10;
-    String before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1";
-    String after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk";
-    ReportType reportType = ReportType.fromValue("Order");
-    ReportStatus reportStatus = ReportStatus.fromValue("Completed");
+    CreateReportRequest createReportRequest =
+        new CreateReportRequest()
+            .startTime(1764237462)
+            .endTime(1764237462)
+            .reportExportFormat(ReportExportFormat.CSV)
+            .reportTypes(Arrays.asList(ReportType.ORDER));
     try {
-      GetReports200Response result =
-          apiInstance.getReports(limit, before, after, reportType, reportStatus);
+      Report result = apiInstance.createReport(createReportRequest);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling PaymentApi#getReports");
+      System.err.println("Exception when calling PaymentApi#createReport");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -96,11 +93,7 @@ import (
 )
 
 func main() {
-	limit := int32(10)
-	before := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
-	after := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-	reportType := coboWaas2.ReportType("Order")
-	reportStatus := coboWaas2.ReportStatus("Completed")
+	createReportRequest := *coboWaas2.NewCreateReportRequest(int32(1764237462), int32(1764237462), coboWaas2.ReportExportFormat("CSV"), []coboWaas2.ReportType{coboWaas2.ReportType("Order")})
 
 	configuration := coboWaas2.NewConfiguration()
 	// Initialize the API client
@@ -113,19 +106,15 @@ func main() {
 	ctx = context.WithValue(ctx, coboWaas2.ContextPortalSigner, crypto.Ed25519Signer{
 		Secret: "<YOUR_PRIVATE_KEY>",
 	})
-	resp, r, err := apiClient.PaymentAPI.GetReports(ctx).
-		Limit(limit).
-		Before(before).
-		After(after).
-		ReportType(reportType).
-		ReportStatus(reportStatus).
+	resp, r, err := apiClient.PaymentAPI.CreateReport(ctx).
+		CreateReportRequest(createReportRequest).
 		Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.GetReports``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.CreateReport``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `GetReports`: GetReports200Response
-	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.GetReports`: %v\n", resp)
+	// response from `CreateReport`: Report
+	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.CreateReport`: %v\n", resp)
 }
 
 ```
@@ -140,13 +129,14 @@ apiClient.setPrivateKey("<YOUR_PRIVATE_KEY>");
 // Call the API
 const apiInstance = new CoboWaas2.PaymentApi();
 const opts = {
-  limit: 10,
-  before: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1",
-  after: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk",
-  report_type: "Order",
-  report_status: "Completed",
+  CreateReportRequest: CoboWaas2.CreateReportRequest.constructFromObject({
+    start_time: 1764237462,
+    end_time: 1764237462,
+    report_export_format: "CSV",
+    report_types: ["Order"],
+  }),
 };
-apiInstance.getReports(opts).then(
+apiInstance.createReport(opts).then(
   (data) => {
     console.log("API called successfully. Returned data: " + data);
   },

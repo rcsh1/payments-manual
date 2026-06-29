@@ -1,0 +1,53 @@
+---
+title: "Reports"
+sidebarTitle: "Reports"
+lang: "en"
+---
+
+This page explains Payments report types, the shared inputs used to define report scope, and where to generate or manage reports.
+
+## Generate report scope
+
+When you generate a report, you define the report scope with these shared inputs:
+
+- `start_time`: Start of the reporting time range
+- `end_time`: End of the reporting time range
+- `report_export_format`: Export format for the generated file
+- `report_types`: One or more report types to generate
+- `token_ids`: Optional token filter for narrowing the report content
+
+Use these inputs to define the time range, output format, and report scope. For detailed request and response mechanics, see the related API operations below.
+
+## Report types and when to use them
+
+The current Payments documentation confirms the following report types:
+
+| `report_type` | Purpose | Common use case |
+| --- | --- | --- |
+| `Order` | Export summary data for pay-in orders. | Reconcile order collections and review order-level pay-in activity. |
+| `OrderTransaction` | Export transaction data related to pay-in orders. | Review the transaction records associated with order-mode payments. |
+| `TopUpTransaction` | Export transaction data for top-up activity. | Reconcile top-up receipts and review top-up transaction records. |
+| `PayinWeeklyStatement` | Export a weekly pay-in statement covering order mode and top-up mode. | Review weekly pay-in activity across your pay-in channels. |
+| `PayinDailyStatement` | Export a daily pay-in statement covering order mode and top-up mode. | Review daily pay-in activity across your pay-in channels. |
+| `CryptoPayout` | Export transaction data for crypto payouts. | Reconcile crypto payout execution and review payout records. |
+| `OffRamp` | Export transaction data for fiat off-ramp payouts. | Reconcile fiat payout execution and review off-ramp records. |
+| `Refund` | Export transaction data for refunds. | Reconcile refund activity and review refund records. |
+| `PayoutWeeklyStatement` | Export a weekly payout statement covering crypto payouts, fiat off-ramps, and refunds. | Review weekly payout activity across payout channels. |
+| `PayoutDailyStatement` | Export a daily payout statement covering crypto payouts, fiat off-ramps, and refunds. | Review daily payout activity across payout channels. |
+| `PayinCommissionFee` | Export pay-in commission fee data. | Reconcile fees charged for pay-in activity. |
+| `PayoutCommissionFee` | Export payout commission fee data. | Reconcile fees charged for payout activity. |
+| `BalanceChange` | Export account balance change data. | Review balance movements for reconciliation and account analysis. |
+| `Summary` | Export summary data that combines pay-ins, payouts, and commission fees. | Review an aggregated reconciliation view across core payment activity. |
+| `BulkSend` | Export transaction data for Bulk Send activity. | Reconcile batch payout execution and review Bulk Send records. |
+
+Different report types cover different business scopes, so the exported columns can differ by `report_type`.
+
+## Exported fields and field differences
+
+Export contents vary by `report_type`. Some columns can also depend on the underlying transaction type or the filters you apply when generating the report.
+Use this page to choose the right `report_type` for your reconciliation or analysis scenario. For generating reports and listing generated reports, use the related API operations below.
+
+## Related API operations
+
+- [Generate reports](/payments/en/api-references/payment/generate-reports)
+- [List all reports](/payments/en/api-references/payment/list-all-reports)

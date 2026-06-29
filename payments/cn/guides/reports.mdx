@@ -1,0 +1,55 @@
+---
+title: "报表"
+sidebarTitle: "报表"
+lang: "zh-hans"
+---
+
+本页介绍 Payments 报表类型、用于定义报表范围的通用输入，以及生成和管理报表的入口。
+
+## 生成报表范围
+
+生成报表时，您可以通过以下通用输入定义报表范围：
+
+- `start_time`：报表时间范围的开始时间
+- `end_time`：报表时间范围的结束时间
+- `report_export_format`：导出文件的格式
+- `report_types`：要生成的一个或多个报表类型
+- `token_ids`：可选的代币过滤条件，用于缩小报表范围
+
+您可以使用这些输入定义时间范围、导出格式和报表范围。有关具体的请求与响应机制，请参见下方相关 API 操作。
+
+## 报表类型及适用场景
+
+当前 Payments 文档已确认以下报表类型：
+
+| `report_type` | 用途 | 常见使用场景 |
+| --- | --- | --- |
+| `Order` | 导出支付订单的汇总数据。 | 用于订单收款对账，以及查看订单层级的收款活动。 |
+| `OrderTransaction` | 导出与支付订单相关的交易数据。 | 用于查看订单模式收款对应的交易记录。 |
+| `TopUpTransaction` | 导出充值模式的交易数据。 | 用于充值收款对账，以及查看充值交易记录。 |
+| `PayinWeeklyStatement` | 导出覆盖订单模式和充值模式的周度收款报表。 | 用于按周查看各类收款渠道的活动。 |
+| `PayinDailyStatement` | 导出覆盖订单模式和充值模式的日报收款表。 | 用于按日查看各类收款渠道的活动。 |
+| `CryptoPayout` | 导出加密货币转账的交易数据。 | 用于加密货币转账对账，以及查看转账记录。 |
+| `OffRamp` | 导出法币 Off-Ramp 转出的交易数据。 | 用于法币出金对账，以及查看 Off-Ramp 记录。 |
+| `Refund` | 导出退款交易数据。 | 用于退款对账，以及查看退款记录。 |
+| `PayoutWeeklyStatement` | 导出覆盖加密货币转账、法币 Off-Ramp 和退款的周度转出报表。 | 用于按周查看各类转出渠道的活动。 |
+| `PayoutDailyStatement` | 导出覆盖加密货币转账、法币 Off-Ramp 和退款的日报转出表。 | 用于按日查看各类转出渠道的活动。 |
+| `PayinCommissionFee` | 导出收款侧手续费数据。 | 用于对账收款相关的手续费。 |
+| `PayoutCommissionFee` | 导出转出侧手续费数据。 | 用于对账转出相关的手续费。 |
+| `BalanceChange` | 导出账户余额变动数据。 | 用于查看余额变化，支持对账和账户分析。 |
+| `Summary` | 导出汇总数据，覆盖收款、转出和手续费。 | 用于从聚合视角查看核心支付活动的对账结果。 |
+| `BulkSend` | 导出 Bulk Send 的交易数据。 | 用于批量下发执行结果对账，以及查看 Bulk Send 记录。 |
+
+不同报表类型覆盖的业务范围不同，因此导出的字段也可能随 `report_type` 而变化。
+
+## 导出字段与字段差异
+
+导出内容会随 `report_type` 而变化。某些列是否出现，也可能取决于底层交易类型或您生成报表时使用的过滤条件。
+您可以使用本页先选择适合当前对账或分析场景的 `report_type`。如需生成报表或查询已生成报表，请使用下方相关 API 操作。
+
+## 相关 API 操作
+
+以下为可用的 API 操作：
+
+- [Generate reports](/payments/cn/api-references/payment/generate-reports)
+- [List all reports](/payments/cn/api-references/payment/list-all-reports)
