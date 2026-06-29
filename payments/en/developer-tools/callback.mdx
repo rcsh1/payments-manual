@@ -4,14 +4,19 @@ lang: "en"
 sidebarTitle: "Introduction"
 ---
 
-Callbacks are a confirmation mechanism that the Cobo payments service uses to request your approval before executing a sensitive operation. When an operation that requires callback confirmation is triggered, Cobo sends a request to your registered callback endpoint. Your endpoint must respond with an approval or denial before Cobo proceeds.
+Callbacks are pre-execution approval requests. When Cobo needs your approval before executing a sensitive operation, Cobo sends a request to your registered callback endpoint and waits for your response. If your endpoint approves the request, Cobo continues the operation. If your endpoint rejects the request or does not respond in time, Cobo does not proceed.
 
-Callbacks differ from webhooks in an important way:
+Callbacks and webhooks serve different purposes:
 
-- **Webhooks** notify your application after an event has occurred.
-- **Callbacks** ask your application to approve or deny an operation before it is executed.
+- A callback asks your application to approve or reject an operation before execution.
+- A webhook notifies your application after an event occurs.
 
-Currently, only **Bulk Send** triggers callback confirmation. For each operation in a Bulk Send — whether it uses smart contracts or regular transfers — Cobo calls your callback endpoint so that you can inspect the transaction details and approve or deny before Cobo proceeds.
+| Flow | Message type | Purpose |
+|:-----|:-------------|:--------|
+| Bulk Send | Callback before execution | Used for approval of each operation before Cobo proceeds. |
+| Payouts, refunds, pay-in orders, and other asynchronous status changes | Webhook after event | Used for status and lifecycle notifications. See [Events and status](/payments/en/guides/status-and-events). |
+
+Currently, only **Bulk Send** triggers callback confirmation. Bulk Send can trigger callback requests for the operations that Cobo needs you to approve before execution, including smart-contract and regular transfer flows.
 
 ## Handle callback messages
 

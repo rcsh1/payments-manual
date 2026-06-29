@@ -6,6 +6,8 @@ sidebarTitle: "Introduction"
 
 Webhooks are essential mechanisms for the Cobo payments service to communicate with your application. After you set up and register webhook endpoints, the Cobo payments service sends push messages to the designated URL when an event occurs. They allow your application to receive real-time updates or notifications and to respond to events accordingly.
 
+Use webhooks to track asynchronous Payment activity after the original API request returns. For retry handling, use `event_id` as the idempotency key for each delivery event. To correlate a webhook with the resource in your system, read the identifiers in the `data` payload for that event type, such as `payout_id`, `refund_id`, `bulk_send_id`, `order_id`, `request_id`, or `psp_order_code`.
+
 
 You can view the data of all webhook events in your organization on **Cobo Portal** > **Developer** > **Webhook Events**.
 
@@ -34,15 +36,17 @@ To learn more about event types and event data types, see [Events and status](/p
 
 When an event is triggered, the Cobo payments service sends an HTTP POST request to your registered endpoint. The request body is a JSON object with the following structure.
 
+<Note>Use `event_id` for delivery deduplication. Use the identifiers inside `data` to correlate the event with your payout, refund, bulk send, or pay-in order records.</Note>
+
 ### Required fields
 
 | Field | Type | Description |
 |:------|:-----|:------------|
-| `event_id` | string (UUID) | The unique identifier of the event. Use `event_id` to deduplicate retried deliveries. |
+| `event_id` | string (UUID) | The unique identifier of the event. Use `event_id` to deduplicate retried deliveries and to ensure that your handler processes each event once. |
 | `url` | string | The registered webhook endpoint URL. |
 | `created_timestamp` | integer (int64) | The time when the event was triggered, in Unix timestamp format (milliseconds). This value remains unchanged across retries. |
 | `type` | string | The event type. See [Events and status](/payments/en/guides/status-and-events) for all event types and their trigger conditions. |
-| `data` | object | The event-specific payload. The schema depends on the `type` field — see [Events and status](/payments/en/guides/status-and-events) for per-event schemas. |
+| `data` | object | The event-specific payload. Use the identifiers in this object to map the webhook to the originating resource in your system. See [Events and status](/payments/en/guides/status-and-events) for the identifier matrix and per-event schemas. |
 
 ### Optional fields
 

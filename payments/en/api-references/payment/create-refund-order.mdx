@@ -2,6 +2,8 @@
 openapi: post /payments/refunds
 ---
 
+<Note>If you provide `request_id` when creating a refund order, Cobo can include that value in `payment.refund.status.updated` webhook payloads together with `refund_id` and `order_id`. Use `refund_id` as the refund resource identifier and `request_id` as your business correlation key when present. For trigger conditions and payload fields, see [Events and status](/payments/en/guides/status-and-events).</Note>
+
 <RequestExample>
 ```python Python
 import cobo_waas2

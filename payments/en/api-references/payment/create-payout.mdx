@@ -2,6 +2,8 @@
 openapi: post /payments/payouts
 ---
 
+<Note>The `request_id` you provide in this request is returned in `payment.payout.status.updated` webhook payloads together with `payout_id`. Use `request_id` to match the webhook to your original request and `payout_id` to query the payout resource. For status transitions and payload fields, see [Events and status](/payments/en/guides/status-and-events).</Note>
+
 <RequestExample>
 ```python Python
 import cobo_waas2

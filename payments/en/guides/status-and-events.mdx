@@ -3,11 +3,22 @@ title: "Events and status"
 lang: "en"
 ---
 
-<Note>
-  **Disclaimer: This article contains AI translations and should only be used as reference.** Contact Cobo's support team through [help@cobo.com](mailto:help@cobo.com) if you have any questions.
-</Note>
+This guide shows which API flow triggers which notification and how to correlate each notification with the originating resource in your system.
 
-This document describes all Webhook events and status transition processes involved in receiving payments (Pay-in), refunds, and payouts/transfers.
+## Notification matrix
+
+| API flow | Notification channel | Events | Correlation identifiers | How to use them |
+| :------- | :------------------- | :----- | :---------------------- | :-------------- |
+| Create pay-in order | Webhook | `payment.order.status.updated`, `payment.transaction.completed`, `payment.transaction.late`, `payment.transaction.failed` as applicable | `order_id`, `psp_order_code` | Use `order_id` as the primary resource identifier. Use `psp_order_code` to map to your business order. |
+| Create refund order | Webhook | `payment.refund.status.updated` | `refund_id`, optional `request_id`, `order_id` | Use `refund_id` as the refund resource identifier. If you supplied `request_id`, use it as an additional business correlation key. |
+| Create payout | Webhook | `payment.payout.status.updated` | `payout_id`, `request_id` | Use `payout_id` as the payout resource identifier and `request_id` as your request correlation key. |
+| Create bulk send | Callback before execution and Webhook after status change | Callback approval flow; `payment.bulk_send.status.updated` | `bulk_send_id`, optional `request_id` | Use callback to approve execution. Use the webhook to track batch status after execution starts. |
+
+## Replay and idempotency
+
+Webhook deliveries can be retried. Use `event_id` to deduplicate deliveries. For bulk send status automation, you can use the resource identifier together with `data.updated_timestamp` to decide whether a status update is newer than the one you have already processed.
+
+The sections below list trigger conditions and payload fields for each event family.
 
 ## Webhook Events
 
@@ -77,7 +88,7 @@ Each transaction event also includes Payment-specific fields listed in the **Eve
 ## Webhook event examples
 
 <Note>
-  The following examples are illustrative and constructed from the field definitions in the Payment spec. Optional fields may be absent in actual webhook deliveries.
+  The following examples show representative webhook payloads. Optional fields may be absent in actual webhook deliveries.
 </Note>
 
 ### payment.order.status.updated
@@ -192,8 +203,8 @@ Each transaction event also includes Payment-specific fields listed in the **Eve
 
 ## Tips
 
-To ensure absolute data accuracy and avoid concurrency conflicts, the Webhook payload does not include real-time balance changes or detailed fee deductions. If your use case requires this information, please refer to the following:
+To ensure data accuracy and avoid concurrency conflicts, the Webhook payload does not include real-time balance changes or detailed fee deductions. If your use case requires this information, use the following endpoints:
 
-- **To update balances promptly based on Webhook notifications:** Upon receiving a Webhook, immediately call the [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) or [Get developer balances](/payments/en/api-references/payment/get-developer-balance) endpoint to obtain the accurate balance for internal accounting.
-- **To obtain fee details associated with a transaction for reconciliation:** Use the corresponding transaction query endpoints or [Generate reports](/payments/en/api-references/payment/generate-reports) to retrieve fee reports for data verification.
-- **To monitor Fee Station balance changes and prevent business disruption:** Periodically call [List Fee Station token balance](https://www.cobo.com/developers/v2/api-references/feestation/list-fee-station-token-balances) and set up internal alerting based on your consumption rate to avoid service interruptions due to insufficient fees.
+- To update balances promptly based on Webhook notifications, call [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) or [Get developer balances](/payments/en/api-references/payment/get-developer-balance) after you receive the Webhook.
+- To obtain fee details associated with a transaction for reconciliation, use the corresponding transaction query endpoints or [Generate reports](/payments/en/api-references/payment/generate-reports).
+- To monitor Fee Station balance changes, periodically call [List Fee Station token balance](https://www.cobo.com/developers/v2/api-references/feestation/list-fee-station-token-balances) and set up internal alerting based on your consumption rate.

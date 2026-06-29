@@ -2,6 +2,8 @@
 openapi: post /payments/bulk_sends
 ---
 
+<Note>If you provide `request_id` when creating a bulk send, Cobo can echo that value in Bulk Send notifications together with `bulk_send_id`. Use `request_id` as your business correlation key and `bulk_send_id` as the Cobo resource identifier. For event triggers and payload details, see [Events and status](/payments/en/guides/status-and-events).</Note>
+
 <RequestExample>
 ```python Python
 import cobo_waas2

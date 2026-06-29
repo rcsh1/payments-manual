@@ -3,7 +3,22 @@ title: "事件与状态"
 lang: "zh-hans"
 ---
 
-本文介绍收款、退款和资金转出过程中涉及到的所有 Webhook 事件以及状态变更流程。
+本文重点说明不同 API 流程会触发哪些通知，以及您应如何将这些通知与系统中的原始资源关联。
+
+## 通知矩阵
+
+| API 流程 | 通知方式 | 事件 | 关联标识符 | 使用方式 |
+| :------- | :------- | :--- | :--------- | :------- |
+| 创建支付订单 | Webhook | `payment.order.status.updated`、`payment.transaction.completed`、`payment.transaction.late`、`payment.transaction.failed`（按适用情况触发） | `order_id`、`psp_order_code` | 使用 `order_id` 作为主要资源标识符。使用 `psp_order_code` 映射到您的业务订单。 |
+| 创建退款单 | Webhook | `payment.refund.status.updated` | `refund_id`、可选的 `request_id`、`order_id` | 使用 `refund_id` 作为退款资源标识符。如果您提供了 `request_id`，可将其作为额外的业务关联键。 |
+| 创建资金转出 | Webhook | `payment.payout.status.updated` | `payout_id`、`request_id` | 使用 `payout_id` 作为资金转出资源标识符，使用 `request_id` 作为您的请求关联键。 |
+| 创建批量下发 | 执行前的 Callback 和状态变更后的 Webhook | Callback 审批流程；`payment.bulk_send.status.updated` | `bulk_send_id`、可选的 `request_id` | 使用 Callback 审批执行。使用 Webhook 跟踪执行开始后的批次状态。 |
+
+## 重放与幂等处理
+
+Webhook 投递可能会重试。请使用 `event_id` 对投递去重。对于批量下发状态自动化，您可以结合资源标识符和 `data.updated_timestamp` 来判断某次状态更新是否比您已处理的记录更新。
+
+下文列出了各事件类型的触发条件和负载字段。
 
 ## Webhook 事件
 
@@ -73,7 +88,7 @@ lang: "zh-hans"
 ## Webhook 事件示例
 
 <Note>
-  以下示例根据 Payment 规范中的字段定义构造，仅供参考。选填字段在实际 Webhook 推送中可能不存在。
+  以下示例展示了具有代表性的 Webhook 负载。选填字段在实际 Webhook 推送中可能不存在。
 </Note>
 
 ### payment.order.status.updated
@@ -188,8 +203,8 @@ lang: "zh-hans"
 
 ## 提示
 
-为了保证数据的绝对准确性并避免并发冲突，Webhook 消息体中不会包含实时余额变动和详细扣费信息。如果您存在以下使用场景，请参考下列提示说明：
+为了保证数据准确性并避免并发冲突，Webhook 消息体中不会包含实时余额变动和详细扣费信息。如果您的场景需要这些信息，请使用以下接口：
 
-- 若需要根据 Webhook 通知及时更新余额，您可以：在接收到 Webhook 时，立即调用 [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) 或 [Get developer balances](/payments/en/api-references/payment/get-developer-balance) 接口获得准确的余额信息，再进行内部记账。
-- 若需要及时知道 Webhook 所指交易引发的扣费信息，以便于关联交易和扣费进行对账，您可以：使用对应的查询交易信息接口和 [Generate reports](/payments/en/api-references/payment/generate-reports) 获取扣费报表，来做数据的核对。
-- 若需要及时知道 Webhook 所指交易引发的 Fee Station 余额的变动情况，保证后续不因 Fee Station 余额不足而影响业务，您可以：定期调用 [List Fee Station token balance](https://www.cobo.com/developers/v2/api-references/feestation/list-fee-station-token-balances) 查询 Fee Station 余额，并根据业务的消耗频率做内部报警策略，避免欠费影响正常业务运行。
+- 若需要根据 Webhook 通知及时更新余额，请在收到 Webhook 后调用 [List merchant balances](/payments/en/api-references/payment/list-merchant-balances) 或 [Get developer balances](/payments/en/api-references/payment/get-developer-balance)。
+- 若需要获取交易相关的扣费信息用于对账，请使用相应的交易查询接口或 [Generate reports](/payments/en/api-references/payment/generate-reports)。
+- 若需要监控 Fee Station 余额变动，请定期调用 [List Fee Station token balance](https://www.cobo.com/developers/v2/api-references/feestation/list-fee-station-token-balances)，并按业务消耗频率设置内部告警。

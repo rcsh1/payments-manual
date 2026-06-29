@@ -4,14 +4,19 @@ lang: "zh-hans"
 sidebarTitle: "介绍"
 ---
 
-Callback 是 Cobo 支付服务在执行敏感操作前向您请求确认的一种机制。当触发需要 Callback 确认的操作时，Cobo 会向您注册的 Callback Endpoint 发送请求。您的 Endpoint 必须返回批准或拒绝的响应，Cobo 才会继续执行。
+Callback 是执行前的审批请求。当 Cobo 在执行敏感操作前需要您的批准时，Cobo 会向您注册的 Callback Endpoint 发送请求并等待响应。如果您的 Endpoint 批准该请求，Cobo 会继续执行该操作。如果您的 Endpoint 拒绝该请求，或未在规定时间内响应，Cobo 不会继续执行。
 
-Callback 与 Webhook 的区别如下：
+Callback 和 Webhook 用途不同：
 
-- **Webhook** 在事件发生后通知您的 App。
-- **Callback** 在操作执行前请求您的 App 批准或拒绝。
+- Callback 会在操作执行前请求您的应用批准或拒绝该操作。
+- Webhook 会在事件发生后通知您的应用。
 
-目前，仅**批量下发（Bulk Send）**会触发 Callback 确认。在批量下发过程中，无论底层使用智能合约还是普通转账，Cobo 都会对每笔操作调用您的 Callback Endpoint，以便您在批准执行前检查交易详情。
+| 流程 | 消息类型 | 用途 |
+|:-----|:---------|:-----|
+| Bulk Send | 执行前的 Callback | 用于在 Cobo 继续执行前审批每一笔操作。 |
+| 资金转出、退款单、支付订单以及其他异步状态变化 | 事件后的 Webhook | 用于状态和生命周期通知。请参阅[事件与状态](/payments/cn/guides/status-and-events)。 |
+
+目前，只有 **Bulk Send** 会触发 Callback 确认。对于 **Bulk Send** 功能，Cobo 可能会针对执行前需要您审批的操作发送 Callback 请求，包括智能合约和常规转账流程。
 
 ## 处理 Callback 消息
 

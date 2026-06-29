@@ -2,6 +2,8 @@
 openapi: post /payments/orders
 ---
 
+<Note>Pay-in notifications are correlated by the order identifiers in webhook payloads, primarily `order_id` and `psp_order_code`, rather than by `request_id`. Use these values to match `payment.order.status.updated` and related transaction events to your records. For event triggers and payload fields, see [Events and status](/payments/en/guides/status-and-events).</Note>
+
 <RequestExample>
 ```python Python
 import cobo_waas2
