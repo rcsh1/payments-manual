@@ -40,238 +40,398 @@ The current Payments documentation confirms the following report types:
 | `Summary` | Export summary data that combines pay-ins, payouts, and commission fees. | Review an aggregated reconciliation view across core payment activity. |
 | `BulkSend` | Export transaction data for Bulk Send activity. | Reconcile batch payout execution and review Bulk Send records. |
 
-Different report types cover different business scopes, so the exported columns can differ by `report_type`.
+Different report types cover different business scopes, so the exported columns can differ by `report_type`. Some report types also generate multiple sheets in the exported file.
 
-## Exported fields and field differences
+## Exported fields by report type
 
-Exported fields vary by `report_type`. The following sections explain what each exported field means and when each field appears.
+Exported fields vary by `report_type`. The following sections list the exported fields confirmed for each report type.
 
 ### `Order`
 
 Each row represents one pay-in order.
 
-| Field | Description | When present |
+| Field | Exported label or meaning | Note |
 | --- | --- | --- |
-| `order_id` | Unique ID of the pay-in order. | Always present. |
-| `merchant_id` | Merchant ID associated with the order. | Present when the order belongs to a merchant account. |
-| `merchant_order_code` | Merchant-defined reference code for the order. | Present when you provided a merchant-side order code. |
-| `psp_order_code` | Developer-defined reference code for the order. | Always present. |
-| `pricing_currency` | Fiat pricing currency used for the order. | Present when a pricing currency was configured for the order. |
-| `pricing_amount` | Base order amount before developer fee. | Present when a pricing amount was configured for the order. |
-| `fee_amount` | Developer fee charged for the order. | Always present. |
-| `payable_currency` | Token ID used for payment. | Present when the order specifies the payment token. |
-| `chain_id` | Blockchain network on which the payer sends funds. | Always present. |
-| `payable_amount` | Token amount the payer is expected to send. | Always present. |
-| `exchange_rate` | Exchange rate used to derive `payable_amount` from the priced amount. | Present when `payable_amount` was not provided directly during order creation. |
-| `amount_tolerance` | Allowed shortfall tolerance for the received amount. | Present when amount tolerance is configured for the order. |
-| `receive_address` | Receiving address assigned to the order. | Always present. |
-| `status` | Current pay-in order status. | Always present. |
-| `received_token_amount` | Total token amount actually received for the order so far. | Always present. |
-| `expired_at` | Order expiration time, in Unix timestamp seconds. | Present when the order has an expiration time. |
-| `created_timestamp` | Time when the order was created, in Unix timestamp seconds. | Present when creation time is included in the export. |
-| `updated_timestamp` | Time when the order was last updated, in Unix timestamp seconds. | Present when update time is included in the export. |
-| `transactions` | Transactions associated with the order. | Present when the export includes linked transaction details. |
-| `settlement_status` | Settlement progress for the order. | Present when settlement tracking is included for the exported row. |
+| `created_time` | Record creation time | Order row creation time. |
+| `order_id` | Order ID | Unique identifier of the order. |
+| `payment_type` | Payment mode | Payment mode for the order row. |
+| `order_status` | Order status | Current order status. |
+| `order_tag` | Order tag | Order tag exported for the row. |
+| `merchant_name` | Merchant name | Merchant name associated with the order. |
+| `merchant_id` | Merchant ID | Merchant identifier associated with the order. |
+| `token` | Token | Token in the report row. |
+| `network` | Network | Network in the report row. |
+| `paid_amount` | Paid amount | Amount recorded as paid. |
+| `payable_amount` | Payable amount | Amount expected for payment. |
+| `product_order_amount` | Product order amount | Product order amount in the row. |
+| `developer_fee` | Developer fee | Developer fee in the row. |
+| `currency_pair` | Currency pair | Currency pair for the row. |
+| `exchange_rate` | Exchange rate | Exchange rate in the row. |
+| `wallet_name` | Wallet name | Wallet name in the row. |
+| `wallet_type` | Wallet type | Wallet type in the row. |
+| `updated_time` | Update time | Latest update time in the row. |
+| `expiration_time` | Expiration time | Expiration time for the order row. |
 
 ### `OrderTransaction`
 
 Each row represents one transaction associated with order-mode pay-ins.
 
-| Field | Description | When present |
+| Field | Exported label or meaning | Note |
 | --- | --- | --- |
-| `transaction_id` | Unique ID of the transaction record. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `cobo_id` | Cobo tracking ID for the transaction. | Present when Cobo tracking data is included for the transaction. |
-| `request_id` | Client-provided request ID used to create the transaction request. | Present when the transaction originated from a request that carried `request_id`. |
-| `wallet_id` | Wallet ID associated with the transaction source or destination. | Present when wallet information is included in the transaction record. |
-| `type` | Transaction type. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `status` | Current transaction status. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `sub_status` | More detailed transaction sub-status. | Present when the transaction has a sub-status. |
-| `failed_reason` | Failure reason for approval or signing failures. | Present only for failed transactions that include a failure reason. |
-| `chain_id` | Blockchain network for the transaction. | Present when the transaction is chain-specific. |
-| `token_id` | Token ID transferred in the transaction. | Present when the transaction is token-specific. |
-| `source` | Transaction source object. | Present when source details are included in the export row. |
-| `destination` | Transaction destination object. | Present when destination details are included in the export row. |
-| `result` | Result object returned for the transaction. | Present when execution result details are included. |
-| `fee` | Transaction fee object. | Present when fee details are recorded for the transaction. |
-| `initiator` | Actor or API key that initiated the transaction. | Present when initiator details are recorded. |
-| `initiator_type` | Type of initiator for the transaction. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `confirmed_num` | Number of blockchain confirmations received. | Present when the transaction has on-chain confirmation data. |
-| `confirming_threshold` | Confirmation threshold used for the transaction. | Present when confirmation threshold data is tracked. |
-| `transaction_hash` | On-chain transaction hash. | Present when the transaction has been submitted on-chain. |
-| `block_info` | Block information for the transaction. | Present when block details are available. |
-| `raw_tx_info` | Raw transaction payload details. | Present when raw transaction data is included. |
-| `replacement` | Replacement relationship for sped-up or replaced transactions. | Present when the transaction was replaced or replaced another transaction. |
-| `category` | Custom categories attached to the transaction. | Present when custom categories were assigned. |
-| `description` | User-defined transaction description. | Present when a description was supplied. |
-| `is_loop` | Whether the transaction was processed through Cobo Loop. | Present when loop metadata is included. |
-| `cobo_category` | Cobo-defined transaction categories. | Present when Cobo category data is attached. |
-| `extra` | Structured business-specific extra metadata. | Present when the transaction carries extra business data. |
-| `fueling_info` | Fueling information for the transaction. | Present when fueling metadata exists. |
-| `created_timestamp` | Time when the transaction was created. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `updated_timestamp` | Time when the transaction was last updated. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `acquiring_type` | Collection mode for the pay-in transaction. | Always present for payment transaction event data. |
-| `order_id` | Pay-in order ID associated with the transaction. | Present for order-mode transactions. |
-| `psp_order_code` | Developer-defined order reference for the related pay-in order. | Present for order-mode transactions when the order carries this code. |
-| `payer_id` | Cobo-assigned payer identifier. | Present when payer tracking is enabled for the transaction. |
-| `custom_payer_id` | Developer-defined payer identifier. | Present when you provided a custom payer identifier. |
-| `merchant_id` | Merchant ID associated with the transaction. | Present when the transaction belongs to a merchant account. |
-| `subscription_id` | Subscription ID related to the transaction. | Present for subscription-related transactions. |
-| `action_id` | Subscription action ID related to the transaction. | Present for subscription-related transactions. |
+| `created_time` | Record creation time | Transaction row creation time. |
+| `merchant_id` | Merchant ID | Merchant identifier associated with the transaction. |
+| `order_id` | Order ID | Related order identifier. |
+| `order_status` | Order status | Related order status in the row. |
+| `transaction_id` | Transaction ID | Unique transaction identifier. |
+| `transaction_status` | Transaction status | Current transaction status. |
+| `transaction_amount` | Transaction amount | Amount in the transaction row. |
+| `from_address` | From address | Source address in the row. |
+| `to_address` | To address | Destination address in the row. |
+| `txn_hash` | Transaction hash | On-chain transaction hash. |
+| `token` | Token | Token in the transaction row. |
+| `network` | Network | Network in the transaction row. |
+| `developer_fee` | Developer fee | Developer fee in the transaction row. |
 
 ### `TopUpTransaction`
 
 Each row represents one top-up transaction.
 
-The local source files in this repo confirm that `TopUpTransaction` is a transaction-level report, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+| Field | Exported label or meaning | Note |
+| --- | --- | --- |
+| `created_time` | Record creation time | Transaction row creation time. |
+| `payment_type` | Payment mode | Payment mode for the top-up row. |
+| `transaction_status` | Transaction status | Current transaction status. |
+| `payer_id` | Payer ID | Payer identifier in the row. |
+| `custom_payer_id` | Custom payer ID | Custom payer identifier in the row. |
+| `received_amount` | Received amount | Amount recorded as received. |
+| `from_address` | From address | Source address in the row. |
+| `to_address` | To address | Destination address in the row. |
+| `transaction_id` | Transaction ID | Unique transaction identifier. |
+| `txn_hash` | Transaction hash | On-chain transaction hash. |
+| `merchant_name` | Merchant name | Merchant name associated with the row. |
+| `merchant_id` | Merchant ID | Merchant identifier associated with the row. |
+| `token` | Token | Token in the row. |
+| `network` | Network | Network in the row. |
+| `developer_fee` | Developer fee | Developer fee in the row. |
+| `wallet_name` | Wallet name | Wallet name in the row. |
+| `wallet_type` | Wallet type | Wallet type in the row. |
+| `updated_time` | Update time | Latest update time in the row. |
 
 ### `PayinWeeklyStatement`
 
-Each row represents one weekly pay-in statement entry across order mode and top-up mode.
+`PayinWeeklyStatement` and `PayinDailyStatement` share the same exported columns. Each row represents one statement entry for the selected period.
 
-The local source files in this repo confirm the business scope of `PayinWeeklyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+| Field | Exported label or meaning | Note |
+| --- | --- | --- |
+| `period` | Period | Statement period in the row. |
+| `token` | Token | Token covered by the statement row. |
+| `transaction_number` | Transaction number | Number of transactions in the row. |
+| `total_payin_amount` | Total pay-in amount | Total pay-in amount in the row. |
+| `order_transaction_number` | Order transaction number | Number of order transactions in the row. |
+| `total_order_amount` | Total order amount | Total order amount in the row. |
+| `topup_transaction_number` | Top-up transaction number | Number of top-up transactions in the row. |
+| `total_topup_amount` | Total top-up amount | Total top-up amount in the row. |
+| `unexpected_transaction_number` | Unexpected transaction number | Number of unexpected transactions in the row. |
+| `total_unexpected_amount` | Total unexpected amount | Total unexpected amount in the row. |
+| `total_payin_commission_fee` | Total pay-in commission fee | Total pay-in commission fee in the row. |
 
 ### `PayinDailyStatement`
 
-Each row represents one daily pay-in statement entry across order mode and top-up mode.
+`PayinDailyStatement` shares the same columns as `PayinWeeklyStatement`.
 
-The local source files in this repo confirm the business scope of `PayinDailyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+| Field | Exported label or meaning | Note |
+| --- | --- | --- |
+| `period` | Period | Statement period in the row. |
+| `token` | Token | Token covered by the statement row. |
+| `transaction_number` | Transaction number | Number of transactions in the row. |
+| `total_payin_amount` | Total pay-in amount | Total pay-in amount in the row. |
+| `order_transaction_number` | Order transaction number | Number of order transactions in the row. |
+| `total_order_amount` | Total order amount | Total order amount in the row. |
+| `topup_transaction_number` | Top-up transaction number | Number of top-up transactions in the row. |
+| `total_topup_amount` | Total top-up amount | Total top-up amount in the row. |
+| `unexpected_transaction_number` | Unexpected transaction number | Number of unexpected transactions in the row. |
+| `total_unexpected_amount` | Total unexpected amount | Total unexpected amount in the row. |
+| `total_payin_commission_fee` | Total pay-in commission fee | Total pay-in commission fee in the row. |
 
 ### `CryptoPayout`
 
-Each row represents one crypto payout record.
+The generated file can include separate sheets for standard crypto payouts and bridge-assisted payouts.
 
-| Field | Description | When present |
+#### Sheet: `payout crypto`
+
+| Field | Exported label or meaning | Note |
 | --- | --- | --- |
-| `payout_id` | Unique ID generated for the payout. | Always present. |
-| `request_id` | Client-provided request ID for the payout. | Always present. |
-| `payout_channel` | Payout channel used for the record. | Always present; this report type covers crypto payout rows. |
-| `source_account` | Merchant ID or `developer` account that funds the payout. | Present when the source account is recorded for the payout. |
-| `payout_items` | Payout item list, including token and amount details. | Present when item-level payout details are included. |
-| `recipient_info` | Recipient details for the payout destination. | Present when destination details are included. |
-| `initiator` | Actor or API key that initiated the payout. | Present when initiator details are recorded. |
-| `actual_payout_amount` | Actual amount delivered to the recipient. | Present after payout processing produces a delivered amount. |
-| `commission_fees` | Commission fee details charged for the payout. | Present when a payout commission fee was incurred. |
-| `remark` | User-provided note for the payout. | Present when a remark was supplied. |
-| `status` | Current payout status. | Always present. |
-| `created_timestamp` | Time when the payout was created, in Unix timestamp seconds. | Always present. |
-| `updated_timestamp` | Time when the payout was last updated, in Unix timestamp seconds. | Always present. |
-| `transactions` | Transactions associated with the payout. | Present when the export includes linked payout transaction details. |
+| `created_time` | Record creation time | Payout row creation time. |
+| `payout_id` | Payout ID | Unique payout identifier. |
+| `payment_type` | Payment mode | Payment mode for the payout row. |
+| `initiator` | Initiator | Initiator in the row. |
+| `payout_status` | Payout status | Current payout status. |
+| `balance_source` | Balance source | Balance source in the row. |
+| `network` | Network | Network in the row. |
+| `token` | Token | Token in the row. |
+| `to_address` | To address | Destination address in the row. |
+| `total_payout_amount` | Total payout amount | Total payout amount in the row. |
+| `actual_payout_amount` | Actual payout amount | Actual payout amount in the row. |
+| `merchant_names` | Merchant names | Merchant names included in the row. |
+| `merchant_ids` | Merchant IDs | Merchant IDs included in the row. |
+| `amounts` | Amounts | Amounts included in the row. |
+| `updated_time` | Update time | Latest update time in the row. |
+
+#### Sheet: `payout crypto with bridge`
+
+| Field | Exported label or meaning | Note |
+| --- | --- | --- |
+| `created_time` | Record creation time | Payout row creation time. |
+| `payout_id` | Payout ID | Unique payout identifier. |
+| `payment_type` | Payment mode | Payment mode for the payout row. |
+| `initiator` | Initiator | Initiator in the row. |
+| `payout_status` | Payout status | Current payout status. |
+| `balance_source` | Balance source | Balance source in the row. |
+| `original_network` | Original network | Original network in the row. |
+| `original_token` | Original token | Original token in the row. |
+| `payout_network` | Payout network | Payout network in the row. |
+| `payout_token` | Payout token | Payout token in the row. |
+| `bridge_fee` | Bridge fee | Bridge fee in the row. |
+| `to_address` | To address | Destination address in the row. |
+| `total_payout_amount` | Total payout amount | Total payout amount in the row. |
+| `actual_payout_amount` | Actual payout amount | Actual payout amount in the row. |
+| `merchant_names` | Merchant names | Merchant names included in the row. |
+| `merchant_ids` | Merchant IDs | Merchant IDs included in the row. |
+| `amounts` | Amounts | Amounts included in the row. |
+| `updated_time` | Update time | Latest update time in the row. |
 
 ### `OffRamp`
 
-Each row represents one fiat off-ramp payout record.
+Each row represents one off-ramp payout record.
 
-| Field | Description | When present |
+| Field | Exported label or meaning | Note |
 | --- | --- | --- |
-| `payout_id` | Unique ID generated for the payout. | Always present. |
-| `request_id` | Client-provided request ID for the payout. | Always present. |
-| `payout_channel` | Payout channel used for the record. | Always present; this report type covers OffRamp payout rows. |
-| `source_account` | Merchant ID or `developer` account that funds the payout. | Present when the source account is recorded for the payout. |
-| `payout_items` | Payout item list, including token and amount details. | Present when item-level payout details are included. |
-| `recipient_info` | Recipient bank or destination details for the payout. | Present when destination details are included. |
-| `initiator` | Actor or API key that initiated the payout. | Present when initiator details are recorded. |
-| `actual_payout_amount` | Actual fiat amount delivered to the recipient. | Present after payout processing produces a delivered amount. |
-| `commission_fees` | Commission fee details charged for the payout. | Present when a payout commission fee was incurred. |
-| `remark` | User-provided note for the payout. | Present when a remark was supplied. |
-| `status` | Current payout status. | Always present. |
-| `created_timestamp` | Time when the payout was created, in Unix timestamp seconds. | Always present. |
-| `updated_timestamp` | Time when the payout was last updated, in Unix timestamp seconds. | Always present. |
-| `transactions` | Transactions associated with the payout. | Present when the export includes linked payout transaction details. |
+| `created_time` | Record creation time | Payout row creation time. |
+| `payout_id` | Payout ID | Unique payout identifier. |
+| `payment_type` | Payment mode | Payment mode for the payout row. |
+| `initiator` | Initiator | Initiator in the row. |
+| `payout_status` | Payout status | Current payout status. |
+| `balance_source` | Balance source | Balance source in the row. |
+| `bank_name` | Bank name | Bank name in the row. |
+| `bank_account_number` | Bank account number | Bank account number in the row. |
+| `total_payout_amount` | Total payout amount | Total payout amount in the row. |
+| `actual_payout_amount` | Actual payout amount | Actual payout amount in the row. |
+| `merchant_names` | Merchant names | Merchant names included in the row. |
+| `merchant_ids` | Merchant IDs | Merchant IDs included in the row. |
+| `amounts` | Amounts | Amounts included in the row. |
+| `updated_time` | Update time | Latest update time in the row. |
 
 ### `Refund`
 
 Each row represents one refund record.
 
-| Field | Description | When present |
+| Field | Exported label or meaning | Note |
 | --- | --- | --- |
-| `request_id` | Client-provided request ID used to create the refund. | Present when the refund was created with `request_id`. |
-| `refund_id` | Unique refund order ID. | Always present. |
-| `order_id` | Related pay-in order ID. | Present when the refund is tied to an order. |
-| `merchant_id` | Merchant ID associated with the refund. | Present when the refund belongs to a merchant account. |
-| `token_id` | Token ID used for the refund. | Always present. |
-| `chain_id` | Blockchain network on which the refund occurs. | Always present. |
-| `amount` | Refund amount in cryptocurrency. | Always present. |
-| `to_address` | Recipient wallet address for the refund. | Always present. |
-| `status` | Current refund status. | Always present. |
-| `refund_type` | Source of funds for the refund. | Present when refund funding source is recorded. |
-| `created_timestamp` | Time when the refund order was created, in Unix timestamp seconds. | Present when creation time is included in the export. |
-| `updated_timestamp` | Time when the refund order was last updated, in Unix timestamp seconds. | Present when update time is included in the export. |
-| `initiator` | Actor or API key that initiated the refund. | Present when initiator details are recorded. |
-| `transactions` | Transactions associated with the refund. | Present when the export includes linked refund transaction details. |
-| `charge_merchant_fee` | Whether developer fee is charged to the merchant for the refund. | Present when merchant-fee charging is configured for the refund. |
-| `merchant_fee_amount` | Developer fee amount charged to the merchant for the refund. | Present when `charge_merchant_fee` is `true`. |
-| `merchant_fee_token_id` | Token ID used for the merchant fee charged on the refund. | Present when `charge_merchant_fee` is `true`. |
-| `commission_fee` | Commission fee charged for the refund. | Present when a commission fee was incurred for the refund. |
+| `created_time` | Record creation time | Refund row creation time. |
+| `refund_order_id` | Refund order ID | Unique refund order identifier. |
+| `payment_type` | Payment mode | Payment mode for the refund row. |
+| `initiator` | Initiator | Initiator in the row. |
+| `transaction_status` | Transaction status | Current transaction status in the row. |
+| `merchant_name` | Merchant name | Merchant name associated with the row. |
+| `merchant_id` | Merchant ID | Merchant identifier associated with the row. |
+| `order_id` | Order ID | Related order identifier. |
+| `token` | Token | Token in the refund row. |
+| `network` | Network | Network in the refund row. |
+| `refund_amount` | Refund amount | Refund amount in the row. |
+| `to_address` | To address | Destination address in the row. |
+| `balance_source` | Balance source | Balance source in the row. |
+| `wallet_name` | Wallet name | Wallet name in the row. |
+| `wallet_type` | Wallet type | Wallet type in the row. |
+| `updated_time` | Update time | Latest update time in the row. |
+| `description` | Description | Description in the row. |
 
 ### `PayoutWeeklyStatement`
 
-Each row represents one weekly payout statement entry across crypto payouts, OffRamp payouts, and refunds.
+`PayoutWeeklyStatement` and `PayoutDailyStatement` share the same exported columns. Each row represents one statement entry for the selected period.
 
-The local source files in this repo confirm the business scope of `PayoutWeeklyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+| Field | Exported label or meaning | Note |
+| --- | --- | --- |
+| `period` | Period | Statement period in the row. |
+| `token` | Token | Token covered by the statement row. |
+| `transaction_number` | Transaction number | Number of transactions in the row. |
+| `total_payout_amount` | Total payout amount | Total payout amount in the row. |
+| `withdraw_crypto_transaction_number` | Withdraw crypto transaction number | Number of crypto payout transactions in the row. |
+| `total_withdraw_crypto_amount` | Total withdraw crypto amount | Total crypto payout amount in the row. |
+| `off_ramp_transaction_number` | Off-ramp transaction number | Number of off-ramp transactions in the row. |
+| `total_off_ramp_amount` | Total off-ramp amount | Total off-ramp amount in the row. |
+| `refund_transaction_number` | Refund transaction number | Number of refund transactions in the row. |
+| `total_refund_amount` | Total refund amount | Total refund amount in the row. |
+| `unexpected_transaction_number` | Unexpected transaction number | Number of unexpected transactions in the row. |
+| `total_unexpected_amount` | Total unexpected amount | Total unexpected amount in the row. |
+| `total_payout_commission_fee` | Total payout commission fee | Total payout commission fee in the row. |
 
 ### `PayoutDailyStatement`
 
-Each row represents one daily payout statement entry across crypto payouts, OffRamp payouts, and refunds.
+`PayoutDailyStatement` shares the same columns as `PayoutWeeklyStatement`.
 
-The local source files in this repo confirm the business scope of `PayoutDailyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+| Field | Exported label or meaning | Note |
+| --- | --- | --- |
+| `period` | Period | Statement period in the row. |
+| `token` | Token | Token covered by the statement row. |
+| `transaction_number` | Transaction number | Number of transactions in the row. |
+| `total_payout_amount` | Total payout amount | Total payout amount in the row. |
+| `withdraw_crypto_transaction_number` | Withdraw crypto transaction number | Number of crypto payout transactions in the row. |
+| `total_withdraw_crypto_amount` | Total withdraw crypto amount | Total crypto payout amount in the row. |
+| `off_ramp_transaction_number` | Off-ramp transaction number | Number of off-ramp transactions in the row. |
+| `total_off_ramp_amount` | Total off-ramp amount | Total off-ramp amount in the row. |
+| `refund_transaction_number` | Refund transaction number | Number of refund transactions in the row. |
+| `total_refund_amount` | Total refund amount | Total refund amount in the row. |
+| `unexpected_transaction_number` | Unexpected transaction number | Number of unexpected transactions in the row. |
+| `total_unexpected_amount` | Total unexpected amount | Total unexpected amount in the row. |
+| `total_payout_commission_fee` | Total payout commission fee | Total payout commission fee in the row. |
 
 ### `PayinCommissionFee`
 
 Each row represents one commission fee record related to pay-in activity.
 
-| Field | Description | When present |
+| Field | Exported label or meaning | Note |
 | --- | --- | --- |
-| `fee_amount` | Commission fee amount charged by Cobo, denominated in USD. | Present when a pay-in commission fee is incurred. |
+| `merchant_id` | Merchant ID | Merchant identifier in the row. |
+| `transaction_type` | Transaction type | Transaction type in the row. |
+| `source` | Source | Source in the row. |
+| `billing_date` | Billing date | Billing date in the row. |
+| `transaction_amount` | Transaction amount | Transaction amount in the row. |
+| `fee_rate` | Fee rate | Fee rate in the row. |
+| `fee_amount` | Fee amount | Fee amount in the row. |
+| `fee_type` | Fee type | Fee type in the row. |
 
 ### `PayoutCommissionFee`
 
 Each row represents one commission fee record related to payout activity.
 
-| Field | Description | When present |
+| Field | Exported label or meaning | Note |
 | --- | --- | --- |
-| `fee_amount` | Commission fee amount charged by Cobo, denominated in USD. | Present when a payout commission fee is incurred. |
+| `merchant_id` | Merchant ID | Merchant identifier in the row. |
+| `transaction_type` | Transaction type | Transaction type in the row. |
+| `source` | Source | Source in the row. |
+| `to_address` | To address | Destination address in the row. |
+| `billing_date` | Billing date | Billing date in the row. |
+| `transaction_amount` | Transaction amount | Transaction amount in the row. |
+| `fee_rate` | Fee rate | Fee rate in the row. |
+| `fee_amount` | Fee amount | Fee amount in the row. |
+| `fee_type` | Fee type | Fee type in the row. |
 
 ### `BalanceChange`
 
-Each row represents one balance change event for a Payments account.
+Each row represents one balance change record.
 
-| Field | Description | When present |
+| Field | Exported label or meaning | Note |
 | --- | --- | --- |
-| `source_id` | Source ID that caused the balance change. | Always present. |
-| `source_type` | Business source type that caused the balance change. | Always present. |
-| `token_id` | Token ID for the balance change. | Always present. |
-| `amount` | Balance change amount, truncated to two decimal places. | Always present. |
-| `amount_raw` | Balance change amount in token precision. | Always present. |
-| `balance_before` | Account balance before the change, truncated to two decimal places. | Always present. |
-| `balance_before_raw` | Account balance before the change in token precision. | Always present. |
-| `balance_after` | Account balance after the change, truncated to two decimal places. | Always present. |
-| `balance_after_raw` | Account balance after the change in token precision. | Always present. |
-| `flow_direction` | Direction of the balance movement relative to the source account. | Always present. |
-| `created_timestamp` | Time when the balance change record was created, in Unix timestamp seconds. | Always present for the balance change object. |
-| `source_account` | Merchant ID or `developer` account whose balance changed. | Present when the export includes account ownership context. |
-| `update_time` | Time when the balance update event was emitted, in Unix timestamp seconds. | Present when the export uses the account-balance update event representation. |
+| `balance_type` | Balance type | Balance type in the row. |
+| `merchant_name` | Merchant name | Merchant name associated with the row. |
+| `merchant_id` | Merchant ID | Merchant identifier associated with the row. |
+| `token` | Token | Token in the row. |
+| `network` | Network | Network in the row. |
+| `amount_raw` | Amount | Amount in the row. |
+| `balance_change_type` | Balance change type | Balance change type in the row. |
+| `source` | Source | Source in the row. |
+| `amount_change` | Amount change | Amount change in the row. |
+| `updated_balance` | Updated balance | Updated balance in the row. |
+| `business_date` | Business date | Business date in the row. |
 
 ### `Summary`
 
-Each row represents one aggregate summary entry across pay-ins, payouts, and commission fees.
+The generated file contains four sheets: `pay-in`, `pay-out`, `commission-fee`, and `cobo-bill`.
 
-The local source files in this repo confirm the business scope of `Summary`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+#### Sheet: `pay-in`
+
+| Field | Exported label or meaning | Note |
+| --- | --- | --- |
+| `transaction_type` | Transaction type | Transaction type in the row. |
+| `transaction_id` | Transaction ID | Unique transaction identifier. |
+| `created_time` | Record creation time | Transaction row creation time. |
+| `transaction_status` | Transaction status | Current transaction status. |
+| `merchant_name` | Merchant name | Merchant name associated with the row. |
+| `merchant_id` | Merchant ID | Merchant identifier associated with the row. |
+| `payer_id` | Payer ID | Payer identifier in the row. |
+| `custom_payer_id` | Custom payer ID | Custom payer identifier in the row. |
+| `order_id` | Order ID | Related order identifier. |
+| `psp_order_code` | PSP order code | PSP order code in the row. |
+| `from_address` | From address | Source address in the row. |
+| `to_address` | To address | Destination address in the row. |
+| `txn_hash` | Transaction hash | On-chain transaction hash. |
+| `token` | Token | Token in the row. |
+| `network` | Network | Network in the row. |
+| `transaction_amount` | Transaction amount | Transaction amount in the row. |
+| `developer_fee` | Developer fee | Developer fee in the row. |
+| `wallet_name` | Wallet name | Wallet name in the row. |
+| `wallet_type` | Wallet type | Wallet type in the row. |
+| `updated_time` | Update time | Latest update time in the row. |
+
+#### Sheet: `pay-out`
+
+| Field | Exported label or meaning | Note |
+| --- | --- | --- |
+| `transaction_type` | Transaction type | Transaction type in the row. |
+| `created_time` | Record creation time | Transaction row creation time. |
+| `transaction_id` | Transaction ID | Unique transaction identifier. |
+| `transaction_status` | Transaction status | Current transaction status. |
+| `merchant_name` | Merchant name | Merchant name associated with the row. |
+| `merchant_id` | Merchant ID | Merchant identifier associated with the row. |
+| `from_address` | From address | Source address in the row. |
+| `to_address` | To address | Destination address in the row. |
+| `txn_hash` | Transaction hash | On-chain transaction hash. |
+| `token` | Token | Token in the row. |
+| `network` | Network | Network in the row. |
+| `transaction_amount` | Transaction amount | Transaction amount in the row. |
+| `wallet_name` | Wallet name | Wallet name in the row. |
+| `wallet_type` | Wallet type | Wallet type in the row. |
+| `bulk_send_id` | Bulk send ID | Bulk send identifier in the row. |
+| `bulk_send_item_id` | Bulk send item ID | Bulk send item identifier in the row. |
+| `bulk_send_remark` | Bulk send remark | Bulk send remark in the row. |
+| `bulk_send_item_remark` | Bulk send item remark | Bulk send item remark in the row. |
+| `updated_time` | Update time | Latest update time in the row. |
+
+#### Sheet: `commission-fee`
+
+| Field | Exported label or meaning | Note |
+| --- | --- | --- |
+| `merchant_id` | Merchant ID | Merchant identifier in the row. |
+| `transaction_type` | Transaction type | Transaction type in the row. |
+| `source` | Source | Source in the row. |
+| `to_address` | To address | Destination address in the row. |
+| `billing_date` | Billing date | Billing date in the row. |
+| `transaction_amount` | Transaction amount | Transaction amount in the row. |
+| `fee_rate` | Fee rate | Fee rate in the row. |
+| `fee_amount` | Fee amount | Fee amount in the row. |
+| `fee_type` | Fee type | Fee type in the row. |
+
+#### Sheet: `cobo-bill`
+
+| Field | Exported label or meaning | Note |
+| --- | --- | --- |
+| `transaction_type` | Transaction type | Transaction type in the row. |
+| `source` | Source | Source in the row. |
+| `billing_date` | Billing date | Billing date in the row. |
+| `fee_amount` | Fee amount | Fee amount in the row. |
 
 ### `BulkSend`
 
-Each row represents one Bulk Send batch record.
+Each row represents one Bulk Send record.
 
-| Field | Description | When present |
+| Field | Exported label or meaning | Note |
 | --- | --- | --- |
-| `bulk_send_id` | Unique ID of the Bulk Send batch. | Always present. |
-| `request_id` | Client-provided request ID for the Bulk Send batch. | Present when the batch was created with `request_id`. |
-| `source_account` | Merchant ID or `developer` account that funds the batch. | Always present. |
-| `description` | Batch-level note describing the Bulk Send purpose. | Present when a description was supplied for the batch. |
-| `execution_mode` | Batch execution mode, such as strict or partial execution. | Always present. |
-| `status` | Current Bulk Send batch status. | Always present. |
-| `created_timestamp` | Time when the Bulk Send batch was created, in Unix timestamp seconds. | Always present. |
-| `updated_timestamp` | Time when the Bulk Send batch was last updated, in Unix timestamp seconds. | Always present. |
-| `commission_fee` | Commission fee charged for the Bulk Send batch. | Present when a commission fee was incurred for the batch. |
+| `created_time` | Record creation time | Bulk Send row creation time. |
+| `bulk_send_id` | Bulk send ID | Bulk Send identifier in the row. |
+| `item_id` | Item ID | Item identifier in the row. |
+| `transaction_id` | Transaction ID | Transaction identifier in the row. |
+| `payment_type` | Payment mode | Payment mode for the row. |
+| `bulk_send_execution_mode` | Bulk send execution mode | Execution mode in the row. |
+| `bulk_send_item_status` | Bulk send item status | Item status in the row. |
+| `balance_source` | Balance source | Balance source in the row. |
+| `network` | Network | Network in the row. |
+| `token` | Token | Token in the row. |
+| `to_address` | To address | Destination address in the row. |
+| `total_payout_amount` | Total payout amount | Total payout amount in the row. |
+| `actual_payout_amount` | Actual payout amount | Actual payout amount in the row. |
+| `merchant_names` | Merchant names | Merchant names included in the row. |
+| `merchant_ids` | Merchant IDs | Merchant IDs included in the row. |
+| `updated_time` | Update time | Latest update time in the row. |
 
 After you confirm the fields you need, use the related API operations below to generate reports or list generated reports.
 
