@@ -273,7 +273,7 @@ lang: "zh-hans"
 | `request_id` | 创建转出时由您提供的请求 ID。 | 始终出现。 |
 | `payout_channel` | 转出通道。对该报表类型固定为 `Crypto`，含义见上文 `payout_channel`。 | 始终出现；该报表类型覆盖加密货币转出记录。 |
 | `source_account` | 为该笔转出出资的商户 ID 或 `developer` 账户。 | 当转出记录包含出资账户时出现。 |
-| `payout_items` | 转出项目列表，包含币种和金额等信息。 | 当导出包含转出项目详情时出现。 |
+| `payout_items` | 转出条目列表，包含币种和金额等信息。 | 当导出包含转出条目详情时出现。 |
 | `recipient_info` | 转出目标收款信息。 | 当导出包含目标详情时出现。 |
 | `initiator` | 发起该笔转出的操作方或 API Key。 | 当记录了发起方详情时出现。 |
 | `actual_payout_amount` | 实际发送给收款方的金额。 | 当转出处理完成并产生实际到账金额后出现。 |
@@ -294,7 +294,7 @@ lang: "zh-hans"
 | `request_id` | 创建转出时由您提供的请求 ID。 | 始终出现。 |
 | `payout_channel` | 转出通道。对该报表类型固定为 `OffRamp`，含义见上文 `payout_channel`。 | 始终出现；该报表类型覆盖 OffRamp 转出记录。 |
 | `source_account` | 为该笔转出出资的商户 ID 或 `developer` 账户。 | 当转出记录包含出资账户时出现。 |
-| `payout_items` | 转出项目列表，包含币种和金额等信息。 | 当导出包含转出项目详情时出现。 |
+| `payout_items` | 转出条目列表，包含币种和金额等信息。 | 当导出包含转出条目详情时出现。 |
 | `recipient_info` | 转出目标银行账户或收款信息。 | 当导出包含目标详情时出现。 |
 | `initiator` | 发起该笔转出的操作方或 API Key。 | 当记录了发起方详情时出现。 |
 | `actual_payout_amount` | 实际发送给收款方的法币金额。 | 当转出处理完成并产生实际到账金额后出现。 |
