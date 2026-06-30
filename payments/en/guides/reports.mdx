@@ -40,11 +40,11 @@ The current Payments documentation confirms the following report types:
 | `Summary` | Export summary data that combines pay-ins, payouts, and commission fees. | Review an aggregated reconciliation view across core payment activity. |
 | `BulkSend` | Export transaction data for Bulk Send activity. | Reconcile batch payout execution and review Bulk Send records. |
 
-Different report types cover different business scopes, so the exported columns can differ by `report_type`.
+Different report types cover different business scopes, and exported columns can differ by `report_type`.
 
 ## Common enum value reference
 
-The following enum values come from the Payments OpenAPI definitions and help explain status-like and type-like fields in exported report rows.
+The following enum values come from the Payments OpenAPI definitions. They can appear in report-related API metadata or in exported rows when the corresponding field is part of the report output.
 
 ### `report_status`
 
@@ -171,234 +171,97 @@ The following enum values come from the Payments OpenAPI definitions and help ex
 
 ## Exported fields and field differences
 
-Exported fields vary by `report_type`. The following sections explain what each exported field means and when each field appears.
+Exported fields vary by `report_type`. The sections below document export-row fields only where this repo provides direct evidence for the report output. For report types whose export-column definitions are not exposed here, this page records only the verified business scope.
 
 ### `Order`
 
 Each row represents one pay-in order.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `order_id` | Unique ID of the pay-in order. | Always present. |
-| `merchant_id` | Merchant ID associated with the order. | Present when the order belongs to a merchant account. |
-| `merchant_order_code` | Merchant-defined reference code for the order. | Present when you provided a merchant-side order code. |
-| `psp_order_code` | Developer-defined reference code for the order. | Always present. |
-| `pricing_currency` | Fiat pricing currency used for the order. | Present when a pricing currency was configured for the order. |
-| `pricing_amount` | Base order amount before developer fee. | Present when a pricing amount was configured for the order. |
-| `fee_amount` | Developer fee charged for the order. | Always present. |
-| `payable_currency` | Token ID used for payment. | Present when the order specifies the payment token. |
-| `chain_id` | Blockchain network on which the payer sends funds. | Always present. |
-| `payable_amount` | Token amount the payer is expected to send. | Always present. |
-| `exchange_rate` | Exchange rate used to derive `payable_amount` from the priced amount. | Present when `payable_amount` was not provided directly during order creation. |
-| `amount_tolerance` | Allowed shortfall tolerance for the received amount. | Present when amount tolerance is configured for the order. |
-| `receive_address` | Receiving address assigned to the order. | Always present. |
-| `status` | Order status. See "Pay-in order `status`" above for the meaning of each value. | Always present. |
-| `received_token_amount` | Total token amount actually received for the order so far. | Always present. |
-| `expired_at` | Order expiration time, in Unix timestamp seconds. | Present when the order has an expiration time. |
-| `created_timestamp` | Time when the order was created, in Unix timestamp seconds. | Present when creation time is included in the export. |
-| `updated_timestamp` | Time when the order was last updated, in Unix timestamp seconds. | Present when update time is included in the export. |
-| `transactions` | Transactions associated with the order. | Present when the export includes linked transaction details. |
-| `settlement_status` | Settlement progress for the order. | Present when settlement tracking is included for the exported row. |
+The local source files in this repo confirm the business scope of `Order`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 ### `OrderTransaction`
 
 Each row represents one transaction associated with order-mode pay-ins.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `transaction_id` | Unique ID of the transaction record. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `cobo_id` | Cobo tracking ID for the transaction. | Present when Cobo tracking data is included for the transaction. |
-| `request_id` | Client-provided request ID used to create the transaction request. | Present when the transaction originated from a request that carried `request_id`. |
-| `wallet_id` | Wallet ID associated with the transaction source or destination. | Present when wallet information is included in the transaction record. |
-| `type` | Transaction type, such as `Deposit`, `Withdrawal`, `ContractCall`, `MessageSign`, `ExternalSafeTx`, `Stake`, or `Unstake`. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `status` | Transaction status, such as `Submitted`, `PendingAuthorization`, `Broadcasting`, `Confirming`, `Completed`, `Failed`, or `Rejected`. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `sub_status` | More specific transaction sub-status that explains the exact review, signing, broadcast, or on-chain stage. See "High-signal transaction `sub_status` values" above. | Present when the transaction has a sub-status. |
-| `failed_reason` | Failure reason for approval or signing failures. | Present only for failed transactions that include a failure reason. |
-| `chain_id` | Blockchain network for the transaction. | Present when the transaction is chain-specific. |
-| `token_id` | Token ID transferred in the transaction. | Present when the transaction is token-specific. |
-| `source` | Transaction source object. | Present when source details are included in the export row. |
-| `destination` | Transaction destination object. | Present when destination details are included in the export row. |
-| `result` | Result object returned for the transaction. | Present when execution result details are included. |
-| `fee` | Transaction fee object. | Present when fee details are recorded for the transaction. |
-| `initiator` | Actor or API key that initiated the transaction. | Present when initiator details are recorded. |
-| `initiator_type` | Initiator type, such as `API`, `Web`, `App`, or `External`. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `confirmed_num` | Number of blockchain confirmations received. | Present when the transaction has on-chain confirmation data. |
-| `confirming_threshold` | Confirmation threshold used for the transaction. | Present when confirmation threshold data is tracked. |
-| `transaction_hash` | On-chain transaction hash. | Present when the transaction has been submitted on-chain. |
-| `block_info` | Block information for the transaction. | Present when block details are available. |
-| `raw_tx_info` | Raw transaction payload details. | Present when raw transaction data is included. |
-| `replacement` | Replacement relationship for sped-up or replaced transactions. | Present when the transaction was replaced or replaced another transaction. |
-| `category` | Custom categories attached to the transaction. | Present when custom categories were assigned. |
-| `description` | User-defined transaction description. | Present when a description was supplied. |
-| `is_loop` | Whether the transaction was processed through Cobo Loop. | Present when loop metadata is included. |
-| `cobo_category` | Cobo-defined transaction categories. | Present when Cobo category data is attached. |
-| `extra` | Structured business-specific extra metadata. | Present when the transaction carries extra business data. |
-| `fueling_info` | Fueling information for the transaction. | Present when fueling metadata exists. |
-| `created_timestamp` | Time when the transaction was created. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `updated_timestamp` | Time when the transaction was last updated. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `acquiring_type` | Collection mode for the pay-in transaction. See `acquiring_type` above. | Always present for payment transaction event data. |
-| `order_id` | Pay-in order ID associated with the transaction. | Present for order-mode transactions. |
-| `psp_order_code` | Developer-defined order reference for the related pay-in order. | Present for order-mode transactions when the order carries this code. |
-| `payer_id` | Cobo-assigned payer identifier. | Present when payer tracking is enabled for the transaction. |
-| `custom_payer_id` | Developer-defined payer identifier. | Present when you provided a custom payer identifier. |
-| `merchant_id` | Merchant ID associated with the transaction. | Present when the transaction belongs to a merchant account. |
-| `subscription_id` | Subscription ID related to the transaction. | Present for subscription-related transactions. |
-| `action_id` | Subscription action ID related to the transaction. | Present for subscription-related transactions. |
+The local source files in this repo confirm the business scope of `OrderTransaction`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 ### `TopUpTransaction`
 
 Each row represents one top-up transaction.
 
-The local source files in this repo confirm that `TopUpTransaction` is a transaction-level report, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+The local source files in this repo confirm the business scope of `TopUpTransaction`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 ### `PayinWeeklyStatement`
 
 Each row represents one weekly pay-in statement entry across order mode and top-up mode.
 
-The local source files in this repo confirm the business scope of `PayinWeeklyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+The local source files in this repo confirm the business scope of `PayinWeeklyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 ### `PayinDailyStatement`
 
 Each row represents one daily pay-in statement entry across order mode and top-up mode.
 
-The local source files in this repo confirm the business scope of `PayinDailyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+The local source files in this repo confirm the business scope of `PayinDailyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 ### `CryptoPayout`
 
 Each row represents one crypto payout record.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `payout_id` | Unique ID generated for the payout. | Always present. |
-| `request_id` | Client-provided request ID for the payout. | Always present. |
-| `payout_channel` | Payout channel. For this report type it is `Crypto`; see `payout_channel` above. | Always present; this report type covers crypto payout rows. |
-| `source_account` | Merchant ID or `developer` account that funds the payout. | Present when the source account is recorded for the payout. |
-| `payout_items` | Payout item list, including token and amount details. | Present when item-level payout details are included. |
-| `recipient_info` | Recipient details for the payout destination. | Present when destination details are included. |
-| `initiator` | Actor or API key that initiated the payout. | Present when initiator details are recorded. |
-| `actual_payout_amount` | Actual amount delivered to the recipient. | Present after payout processing produces a delivered amount. |
-| `commission_fees` | Commission fee details charged for the payout. | Present when a payout commission fee was incurred. |
-| `remark` | User-provided note for the payout. | Present when a remark was supplied. |
-| `status` | Payout status. See "Payout `status`" above for the meaning of each value. | Always present. |
-| `created_timestamp` | Time when the payout was created, in Unix timestamp seconds. | Always present. |
-| `updated_timestamp` | Time when the payout was last updated, in Unix timestamp seconds. | Always present. |
-| `transactions` | Transactions associated with the payout. | Present when the export includes linked payout transaction details. |
+The local source files in this repo confirm the business scope of `CryptoPayout`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 ### `OffRamp`
 
 Each row represents one fiat off-ramp payout record.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `payout_id` | Unique ID generated for the payout. | Always present. |
-| `request_id` | Client-provided request ID for the payout. | Always present. |
-| `payout_channel` | Payout channel. For this report type it is `OffRamp`; see `payout_channel` above. | Always present; this report type covers OffRamp payout rows. |
-| `source_account` | Merchant ID or `developer` account that funds the payout. | Present when the source account is recorded for the payout. |
-| `payout_items` | Payout item list, including token and amount details. | Present when item-level payout details are included. |
-| `recipient_info` | Recipient bank or destination details for the payout. | Present when destination details are included. |
-| `initiator` | Actor or API key that initiated the payout. | Present when initiator details are recorded. |
-| `actual_payout_amount` | Actual fiat amount delivered to the recipient. | Present after payout processing produces a delivered amount. |
-| `commission_fees` | Commission fee details charged for the payout. | Present when a payout commission fee was incurred. |
-| `remark` | User-provided note for the payout. | Present when a remark was supplied. |
-| `status` | Payout status. See "Payout `status`" above for the meaning of each value. | Always present. |
-| `created_timestamp` | Time when the payout was created, in Unix timestamp seconds. | Always present. |
-| `updated_timestamp` | Time when the payout was last updated, in Unix timestamp seconds. | Always present. |
-| `transactions` | Transactions associated with the payout. | Present when the export includes linked payout transaction details. |
+The local source files in this repo confirm the business scope of `OffRamp`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 ### `Refund`
 
 Each row represents one refund record.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `request_id` | Client-provided request ID used to create the refund. | Present when the refund was created with `request_id`. |
-| `refund_id` | Unique refund order ID. | Always present. |
-| `order_id` | Related pay-in order ID. | Present when the refund is tied to an order. |
-| `merchant_id` | Merchant ID associated with the refund. | Present when the refund belongs to a merchant account. |
-| `token_id` | Token ID used for the refund. | Always present. |
-| `chain_id` | Blockchain network on which the refund occurs. | Always present. |
-| `amount` | Refund amount in cryptocurrency. | Always present. |
-| `to_address` | Recipient wallet address for the refund. | Always present. |
-| `status` | Refund status. See "Refund `status`" above for the meaning of each value. | Always present. |
-| `refund_type` | Funding source used for the refund. See `refund_type` above. | Present when refund funding source is recorded. |
-| `created_timestamp` | Time when the refund order was created, in Unix timestamp seconds. | Present when creation time is included in the export. |
-| `updated_timestamp` | Time when the refund order was last updated, in Unix timestamp seconds. | Present when update time is included in the export. |
-| `initiator` | Actor or API key that initiated the refund. | Present when initiator details are recorded. |
-| `transactions` | Transactions associated with the refund. | Present when the export includes linked refund transaction details. |
-| `charge_merchant_fee` | Whether developer fee is charged to the merchant for the refund. | Present when merchant-fee charging is configured for the refund. |
-| `merchant_fee_amount` | Developer fee amount charged to the merchant for the refund. | Present when `charge_merchant_fee` is `true`. |
-| `merchant_fee_token_id` | Token ID used for the merchant fee charged on the refund. | Present when `charge_merchant_fee` is `true`. |
-| `commission_fee` | Commission fee charged for the refund. | Present when a commission fee was incurred for the refund. |
+The local source files in this repo confirm the business scope of `Refund`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 ### `PayoutWeeklyStatement`
 
 Each row represents one weekly payout statement entry across crypto payouts, OffRamp payouts, and refunds.
 
-The local source files in this repo confirm the business scope of `PayoutWeeklyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+The local source files in this repo confirm the business scope of `PayoutWeeklyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 ### `PayoutDailyStatement`
 
 Each row represents one daily payout statement entry across crypto payouts, OffRamp payouts, and refunds.
 
-The local source files in this repo confirm the business scope of `PayoutDailyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+The local source files in this repo confirm the business scope of `PayoutDailyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 ### `PayinCommissionFee`
 
 Each row represents one commission fee record related to pay-in activity.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `fee_amount` | Commission fee amount charged by Cobo, denominated in USD. | Present when a pay-in commission fee is incurred. |
+The local source files in this repo confirm the business scope of `PayinCommissionFee`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 ### `PayoutCommissionFee`
 
 Each row represents one commission fee record related to payout activity.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `fee_amount` | Commission fee amount charged by Cobo, denominated in USD. | Present when a payout commission fee is incurred. |
+The local source files in this repo confirm the business scope of `PayoutCommissionFee`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 ### `BalanceChange`
 
 Each row represents one balance change event for a Payments account.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `source_id` | Source ID that caused the balance change. | Always present. |
-| `source_type` | Business source type that caused the balance change. See `source_type` above. | Always present. |
-| `token_id` | Token ID for the balance change. | Always present. |
-| `amount` | Balance change amount, truncated to two decimal places. | Always present. |
-| `amount_raw` | Balance change amount in token precision. | Always present. |
-| `balance_before` | Account balance before the change, truncated to two decimal places. | Always present. |
-| `balance_before_raw` | Account balance before the change in token precision. | Always present. |
-| `balance_after` | Account balance after the change, truncated to two decimal places. | Always present. |
-| `balance_after_raw` | Account balance after the change in token precision. | Always present. |
-| `flow_direction` | Direction of the balance movement relative to the `source_account`. See `flow_direction` above. | Always present. |
-| `created_timestamp` | Time when the balance change record was created, in Unix timestamp seconds. | Always present for the balance change object. |
-| `source_account` | Merchant ID or `developer` account whose balance changed. | Present when the export includes account ownership context. |
-| `update_time` | Time when the balance update event was emitted, in Unix timestamp seconds. | Present when the export uses the account-balance update event representation. |
+The local source files in this repo confirm the business scope of `BalanceChange`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 ### `Summary`
 
 Each row represents one aggregate summary entry across pay-ins, payouts, and commission fees.
 
-The local source files in this repo confirm the business scope of `Summary`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+The local source files in this repo confirm the business scope of `Summary`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 ### `BulkSend`
 
 Each row represents one Bulk Send batch record.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `bulk_send_id` | Unique ID of the Bulk Send batch. | Always present. |
-| `request_id` | Client-provided request ID for the Bulk Send batch. | Present when the batch was created with `request_id`. |
-| `source_account` | Merchant ID or `developer` account that funds the batch. | Always present. |
-| `description` | Batch-level note describing the Bulk Send purpose. | Present when a description was supplied for the batch. |
-| `execution_mode` | Batch execution mode. Common values include `Strict` and `Partial`. `Strict` enforces all-or-nothing validation, while `Partial` allows partial success. | Always present. |
-| `status` | Bulk Send batch status, indicating whether the batch is still processing, completed, partially completed, or failed. | Always present. |
-| `created_timestamp` | Time when the Bulk Send batch was created, in Unix timestamp seconds. | Always present. |
-| `updated_timestamp` | Time when the Bulk Send batch was last updated, in Unix timestamp seconds. | Always present. |
-| `commission_fee` | Commission fee charged for the Bulk Send batch. | Present when a commission fee was incurred for the batch. |
+The local source files in this repo confirm the business scope of `BulkSend`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid overstating the export schema, this page currently records only the verified scope for this `report_type`.
 
 After you confirm the fields you need, use the related API operations below to generate reports or list generated reports.
 

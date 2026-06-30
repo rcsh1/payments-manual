@@ -40,11 +40,11 @@ lang: "zh-hans"
 | `Summary` | 导出汇总数据，覆盖收款、转出和手续费。 | 用于从聚合视角查看核心支付活动的对账结果。 |
 | `BulkSend` | 导出 Bulk Send 的交易数据。 | 用于批量下发执行结果对账，以及查看 Bulk Send 记录。 |
 
-不同报表类型覆盖的业务范围不同，因此导出的字段也可能随 `report_type` 而变化。
+不同报表类型覆盖的业务范围不同，导出的字段也可能随 `report_type` 而变化。
 
 ## 常见枚举值说明
 
-以下枚举值来自 Payments OpenAPI 定义，用于帮助理解导出字段中的状态类和类型类字段。
+以下枚举值来自 Payments OpenAPI 定义。它们可能出现在报表相关 API 元数据中，也可能出现在实际包含对应字段的导出结果中。
 
 ### `report_status`
 
@@ -149,7 +149,7 @@ lang: "zh-hans"
 
 ### 高频交易 `sub_status`
 
-`sub_status`` 用于解释交易具体卡在哪个细分环节。完整清单较长，下面列出 Payments 报表里最常见、最值得关注的一组：
+`sub_status` 用于解释交易具体卡在哪个细分环节。完整清单较长，下面列出 Payments 报表里最常见、最值得关注的一组：
 
 | 值 | 含义 |
 | --- | --- |
@@ -171,234 +171,97 @@ lang: "zh-hans"
 
 ## 导出字段与字段差异
 
-导出字段会随 `report_type` 而变化。以下内容按报表类型说明每个导出字段的含义，以及字段何时出现。
+导出字段会随 `report_type` 而变化。以下内容仅在本仓库提供直接报表输出证据时记录导出行字段；对于本仓库未暴露导出列定义的报表类型，本页仅记录其已验证业务范围。
 
 ### `Order`
 
 每一行代表一笔支付订单。
 
-| 字段 | 说明 | 出现条件 |
-| --- | --- | --- |
-| `order_id` | 支付订单的唯一 ID。 | 始终出现。 |
-| `merchant_id` | 与订单关联的商户 ID。 | 当订单属于商户账户时出现。 |
-| `merchant_order_code` | 商户为订单定义的业务参考码。 | 当您提供了商户侧订单号时出现。 |
-| `psp_order_code` | 开发者为订单定义的业务参考码。 | 始终出现。 |
-| `pricing_currency` | 订单使用的计价法币币种。 | 当订单配置了计价币种时出现。 |
-| `pricing_amount` | 不含开发者手续费的订单基础金额。 | 当订单配置了计价金额时出现。 |
-| `fee_amount` | 订单收取的开发者手续费。 | 始终出现。 |
-| `payable_currency` | 用于支付的代币 ID。 | 当订单指定了支付币种时出现。 |
-| `chain_id` | 付款所在的区块链网络。 | 始终出现。 |
-| `payable_amount` | 付款人应支付的代币金额。 | 始终出现。 |
-| `exchange_rate` | 用于从计价金额换算出 `payable_amount` 的汇率。 | 当创建订单时未直接提供 `payable_amount` 时出现。 |
-| `amount_tolerance` | 允许的收款金额偏差范围。 | 当订单配置了金额容差时出现。 |
-| `receive_address` | 订单对应的收款地址。 | 始终出现。 |
-| `status` | 订单状态。取值见上文“支付订单 `status`”。 | 始终出现。 |
-| `received_token_amount` | 该订单当前实际已收到的代币总额。 | 始终出现。 |
-| `expired_at` | 订单过期时间，Unix 时间戳（秒）。 | 当订单设置了过期时间时出现。 |
-| `created_timestamp` | 订单创建时间，Unix 时间戳（秒）。 | 当导出包含创建时间时出现。 |
-| `updated_timestamp` | 订单最近更新时间，Unix 时间戳（秒）。 | 当导出包含更新时间时出现。 |
-| `transactions` | 与订单关联的交易列表。 | 当导出包含关联交易详情时出现。 |
-| `settlement_status` | 订单对应的结算进度。 | 当导出包含结算跟踪信息时出现。 |
+本仓库内的本地源码已确认 `Order` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 ### `OrderTransaction`
 
 每一行代表一笔订单模式收款交易。
 
-| 字段 | 说明 | 出现条件 |
-| --- | --- | --- |
-| `transaction_id` | 交易记录的唯一 ID。 | 已在本地交易对象中确认；当导出为交易级别行时出现。 |
-| `cobo_id` | Cobo 用于跟踪该交易的 ID。 | 当交易包含 Cobo 跟踪信息时出现。 |
-| `request_id` | 发起该交易请求时由您提供的请求 ID。 | 当该交易来源请求带有 `request_id` 时出现。 |
-| `wallet_id` | 与交易来源或目标关联的钱包 ID。 | 当交易记录包含钱包信息时出现。 |
-| `type` | 交易类型，例如 `Deposit`、`Withdrawal`、`ContractCall`、`MessageSign`、`ExternalSafeTx`、`Stake`、`Unstake`。 | 已在本地交易对象中确认；当导出为交易级别行时出现。 |
-| `status` | 交易主状态，例如 `Submitted`、`PendingAuthorization`、`Broadcasting`、`Confirming`、`Completed`、`Failed`、`Rejected`。 | 已在本地交易对象中确认；当导出为交易级别行时出现。 |
-| `sub_status` | 更细粒度的交易子状态，用于解释具体卡在哪个检查、审批、签名、广播或链上阶段。常见值见上文“高频交易 `sub_status`”。 | 当交易存在子状态时出现。 |
-| `failed_reason` | 审批失败或签名失败时的失败原因。 | 仅在失败交易且返回失败原因时出现。 |
-| `chain_id` | 交易所在的区块链网络。 | 当交易与链有关时出现。 |
-| `token_id` | 交易涉及的代币 ID。 | 当交易与代币有关时出现。 |
-| `source` | 交易来源对象。 | 当导出包含来源详情时出现。 |
-| `destination` | 交易目标对象。 | 当导出包含目标详情时出现。 |
-| `result` | 交易执行结果对象。 | 当导出包含执行结果详情时出现。 |
-| `fee` | 交易手续费对象。 | 当该交易记录了手续费详情时出现。 |
-| `initiator` | 发起该交易的操作方或 API Key。 | 当记录了发起方详情时出现。 |
-| `initiator_type` | 交易发起方类型，例如 `API`、`Web`、`App`、`External`。 | 已在本地交易对象中确认；当导出为交易级别行时出现。 |
-| `confirmed_num` | 交易当前已获得的链上确认数。 | 当交易存在链上确认数据时出现。 |
-| `confirming_threshold` | 判定交易安全所需的确认阈值。 | 当记录了确认阈值时出现。 |
-| `transaction_hash` | 链上交易哈希。 | 当交易已提交到链上时出现。 |
-| `block_info` | 交易对应的区块信息。 | 当区块详情可用时出现。 |
-| `raw_tx_info` | 原始交易载荷信息。 | 当导出包含原始交易数据时出现。 |
-| `replacement` | 被替换交易或替换关系信息。 | 当交易发生了替换关系时出现。 |
-| `category` | 您为交易设置的自定义分类。 | 当该交易设置了自定义分类时出现。 |
-| `description` | 您为交易填写的说明。 | 当创建时提供了说明时出现。 |
-| `is_loop` | 是否通过 Cobo Loop 执行。 | 当导出包含 Loop 元数据时出现。 |
-| `cobo_category` | Cobo 定义的交易分类。 | 当交易带有 Cobo 分类时出现。 |
-| `extra` | 结构化业务扩展信息。 | 当交易携带扩展业务字段时出现。 |
-| `fueling_info` | 交易补充燃料相关信息。 | 当存在燃料补充元数据时出现。 |
-| `created_timestamp` | 交易创建时间。 | 已在本地交易对象中确认；当导出为交易级别行时出现。 |
-| `updated_timestamp` | 交易最近更新时间。 | 已在本地交易对象中确认；当导出为交易级别行时出现。 |
-| `acquiring_type` | 收款模式。取值见上文 `acquiring_type`。 | 在支付交易事件数据中始终出现。 |
-| `order_id` | 关联的支付订单 ID。 | 在订单模式交易中出现。 |
-| `psp_order_code` | 关联支付订单的开发者业务参考码。 | 当订单携带该编码时，在订单模式交易中出现。 |
-| `payer_id` | Cobo 分配的付款人标识。 | 当该交易启用了付款人追踪时出现。 |
-| `custom_payer_id` | 您定义的付款人标识。 | 当您提供了自定义付款人标识时出现。 |
-| `merchant_id` | 与交易关联的商户 ID。 | 当交易属于商户账户时出现。 |
-| `subscription_id` | 与该交易关联的订阅 ID。 | 当交易与订阅有关时出现。 |
-| `action_id` | 与该交易关联的订阅动作 ID。 | 当交易与订阅动作有关时出现。 |
+本仓库内的本地源码已确认 `OrderTransaction` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 ### `TopUpTransaction`
 
 每一行代表一笔充值模式交易。
 
-本仓库内的本地源码已确认 `TopUpTransaction` 属于交易级别报表，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免记录未经验证的字段，本页当前仅记录该 `report_type` 的已验证业务范围。
+本仓库内的本地源码已确认 `TopUpTransaction` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 ### `PayinWeeklyStatement`
 
 每一行代表一条覆盖订单模式和充值模式的周度收款报表记录。
 
-本仓库内的本地源码已确认 `PayinWeeklyStatement` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免记录未经验证的字段，本页当前仅记录该 `report_type` 的已验证业务范围。
+本仓库内的本地源码已确认 `PayinWeeklyStatement` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 ### `PayinDailyStatement`
 
 每一行代表一条覆盖订单模式和充值模式的日度收款报表记录。
 
-本仓库内的本地源码已确认 `PayinDailyStatement` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免记录未经验证的字段，本页当前仅记录该 `report_type` 的已验证业务范围。
+本仓库内的本地源码已确认 `PayinDailyStatement` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 ### `CryptoPayout`
 
 每一行代表一笔加密货币转出记录。
 
-| 字段 | 说明 | 出现条件 |
-| --- | --- | --- |
-| `payout_id` | 转出的唯一 ID。 | 始终出现。 |
-| `request_id` | 创建转出时由您提供的请求 ID。 | 始终出现。 |
-| `payout_channel` | 转出通道。对该报表类型固定为 `Crypto`，含义见上文 `payout_channel`。 | 始终出现；该报表类型覆盖加密货币转出记录。 |
-| `source_account` | 为该笔转出出资的商户 ID 或 `developer` 账户。 | 当转出记录包含出资账户时出现。 |
-| `payout_items` | 转出条目列表，包含币种和金额等信息。 | 当导出包含转出条目详情时出现。 |
-| `recipient_info` | 转出目标收款信息。 | 当导出包含目标详情时出现。 |
-| `initiator` | 发起该笔转出的操作方或 API Key。 | 当记录了发起方详情时出现。 |
-| `actual_payout_amount` | 实际发送给收款方的金额。 | 当转出处理完成并产生实际到账金额后出现。 |
-| `commission_fees` | 该笔转出收取的手续费详情。 | 当该笔转出产生手续费时出现。 |
-| `remark` | 您为该笔转出填写的备注。 | 当创建时提供了备注时出现。 |
-| `status` | 转出状态。取值见上文“转出 `status`”。 | 始终出现。 |
-| `created_timestamp` | 转出创建时间，Unix 时间戳（秒）。 | 始终出现。 |
-| `updated_timestamp` | 转出最近更新时间，Unix 时间戳（秒）。 | 始终出现。 |
-| `transactions` | 与该笔转出关联的交易列表。 | 当导出包含关联转出交易详情时出现。 |
+本仓库内的本地源码已确认 `CryptoPayout` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 ### `OffRamp`
 
 每一行代表一笔法币 Off-Ramp 转出记录。
 
-| 字段 | 说明 | 出现条件 |
-| --- | --- | --- |
-| `payout_id` | 转出的唯一 ID。 | 始终出现。 |
-| `request_id` | 创建转出时由您提供的请求 ID。 | 始终出现。 |
-| `payout_channel` | 转出通道。对该报表类型固定为 `OffRamp`，含义见上文 `payout_channel`。 | 始终出现；该报表类型覆盖 OffRamp 转出记录。 |
-| `source_account` | 为该笔转出出资的商户 ID 或 `developer` 账户。 | 当转出记录包含出资账户时出现。 |
-| `payout_items` | 转出条目列表，包含币种和金额等信息。 | 当导出包含转出条目详情时出现。 |
-| `recipient_info` | 转出目标银行账户或收款信息。 | 当导出包含目标详情时出现。 |
-| `initiator` | 发起该笔转出的操作方或 API Key。 | 当记录了发起方详情时出现。 |
-| `actual_payout_amount` | 实际发送给收款方的法币金额。 | 当转出处理完成并产生实际到账金额后出现。 |
-| `commission_fees` | 该笔转出收取的手续费详情。 | 当该笔转出产生手续费时出现。 |
-| `remark` | 您为该笔转出填写的备注。 | 当创建时提供了备注时出现。 |
-| `status` | 转出状态。取值见上文“转出 `status`”。 | 始终出现。 |
-| `created_timestamp` | 转出创建时间，Unix 时间戳（秒）。 | 始终出现。 |
-| `updated_timestamp` | 转出最近更新时间，Unix 时间戳（秒）。 | 始终出现。 |
-| `transactions` | 与该笔转出关联的交易列表。 | 当导出包含关联转出交易详情时出现。 |
+本仓库内的本地源码已确认 `OffRamp` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 ### `Refund`
 
 每一行代表一笔退款记录。
 
-| 字段 | 说明 | 出现条件 |
-| --- | --- | --- |
-| `request_id` | 创建退款时由您提供的请求 ID。 | 当退款创建时带有 `request_id` 时出现。 |
-| `refund_id` | 退款单的唯一 ID。 | 始终出现。 |
-| `order_id` | 关联的支付订单 ID。 | 当退款与某笔订单关联时出现。 |
-| `merchant_id` | 与退款关联的商户 ID。 | 当退款属于商户账户时出现。 |
-| `token_id` | 退款使用的代币 ID。 | 始终出现。 |
-| `chain_id` | 退款所在的区块链网络。 | 始终出现。 |
-| `amount` | 退款的加密货币金额。 | 始终出现。 |
-| `to_address` | 退款收款钱包地址。 | 始终出现。 |
-| `status` | 退款状态。取值见上文“退款 `status`”。 | 始终出现。 |
-| `refund_type` | 退款扣款来源。取值见上文 `refund_type`。 | 当退款记录包含资金来源时出现。 |
-| `created_timestamp` | 退款单创建时间，Unix 时间戳（秒）。 | 当导出包含创建时间时出现。 |
-| `updated_timestamp` | 退款单最近更新时间，Unix 时间戳（秒）。 | 当导出包含更新时间时出现。 |
-| `initiator` | 发起该笔退款的操作方或 API Key。 | 当记录了发起方详情时出现。 |
-| `transactions` | 与退款关联的交易列表。 | 当导出包含关联退款交易详情时出现。 |
-| `charge_merchant_fee` | 该笔退款是否向商户收取开发者手续费。 | 当退款配置了商户侧手续费规则时出现。 |
-| `merchant_fee_amount` | 该笔退款向商户收取的开发者手续费金额。 | 当 `charge_merchant_fee` 为 `true` 时出现。 |
-| `merchant_fee_token_id` | 该笔退款商户手续费使用的代币 ID。 | 当 `charge_merchant_fee` 为 `true` 时出现。 |
-| `commission_fee` | 该笔退款产生的手续费。 | 当该笔退款产生手续费时出现。 |
+本仓库内的本地源码已确认 `Refund` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 ### `PayoutWeeklyStatement`
 
 每一行代表一条覆盖加密货币转出、OffRamp 转出和退款的周度转出报表记录。
 
-本仓库内的本地源码已确认 `PayoutWeeklyStatement` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免记录未经验证的字段，本页当前仅记录该 `report_type` 的已验证业务范围。
+本仓库内的本地源码已确认 `PayoutWeeklyStatement` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 ### `PayoutDailyStatement`
 
 每一行代表一条覆盖加密货币转出、OffRamp 转出和退款的日度转出报表记录。
 
-本仓库内的本地源码已确认 `PayoutDailyStatement` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免记录未经验证的字段，本页当前仅记录该 `report_type` 的已验证业务范围。
+本仓库内的本地源码已确认 `PayoutDailyStatement` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 ### `PayinCommissionFee`
 
 每一行代表一条与收款相关的手续费记录。
 
-| 字段 | 说明 | 出现条件 |
-| --- | --- | --- |
-| `fee_amount` | Cobo 收取的手续费金额，单位为 USD。 | 当收款业务产生手续费时出现。 |
+本仓库内的本地源码已确认 `PayinCommissionFee` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 ### `PayoutCommissionFee`
 
 每一行代表一条与转出相关的手续费记录。
 
-| 字段 | 说明 | 出现条件 |
-| --- | --- | --- |
-| `fee_amount` | Cobo 收取的手续费金额，单位为 USD。 | 当转出业务产生手续费时出现。 |
+本仓库内的本地源码已确认 `PayoutCommissionFee` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 ### `BalanceChange`
 
 每一行代表一条 Payments 账户余额变动记录。
 
-| 字段 | 说明 | 出现条件 |
-| --- | --- | --- |
-| `source_id` | 触发该次余额变动的来源 ID。 | 始终出现。 |
-| `source_type` | 触发余额变动的业务来源类型。取值见上文 `source_type`。 | 始终出现。 |
-| `token_id` | 余额变动对应的代币 ID。 | 始终出现。 |
-| `amount` | 余额变动金额，保留两位小数。 | 始终出现。 |
-| `amount_raw` | 按代币精度表示的余额变动金额。 | 始终出现。 |
-| `balance_before` | 变动前余额，保留两位小数。 | 始终出现。 |
-| `balance_before_raw` | 按代币精度表示的变动前余额。 | 始终出现。 |
-| `balance_after` | 变动后余额，保留两位小数。 | 始终出现。 |
-| `balance_after_raw` | 按代币精度表示的变动后余额。 | 始终出现。 |
-| `flow_direction` | 相对于 `source_account` 的资金流向。取值见上文 `flow_direction`。 | 始终出现。 |
-| `created_timestamp` | 余额变动记录创建时间，Unix 时间戳（秒）。 | 在余额变动对象中始终出现。 |
-| `source_account` | 发生余额变动的商户 ID 或 `developer` 账户。 | 当导出包含账户归属信息时出现。 |
-| `update_time` | 余额更新事件触发时间，Unix 时间戳（秒）。 | 当导出采用账户余额更新事件表示时出现。 |
+本仓库内的本地源码已确认 `BalanceChange` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 ### `Summary`
 
 每一行代表一条覆盖收款、转出和手续费的聚合汇总记录。
 
-本仓库内的本地源码已确认 `Summary` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免记录未经验证的字段，本页当前仅记录该 `report_type` 的已验证业务范围。
+本仓库内的本地源码已确认 `Summary` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 ### `BulkSend`
 
 每一行代表一笔 Bulk Send 批次记录。
 
-| 字段 | 说明 | 出现条件 |
-| --- | --- | --- |
-| `bulk_send_id` | Bulk Send 批次的唯一 ID。 | 始终出现。 |
-| `request_id` | 创建 Bulk Send 批次时由您提供的请求 ID。 | 当创建批次时带有 `request_id` 时出现。 |
-| `source_account` | 为该批次出资的商户 ID 或 `developer` 账户。 | 始终出现。 |
-| `description` | 该批次的整体说明。 | 当创建批次时提供了描述时出现。 |
-| `execution_mode` | 批次执行模式，常见值包括 `Strict` 和 `Partial`。前者在校验阶段执行“全有或全无”，后者允许部分成功。 | 始终出现。 |
-| `status` | Bulk Send 批次状态，用于表示批次是否仍在处理中、已完成、部分完成或失败。 | 始终出现。 |
-| `created_timestamp` | Bulk Send 批次创建时间，Unix 时间戳（秒）。 | 始终出现。 |
-| `updated_timestamp` | Bulk Send 批次最近更新时间，Unix 时间戳（秒）。 | 始终出现。 |
-| `commission_fee` | 该 Bulk Send 批次产生的手续费。 | 当该批次产生手续费时出现。 |
+本仓库内的本地源码已确认 `BulkSend` 的业务范围，但没有暴露其 CSV/XLSX 导出文件的权威列清单。为避免夸大导出结构，本页当前仅记录该 `report_type` 的已验证业务范围。
 
 确认所需字段后，您可以使用下方 API 操作生成报表或查询已生成的报表。
 
