@@ -1,0 +1,103 @@
+---
+title: "结算网络"
+sidebarTitle: "结算网络"
+lang: "zh-hans"
+---
+
+结算网络是 Payments 中用于与交易对手方（也称为网络成员）结算余额的能力，通过在结算室中协调的流动性提供方（LP）合约完成。它不同于账户余额中的自动结算，也不同于已废弃的旧版 settlement-request API。
+
+## 概述
+
+当结算流程需要查询交易对手方、在结算室中协调并审批 LP 合约时，您可以使用结算网络。该产品流程不同于自动结算和资金划转，后者是在账本中分配 Payments 账户资金。账户余额相关概念参见[账户和资金分配](/payments/cn/guides/amounts-and-balances)和[划转资金](/payments/cn/guides/allocate-funds)。
+
+结算网络也不同于已废弃的旧版 settlement-request 流程。与网络成员结算时，请使用结算网络工作流，不要将旧版 settlement-request API 作为 Settlement Network 的产品流程。
+
+## 开始前准备
+
+使用结算网络前，请完成以下准备：
+
+1. 在 Cobo Portal 中安装 Payments App。设置步骤参见[快速开始](/payments/cn/guides/preparation)。
+2. 使用具备支付管理权限的角色登录。角色设置参见[角色和权限](/payments/cn/guides/roles-and-permissions)。
+
+## 进入结算网络
+
+在 Payments App 中进入**结算网络**。该区域包含三个受角色权限控制的工作区：
+
+- **Network Members**：结算前查询交易对手方。
+- **Settlement Rooms**：与交易对手方协调结算条款。
+- **Contract Management**：创建和管理结算网络活动所需的 LP 合约。
+
+根据任务使用对应操作路径：
+
+1. 如需查询交易对手方，进入**结算网络** > **Network Members**。
+2. 如需协调结算，进入**结算网络** > **Settlement Rooms**。
+3. 如需创建或查看 LP 合约，进入**结算网络** > **Contract Management**。
+
+## 查询网络成员
+
+使用 **Network Members** 在开始结算协调前查找交易对手方。
+
+1. 在 Payments App 中进入**结算网络** > **Network Members**。
+2. 搜索需要结算的网络成员。
+3. 查看搜索结果中显示的成员信息。
+4. 在协调结算室或 LP 合约时使用匹配到的网络成员。
+
+## 在结算室中协调
+
+使用结算室与交易对手方协调结算条款。各方在结算室中协商并确认结算详情，同时可以通过 Telegram 进行链下沟通。
+
+1. 在 Payments App 中进入**结算网络** > **Settlement Rooms**。
+2. 打开或创建该网络成员结算对应的结算室。
+3. 与交易对手方协调结算条款。
+4. 确认已达成一致的结算详情，然后进入合约审批流程。
+
+## 创建并审批 LP 合约
+
+从 **Contract Management** 创建 LP 合约，然后在 **Cobo Guard** 中完成所需审批。Cobo Guard 是 Cobo 提供的移动端 App，用于多因素认证（MFA）、操作审批、交易签名和私钥分片管理。
+
+1. 在 Payments App 中进入**结算网络** > **Contract Management**。
+2. 为结算网络活动创建 LP 合约。
+3. 提交前查看合约详情。
+4. 提交合约进行审批。
+5. 系统提示时，在 **Cobo Guard** 中完成审批。
+
+## 状态
+
+结算室、LP 合约和虚拟账户都会随着结算推进进入不同生命周期状态。这些状态用于描述对象所处的操作阶段，例如创建、活跃协调或执行，以及完成。请根据 Payments App 中显示的当前状态，判断结算室、合约或虚拟账户的下一步可用操作。
+
+## 余额影响
+
+账户余额是某一时间点可用于转出或退款的金额。余额模型参见[账户和资金分配](/payments/cn/guides/amounts-and-balances)。
+
+结算网络活动会改变余额。处于进行中结算流程的资金，在该结算流程释放或完成前，不能用于其他转出。
+
+## 费用
+
+结算网络活动可能会按平台费用模型扣除服务费。费用扣除行为和账单记录参见[费用扣除](/payments/cn/guides/wallet-fee-deduction)和[账单](/payments/cn/guides/billing)。
+
+## 报表与对账
+
+结算网络活动会以 `source_type` 为 `SettlementNetwork` 的余额变动记录出现在 **BalanceChange** 报表中。您可以使用这些记录对账由结算网络活动导致的余额变动。报表字段和导出行为参见[报表](/payments/cn/guides/reports)。
+
+## Webhook 事件
+
+结算网络支付交易会发送 `payment.transaction.*` Webhook 事件。事件名称如下：
+
+- `payment.transaction.settlement_network.created`
+- `payment.transaction.settlement_network.completed`
+
+这些事件遵循 `payment.transaction.*` 事件格式。事件定义和负载字段参见[事件与状态](/payments/cn/guides/status-and-events)。
+
+## 与旧版 settlement request API 的关系
+
+Settlement Network 独立于已废弃的旧版 settlement-request API 和旧版 `payment.settlement.status.updated` 事件。请不要将旧版 settlement-request 端点作为此工作流的集成路径。
+
+旧版 API 参考仅供查阅，参见 [List all settlement requests](/payments/en/api-references/payment/list-all-settlement-requests)。
+
+## 相关页面
+
+- [账户和资金分配](/payments/cn/guides/amounts-and-balances)
+- [划转资金](/payments/cn/guides/allocate-funds)
+- [报表](/payments/cn/guides/reports)
+- [事件与状态](/payments/cn/guides/status-and-events)
+- [角色和权限](/payments/cn/guides/roles-and-permissions)

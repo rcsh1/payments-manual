@@ -94,7 +94,7 @@ lang: "zh-hans"
 | `Payout` | 转出导致的余额变动。 |
 | `UnexceptedOut` | 非预期出账导致的余额变动。 |
 | `Allocation` | 资金分配导致的余额变动。 |
-| `SettlementNetwork` | 结算网络相关操作导致的余额变动。 |
+| `SettlementNetwork` | 结算网络相关操作导致的余额变动。参见 [Settlement Network](/payments/cn/guides/settlement-network)。 |
 | `BulkSend` | Bulk Send 导致的余额变动。 |
 
 ### 支付订单 `status`
@@ -360,7 +360,7 @@ lang: "zh-hans"
 
 ### `BalanceChange`
 
-每一行代表一条 Payments 账户余额变动记录。
+每一行代表一条 Payments 账户余额变动记录。结算网络活动会以 `source_type` 为 `SettlementNetwork` 的记录出现在该报表中。产品操作流程参见 [Settlement Network](/payments/cn/guides/settlement-network)。
 
 | 字段 | 说明 | 出现条件 |
 | --- | --- | --- |

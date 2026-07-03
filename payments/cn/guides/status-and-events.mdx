@@ -19,7 +19,11 @@ lang: "zh-hans"
 | 充值模式 | `payment.transaction.completed` | 充币交易通过合规筛查，资金已成功入账并计入实收金额。 | 该负载包含[交易负载字段](#交易负载字段)部分的所有基础字段，以及以下 Payment 专属字段：<br />- `acquiring_type`（必填）：收款类型，值为 `TopUp`。<br />- `payer_id`（选填）：Cobo 分配的用于跟踪和识别付款人的唯一标识符。<br />- `custom_payer_id`（选填）：开发者系统中用于跟踪和识别付款人的唯一标识符。 |
 | 意外入账 | `payment.transaction.external.created` | 检测到非预期充币交易（包括：非当前订单/充值计划内的交易，或非支付服务支持的币种充币）。 | 该负载包含[交易负载字段](#交易负载字段)部分的所有基础字段。 |
 | 意外入账 | `payment.transaction.external.completed` | 非预期充币交易已通过合规筛查并成功入账，资金已计入开发者余额。 | 该负载包含[交易负载字段](#交易负载字段)部分的所有基础字段。 |
+| 结算网络 | `payment.transaction.settlement_network.created` | 与结算网络支付交易的创建相关。产品操作流程参见 [Settlement Network](/payments/cn/guides/settlement-network)。 | 遵循 `payment.transaction.*` 事件格式。参见[交易负载字段](#交易负载字段)。 |
+| 结算网络 | `payment.transaction.settlement_network.completed` | 与结算网络支付交易的完成相关。产品操作流程参见 [Settlement Network](/payments/cn/guides/settlement-network)。 | 遵循 `payment.transaction.*` 事件格式。参见[交易负载字段](#交易负载字段)。 |
 | 入账检查 | `payment.transaction.failed` | 入账交易合规筛查不通过。 | 该负载包含[交易负载字段](#交易负载字段)部分的所有基础字段，以及以下 Payment 专属字段：<br />- `acquiring_type`（必填）：收款类型，`Order` 表示订单模式，`TopUp` 表示充值模式。<br />- `order_id`（选填）：支付订单 ID。<br />- `psp_order_code`（选填）：开发者用于标识该订单的唯一参考编码。<br />- `payer_id`（选填）：Cobo 分配的用于跟踪和识别付款人的唯一标识符。<br />- `custom_payer_id`（选填）：开发者系统中用于跟踪和识别付款人的唯一标识符。 |
+
+结算网络产品的操作流程参见 [Settlement Network](/payments/cn/guides/settlement-network)。
 
 ### 交易负载字段
 

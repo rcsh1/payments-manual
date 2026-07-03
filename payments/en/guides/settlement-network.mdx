@@ -1,0 +1,103 @@
+---
+title: "Settlement Network"
+sidebarTitle: "Settlement Network"
+lang: "en"
+---
+
+Settlement Network is a Payments capability for settling balances with counterparties, also called network members, through liquidity-provider (LP) contracts coordinated in settlement rooms. It is separate from automatic settlement in account balances and from the deprecated legacy settlement-request APIs.
+
+## Overview
+
+Use Settlement Network to coordinate balance settlement with network members when the workflow needs counterparty lookup, settlement-room coordination, and LP contract approval. This product workflow is separate from automatic settlement and allocation, which distribute funds across Payments accounts in the ledger. For account-balance concepts, see [Accounts and fund allocation](/payments/en/guides/amounts-and-balances) and [Allocate funds](/payments/en/guides/allocate-funds).
+
+Settlement Network is also separate from the deprecated legacy settlement request flow. Use the Settlement Network workflow for network-member settlement, and do not treat the legacy settlement-request APIs as the product workflow for Settlement Network.
+
+## Before you begin
+
+Before you use Settlement Network:
+
+1. Install the Payments App in Cobo Portal. For setup steps, see [Get started](/payments/en/guides/preparation).
+2. Sign in with a role that has payment-management permissions. For role setup, see [Roles and permissions](/payments/en/guides/roles-and-permissions).
+
+## Navigate Settlement Network
+
+In the Payments App, go to **Settlement Network**. The area includes three role-gated work areas:
+
+- **Network Members**: Look up counterparties before settlement.
+- **Settlement Rooms**: Coordinate settlement terms with counterparties.
+- **Contract Management**: Create and manage LP contracts for settlement-network activity.
+
+Use the relevant operation path for the task:
+
+1. To look up a counterparty, go to **Settlement Network** > **Network Members**.
+2. To coordinate a settlement, go to **Settlement Network** > **Settlement Rooms**.
+3. To create or review an LP contract, go to **Settlement Network** > **Contract Management**.
+
+## Look up network members
+
+Use **Network Members** to find the counterparty before you start settlement coordination.
+
+1. In the Payments App, go to **Settlement Network** > **Network Members**.
+2. Search for the network member that you want to settle with.
+3. Review the member information shown in the result.
+4. Use the matched network member when you coordinate the settlement room or LP contract.
+
+## Coordinate in a settlement room
+
+Use a settlement room to coordinate settlement terms with the counterparty. The parties negotiate and confirm settlement details in the room, while Telegram can be used for out-of-band coordination between participants.
+
+1. In the Payments App, go to **Settlement Network** > **Settlement Rooms**.
+2. Open or create the room for the network member settlement.
+3. Coordinate the settlement terms with the counterparty.
+4. Confirm the agreed settlement details before you proceed to contract approval.
+
+## Create and approve an LP contract
+
+Create the LP contract from **Contract Management**, then complete the required approval in **Cobo Guard**. Cobo Guard is the Cobo mobile app used for multi-factor authentication, operation approval, transaction signing, and key share management.
+
+1. In the Payments App, go to **Settlement Network** > **Contract Management**.
+2. Create an LP contract for the settlement-network activity.
+3. Review the contract details before submission.
+4. Submit the contract for approval.
+5. Complete the approval in **Cobo Guard** when prompted.
+
+## Statuses
+
+Settlement rooms, LP contracts, and virtual accounts each move through lifecycle states as the settlement progresses. These states describe the operational stage of the object, such as creation, active coordination or execution, and completion. Use the current state shown in the Payments App to decide the next available operation for the room, contract, or virtual account.
+
+## Balance impact
+
+An account balance is the amount available for payouts or refunds at a point in time. For the balance model, see [Accounts and fund allocation](/payments/en/guides/amounts-and-balances).
+
+Settlement-network activity changes balances. Funds tied up in an in-flight settlement are not available for other payouts until the settlement flow releases or completes those funds.
+
+## Fees
+
+Settlement-network activity can incur service fees deducted under the platform fee model. For fee deduction behavior and billing records, see [Fee deduction](/payments/en/guides/wallet-fee-deduction) and [Billing](/payments/en/guides/billing).
+
+## Reports and reconciliation
+
+Settlement-network activity appears in the **BalanceChange** report as balance-change rows whose `source_type` is `SettlementNetwork`. Use these rows to reconcile balance changes caused by settlement network activity. For report fields and export behavior, see [Reports](/payments/en/guides/reports).
+
+## Webhook events
+
+Settlement-network payment transactions emit `payment.transaction.*` webhook events. The event names are:
+
+- `payment.transaction.settlement_network.created`
+- `payment.transaction.settlement_network.completed`
+
+These events follow the `payment.transaction.*` event format. For event definitions and payload fields, see [Events and status](/payments/en/guides/status-and-events).
+
+## Relationship to legacy settlement request APIs
+
+Settlement Network is separate from the deprecated legacy settlement-request APIs and the legacy `payment.settlement.status.updated` event. Do not use the legacy settlement-request endpoints as the integration path for this workflow.
+
+For legacy API reference only, see [List all settlement requests](/payments/en/api-references/payment/list-all-settlement-requests).
+
+## Related pages
+
+- [Accounts and fund allocation](/payments/en/guides/amounts-and-balances)
+- [Allocate funds](/payments/en/guides/allocate-funds)
+- [Reports](/payments/en/guides/reports)
+- [Events and status](/payments/en/guides/status-and-events)
+- [Roles and permissions](/payments/en/guides/roles-and-permissions)
