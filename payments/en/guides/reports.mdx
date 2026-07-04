@@ -171,234 +171,313 @@ The following enum values come from the Payments OpenAPI definitions and help ex
 
 ## Exported fields and field differences
 
-Exported fields vary by `report_type`. The following sections explain what each exported field means and when each field appears.
+Each report type exports a fixed, ordered set of columns. In the exported file, each column header is a human-readable display label generated from the internal column key shown below; for example, timestamp column headers carry a UTC+8 suffix such as `Created Time(UTC+8)`, `Updated Time(UTC+8)`, and `Expiration Time(UTC+8)`. The `CryptoPayout` and `Summary` report types export multiple sheets in a single XLSX file, as described in their sections below.
 
 ### `Order`
 
 Each row represents one pay-in order.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `order_id` | Unique ID of the pay-in order. | Always present. |
-| `merchant_id` | Merchant ID associated with the order. | Present when the order belongs to a merchant account. |
-| `merchant_order_code` | Merchant-defined reference code for the order. | Present when you provided a merchant-side order code. |
-| `psp_order_code` | Developer-defined reference code for the order. | Always present. |
-| `pricing_currency` | Fiat pricing currency used for the order. | Present when a pricing currency was configured for the order. |
-| `pricing_amount` | Base order amount before developer fee. | Present when a pricing amount was configured for the order. |
-| `fee_amount` | Developer fee charged for the order. | Always present. |
-| `payable_currency` | Token ID used for payment. | Present when the order specifies the payment token. |
-| `chain_id` | Blockchain network on which the payer sends funds. | Always present. |
-| `payable_amount` | Token amount the payer is expected to send. | Always present. |
-| `exchange_rate` | Exchange rate used to derive `payable_amount` from the priced amount. | Present when `payable_amount` was not provided directly during order creation. |
-| `amount_tolerance` | Allowed shortfall tolerance for the received amount. | Present when amount tolerance is configured for the order. |
-| `receive_address` | Receiving address assigned to the order. | Always present. |
-| `status` | Order status. See "Pay-in order `status`" above for the meaning of each value. | Always present. |
-| `received_token_amount` | Total token amount actually received for the order so far. | Always present. |
-| `expired_at` | Order expiration time, in Unix timestamp seconds. | Present when the order has an expiration time. |
-| `created_timestamp` | Time when the order was created, in Unix timestamp seconds. | Present when creation time is included in the export. |
-| `updated_timestamp` | Time when the order was last updated, in Unix timestamp seconds. | Present when update time is included in the export. |
-| `transactions` | Transactions associated with the order. | Present when the export includes linked transaction details. |
-| `settlement_status` | Settlement progress for the order. | Present when settlement tracking is included for the exported row. |
+| Column | Description |
+| --- | --- |
+| `created_time` | When the order was created; exported under the `Created Time(UTC+8)` column header. |
+| `order_id` | Unique ID of the pay-in order. |
+| `payment_type` | Business payment type recorded for the order, such as the pay-in collection mode that produced it. |
+| `order_status` | Current status of the pay-in order; see "Pay-in order `status`" above. |
+| `order_tag` | Merchant-defined tag attached to the order for grouping or labeling. |
+| `merchant_name` | Display name of the merchant associated with the order. |
+| `merchant_id` | ID of the merchant associated with the order. |
+| `token` | Token used to pay the order. |
+| `network` | Blockchain network on which the payment is received. |
+| `paid_amount` | Token amount actually received for the order. |
+| `payable_amount` | Token amount the payer was expected to send. |
+| `product_order_amount` | Base order amount before the developer fee. |
+| `developer_fee` | Developer fee charged on the order. |
+| `currency_pair` | Pricing-to-settlement currency pair used for conversion. |
+| `exchange_rate` | Exchange rate used to convert the priced amount into the payable token amount. |
+| `wallet_name` | Name of the wallet that receives the order funds. |
+| `wallet_type` | Type of the receiving wallet. |
+| `updated_time` | When the order was last updated; exported under the `Updated Time(UTC+8)` column header. |
+| `expiration_time` | When the order expires; exported under the `Expiration Time(UTC+8)` column header. |
 
 ### `OrderTransaction`
 
 Each row represents one transaction associated with order-mode pay-ins.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `transaction_id` | Unique ID of the transaction record. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `cobo_id` | Cobo tracking ID for the transaction. | Present when Cobo tracking data is included for the transaction. |
-| `request_id` | Client-provided request ID used to create the transaction request. | Present when the transaction originated from a request that carried `request_id`. |
-| `wallet_id` | Wallet ID associated with the transaction source or destination. | Present when wallet information is included in the transaction record. |
-| `type` | Transaction type, such as `Deposit`, `Withdrawal`, `ContractCall`, `MessageSign`, `ExternalSafeTx`, `Stake`, or `Unstake`. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `status` | Transaction status, such as `Submitted`, `PendingAuthorization`, `Broadcasting`, `Confirming`, `Completed`, `Failed`, or `Rejected`. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `sub_status` | More specific transaction sub-status that explains the exact review, signing, broadcast, or on-chain stage. See "High-signal transaction `sub_status` values" above. | Present when the transaction has a sub-status. |
-| `failed_reason` | Failure reason for approval or signing failures. | Present only for failed transactions that include a failure reason. |
-| `chain_id` | Blockchain network for the transaction. | Present when the transaction is chain-specific. |
-| `token_id` | Token ID transferred in the transaction. | Present when the transaction is token-specific. |
-| `source` | Transaction source object. | Present when source details are included in the export row. |
-| `destination` | Transaction destination object. | Present when destination details are included in the export row. |
-| `result` | Result object returned for the transaction. | Present when execution result details are included. |
-| `fee` | Transaction fee object. | Present when fee details are recorded for the transaction. |
-| `initiator` | Actor or API key that initiated the transaction. | Present when initiator details are recorded. |
-| `initiator_type` | Initiator type, such as `API`, `Web`, `App`, or `External`. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `confirmed_num` | Number of blockchain confirmations received. | Present when the transaction has on-chain confirmation data. |
-| `confirming_threshold` | Confirmation threshold used for the transaction. | Present when confirmation threshold data is tracked. |
-| `transaction_hash` | On-chain transaction hash. | Present when the transaction has been submitted on-chain. |
-| `block_info` | Block information for the transaction. | Present when block details are available. |
-| `raw_tx_info` | Raw transaction payload details. | Present when raw transaction data is included. |
-| `replacement` | Replacement relationship for sped-up or replaced transactions. | Present when the transaction was replaced or replaced another transaction. |
-| `category` | Custom categories attached to the transaction. | Present when custom categories were assigned. |
-| `description` | User-defined transaction description. | Present when a description was supplied. |
-| `is_loop` | Whether the transaction was processed through Cobo Loop. | Present when loop metadata is included. |
-| `cobo_category` | Cobo-defined transaction categories. | Present when Cobo category data is attached. |
-| `extra` | Structured business-specific extra metadata. | Present when the transaction carries extra business data. |
-| `fueling_info` | Fueling information for the transaction. | Present when fueling metadata exists. |
-| `created_timestamp` | Time when the transaction was created. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `updated_timestamp` | Time when the transaction was last updated. | Verified as a core transaction field; present when transaction-level rows are exported. |
-| `acquiring_type` | Collection mode for the pay-in transaction. See `acquiring_type` above. | Always present for payment transaction event data. |
-| `order_id` | Pay-in order ID associated with the transaction. | Present for order-mode transactions. |
-| `psp_order_code` | Developer-defined order reference for the related pay-in order. | Present for order-mode transactions when the order carries this code. |
-| `payer_id` | Cobo-assigned payer identifier. | Present when payer tracking is enabled for the transaction. |
-| `custom_payer_id` | Developer-defined payer identifier. | Present when you provided a custom payer identifier. |
-| `merchant_id` | Merchant ID associated with the transaction. | Present when the transaction belongs to a merchant account. |
-| `subscription_id` | Subscription ID related to the transaction. | Present for subscription-related transactions. |
-| `action_id` | Subscription action ID related to the transaction. | Present for subscription-related transactions. |
+| Column | Description |
+| --- | --- |
+| `created_time` | When the transaction was created; exported under the `Created Time(UTC+8)` column header. |
+| `merchant_id` | Merchant associated with the related order. |
+| `order_id` | Pay-in order the transaction belongs to. |
+| `order_status` | Status of the related pay-in order; see "Pay-in order `status`" above. |
+| `transaction_id` | Unique ID of the transaction record. |
+| `transaction_status` | Processing status of the transaction; see "Transaction `status`" above. |
+| `transaction_amount` | Token amount moved by the transaction. |
+| `from_address` | On-chain sender address. |
+| `to_address` | On-chain receiving address. |
+| `txn_hash` | On-chain transaction hash. |
+| `token` | Token transferred. |
+| `network` | Blockchain network of the transaction. |
+| `developer_fee` | Developer fee attributed to the transaction. |
 
 ### `TopUpTransaction`
 
 Each row represents one top-up transaction.
 
-The local source files in this repo confirm that `TopUpTransaction` is a transaction-level report, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+| Column | Description |
+| --- | --- |
+| `created_time` | When the transaction was created; exported under the `Created Time(UTC+8)` column header. |
+| `payment_type` | Business payment type recorded for the top-up transaction. |
+| `transaction_status` | Processing status of the transaction; see "Transaction `status`" above. |
+| `payer_id` | Cobo-assigned payer identifier. |
+| `custom_payer_id` | Developer-defined payer identifier. |
+| `received_amount` | Token amount received in the top-up. |
+| `from_address` | On-chain sender address. |
+| `to_address` | Top-up receiving address. |
+| `transaction_id` | Unique ID of the transaction record. |
+| `txn_hash` | On-chain transaction hash. |
+| `merchant_name` | Display name of the merchant. |
+| `merchant_id` | ID of the merchant. |
+| `token` | Token received. |
+| `network` | Blockchain network of the transaction. |
+| `developer_fee` | Developer fee attributed to the transaction. |
+| `wallet_name` | Name of the receiving wallet. |
+| `wallet_type` | Type of the receiving wallet. |
+| `updated_time` | When the transaction was last updated; exported under the `Updated Time(UTC+8)` column header. |
 
 ### `PayinWeeklyStatement`
 
 Each row represents one weekly pay-in statement entry across order mode and top-up mode.
 
-The local source files in this repo confirm the business scope of `PayinWeeklyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+| Column | Description |
+| --- | --- |
+| `period` | Statement period the row covers (a week for weekly, a day for daily). |
+| `token` | Token the amounts in the row are denominated in. |
+| `transaction_number` | Total number of pay-in transactions in the period. |
+| `total_payin_amount` | Total pay-in amount for the period. |
+| `order_transaction_number` | Number of order-mode pay-in transactions. |
+| `total_order_amount` | Total order-mode pay-in amount. |
+| `topup_transaction_number` | Number of top-up transactions. |
+| `total_topup_amount` | Total top-up amount. |
+| `unexpected_transaction_number` | Number of unexpected incoming transactions. |
+| `total_unexpected_amount` | Total unexpected incoming amount. |
+| `total_payin_commission_fee` | Total pay-in commission fee for the period. |
 
 ### `PayinDailyStatement`
 
 Each row represents one daily pay-in statement entry across order mode and top-up mode.
 
-The local source files in this repo confirm the business scope of `PayinDailyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+| Column | Description |
+| --- | --- |
+| `period` | Statement period the row covers (a week for weekly, a day for daily). |
+| `token` | Token the amounts in the row are denominated in. |
+| `transaction_number` | Total number of pay-in transactions in the period. |
+| `total_payin_amount` | Total pay-in amount for the period. |
+| `order_transaction_number` | Number of order-mode pay-in transactions. |
+| `total_order_amount` | Total order-mode pay-in amount. |
+| `topup_transaction_number` | Number of top-up transactions. |
+| `total_topup_amount` | Total top-up amount. |
+| `unexpected_transaction_number` | Number of unexpected incoming transactions. |
+| `total_unexpected_amount` | Total unexpected incoming amount. |
+| `total_payin_commission_fee` | Total pay-in commission fee for the period. |
 
 ### `CryptoPayout`
 
 Each row represents one crypto payout record.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `payout_id` | Unique ID generated for the payout. | Always present. |
-| `request_id` | Client-provided request ID for the payout. | Always present. |
-| `payout_channel` | Payout channel. For this report type it is `Crypto`; see `payout_channel` above. | Always present; this report type covers crypto payout rows. |
-| `source_account` | Merchant ID or `developer` account that funds the payout. | Present when the source account is recorded for the payout. |
-| `payout_items` | Payout item list, including token and amount details. | Present when item-level payout details are included. |
-| `recipient_info` | Recipient details for the payout destination. | Present when destination details are included. |
-| `initiator` | Actor or API key that initiated the payout. | Present when initiator details are recorded. |
-| `actual_payout_amount` | Actual amount delivered to the recipient. | Present after payout processing produces a delivered amount. |
-| `commission_fees` | Commission fee details charged for the payout. | Present when a payout commission fee was incurred. |
-| `remark` | User-provided note for the payout. | Present when a remark was supplied. |
-| `status` | Payout status. See "Payout `status`" above for the meaning of each value. | Always present. |
-| `created_timestamp` | Time when the payout was created, in Unix timestamp seconds. | Always present. |
-| `updated_timestamp` | Time when the payout was last updated, in Unix timestamp seconds. | Always present. |
-| `transactions` | Transactions associated with the payout. | Present when the export includes linked payout transaction details. |
+This report is always exported as an XLSX file. The first sheet, `payout crypto`, covers standard crypto payouts. When a payout is routed through a cross-chain bridge, the export includes a second sheet, `payout crypto with bridge`, that repeats the first sheet's columns and adds the bridge columns listed after it.
+
+Sheet `payout crypto`:
+
+| Column | Description |
+| --- | --- |
+| `created_time` | When the payout was created; exported under the `Created Time(UTC+8)` column header. |
+| `payout_id` | Unique ID of the payout. |
+| `payment_type` | Business payment type recorded for the payout. |
+| `initiator` | Actor or API key that initiated the payout. |
+| `payout_status` | Status of the payout; see "Payout `status`" above. |
+| `balance_source` | Account that funded the payout, such as a merchant balance or the developer balance. |
+| `network` | Blockchain network used for the payout. |
+| `token` | Token sent to the recipient. |
+| `to_address` | Recipient on-chain address. |
+| `total_payout_amount` | Total amount requested for the payout. |
+| `actual_payout_amount` | Amount actually delivered to the recipient. |
+| `merchant_names` | Names of the merchants whose balances funded the payout. |
+| `merchant_ids` | IDs of the merchants whose balances funded the payout. |
+| `amounts` | Per-merchant amount breakdown for the payout. |
+| `updated_time` | When the payout was last updated; exported under the `Updated Time(UTC+8)` column header. |
+
+Sheet `payout crypto with bridge` additional columns (in addition to all columns above):
+
+| Column | Description |
+| --- | --- |
+| `original_network` | Source network before the cross-chain (bridge) conversion. |
+| `original_token` | Source token before the cross-chain conversion. |
+| `payout_network` | Destination network delivered after bridging. |
+| `payout_token` | Destination token delivered after bridging. |
+| `bridge_fee` | Cross-chain fee charged for the payout. |
 
 ### `OffRamp`
 
 Each row represents one fiat off-ramp payout record.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `payout_id` | Unique ID generated for the payout. | Always present. |
-| `request_id` | Client-provided request ID for the payout. | Always present. |
-| `payout_channel` | Payout channel. For this report type it is `OffRamp`; see `payout_channel` above. | Always present; this report type covers OffRamp payout rows. |
-| `source_account` | Merchant ID or `developer` account that funds the payout. | Present when the source account is recorded for the payout. |
-| `payout_items` | Payout item list, including token and amount details. | Present when item-level payout details are included. |
-| `recipient_info` | Recipient bank or destination details for the payout. | Present when destination details are included. |
-| `initiator` | Actor or API key that initiated the payout. | Present when initiator details are recorded. |
-| `actual_payout_amount` | Actual fiat amount delivered to the recipient. | Present after payout processing produces a delivered amount. |
-| `commission_fees` | Commission fee details charged for the payout. | Present when a payout commission fee was incurred. |
-| `remark` | User-provided note for the payout. | Present when a remark was supplied. |
-| `status` | Payout status. See "Payout `status`" above for the meaning of each value. | Always present. |
-| `created_timestamp` | Time when the payout was created, in Unix timestamp seconds. | Always present. |
-| `updated_timestamp` | Time when the payout was last updated, in Unix timestamp seconds. | Always present. |
-| `transactions` | Transactions associated with the payout. | Present when the export includes linked payout transaction details. |
+| Column | Description |
+| --- | --- |
+| `created_time` | When the payout was created; exported under the `Created Time(UTC+8)` column header. |
+| `payout_id` | Unique ID of the payout. |
+| `payment_type` | Business payment type recorded for the payout. |
+| `initiator` | Actor or API key that initiated the payout. |
+| `payout_status` | Status of the payout; see "Payout `status`" above. |
+| `balance_source` | Account that funded the payout. |
+| `bank_name` | Recipient bank name. |
+| `bank_account_number` | Recipient bank account number. |
+| `total_payout_amount` | Total fiat amount requested for the payout. |
+| `actual_payout_amount` | Fiat amount actually delivered to the recipient. |
+| `merchant_names` | Names of the merchants whose balances funded the payout. |
+| `merchant_ids` | IDs of the merchants whose balances funded the payout. |
+| `amounts` | Per-merchant amount breakdown for the payout. |
+| `updated_time` | When the payout was last updated; exported under the `Updated Time(UTC+8)` column header. |
 
 ### `Refund`
 
 Each row represents one refund record.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `request_id` | Client-provided request ID used to create the refund. | Present when the refund was created with `request_id`. |
-| `refund_id` | Unique refund order ID. | Always present. |
-| `order_id` | Related pay-in order ID. | Present when the refund is tied to an order. |
-| `merchant_id` | Merchant ID associated with the refund. | Present when the refund belongs to a merchant account. |
-| `token_id` | Token ID used for the refund. | Always present. |
-| `chain_id` | Blockchain network on which the refund occurs. | Always present. |
-| `amount` | Refund amount in cryptocurrency. | Always present. |
-| `to_address` | Recipient wallet address for the refund. | Always present. |
-| `status` | Refund status. See "Refund `status`" above for the meaning of each value. | Always present. |
-| `refund_type` | Funding source used for the refund. See `refund_type` above. | Present when refund funding source is recorded. |
-| `created_timestamp` | Time when the refund order was created, in Unix timestamp seconds. | Present when creation time is included in the export. |
-| `updated_timestamp` | Time when the refund order was last updated, in Unix timestamp seconds. | Present when update time is included in the export. |
-| `initiator` | Actor or API key that initiated the refund. | Present when initiator details are recorded. |
-| `transactions` | Transactions associated with the refund. | Present when the export includes linked refund transaction details. |
-| `charge_merchant_fee` | Whether developer fee is charged to the merchant for the refund. | Present when merchant-fee charging is configured for the refund. |
-| `merchant_fee_amount` | Developer fee amount charged to the merchant for the refund. | Present when `charge_merchant_fee` is `true`. |
-| `merchant_fee_token_id` | Token ID used for the merchant fee charged on the refund. | Present when `charge_merchant_fee` is `true`. |
-| `commission_fee` | Commission fee charged for the refund. | Present when a commission fee was incurred for the refund. |
+| Column | Description |
+| --- | --- |
+| `created_time` | When the refund was created; exported under the `Created Time(UTC+8)` column header. |
+| `refund_order_id` | Unique ID of the refund order. |
+| `payment_type` | Business payment type recorded for the refund. |
+| `initiator` | Actor or API key that initiated the refund. |
+| `transaction_status` | Status of the refund transaction; see "Transaction `status`" above. |
+| `merchant_name` | Display name of the merchant associated with the refund. |
+| `merchant_id` | ID of the merchant associated with the refund. |
+| `order_id` | Related pay-in order ID. |
+| `token` | Token used for the refund. |
+| `network` | Blockchain network on which the refund is sent. |
+| `refund_amount` | Amount refunded. |
+| `to_address` | Recipient address for the refund. |
+| `balance_source` | Account the refund was funded from. |
+| `wallet_name` | Name of the wallet used for the refund. |
+| `wallet_type` | Type of the wallet used for the refund. |
+| `updated_time` | When the refund was last updated; exported under the `Updated Time(UTC+8)` column header. |
+| `description` | Note describing the refund. |
 
 ### `PayoutWeeklyStatement`
 
-Each row represents one weekly payout statement entry across crypto payouts, OffRamp payouts, and refunds.
+Each row represents one weekly payout statement entry across crypto payouts, off-ramp payouts, and refunds.
 
-The local source files in this repo confirm the business scope of `PayoutWeeklyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+| Column | Description |
+| --- | --- |
+| `period` | Statement period the row covers (a week for weekly, a day for daily). |
+| `token` | Token the amounts in the row are denominated in. |
+| `transaction_number` | Total number of payout transactions in the period. |
+| `total_payout_amount` | Total payout amount for the period. |
+| `withdraw_crypto_transaction_number` | Number of crypto payout transactions. |
+| `total_withdraw_crypto_amount` | Total crypto payout amount. |
+| `off_ramp_transaction_number` | Number of off-ramp payout transactions. |
+| `total_off_ramp_amount` | Total off-ramp payout amount. |
+| `refund_transaction_number` | Number of refund transactions. |
+| `total_refund_amount` | Total refund amount. |
+| `unexpected_transaction_number` | Number of unexpected outgoing transactions. |
+| `total_unexpected_amount` | Total unexpected outgoing amount. |
+| `total_payout_commission_fee` | Total payout commission fee for the period. |
 
 ### `PayoutDailyStatement`
 
-Each row represents one daily payout statement entry across crypto payouts, OffRamp payouts, and refunds.
+Each row represents one daily payout statement entry across crypto payouts, off-ramp payouts, and refunds.
 
-The local source files in this repo confirm the business scope of `PayoutDailyStatement`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+| Column | Description |
+| --- | --- |
+| `period` | Statement period the row covers (a week for weekly, a day for daily). |
+| `token` | Token the amounts in the row are denominated in. |
+| `transaction_number` | Total number of payout transactions in the period. |
+| `total_payout_amount` | Total payout amount for the period. |
+| `withdraw_crypto_transaction_number` | Number of crypto payout transactions. |
+| `total_withdraw_crypto_amount` | Total crypto payout amount. |
+| `off_ramp_transaction_number` | Number of off-ramp payout transactions. |
+| `total_off_ramp_amount` | Total off-ramp payout amount. |
+| `refund_transaction_number` | Number of refund transactions. |
+| `total_refund_amount` | Total refund amount. |
+| `unexpected_transaction_number` | Number of unexpected outgoing transactions. |
+| `total_unexpected_amount` | Total unexpected outgoing amount. |
+| `total_payout_commission_fee` | Total payout commission fee for the period. |
 
 ### `PayinCommissionFee`
 
 Each row represents one commission fee record related to pay-in activity.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `fee_amount` | Commission fee amount charged by Cobo, denominated in USD. | Present when a pay-in commission fee is incurred. |
+| Column | Description |
+| --- | --- |
+| `merchant_id` | Merchant the fee is attributed to. |
+| `transaction_type` | Type of transaction the fee applies to. |
+| `source` | Business source of the charged transaction. |
+| `billing_date` | Date the fee was billed. |
+| `transaction_amount` | Amount of the underlying transaction. |
+| `fee_rate` | Rate applied to compute the fee. |
+| `fee_amount` | Commission fee amount charged by Cobo. |
+| `fee_type` | Category of the commission fee. |
 
 ### `PayoutCommissionFee`
 
 Each row represents one commission fee record related to payout activity.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `fee_amount` | Commission fee amount charged by Cobo, denominated in USD. | Present when a payout commission fee is incurred. |
+| Column | Description |
+| --- | --- |
+| `merchant_id` | Merchant the fee is attributed to. |
+| `transaction_type` | Type of transaction the fee applies to. |
+| `source` | Business source of the charged transaction. |
+| `to_address` | Recipient address of the underlying payout. |
+| `billing_date` | Date the fee was billed. |
+| `transaction_amount` | Amount of the underlying transaction. |
+| `fee_rate` | Rate applied to compute the fee. |
+| `fee_amount` | Commission fee amount charged by Cobo. |
+| `fee_type` | Category of the commission fee. |
 
 ### `BalanceChange`
 
-Each row represents one balance change event for a Payments account.
+Each row represents one balance change record for a Payments account.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `source_id` | Source ID that caused the balance change. | Always present. |
-| `source_type` | Business source type that caused the balance change. See `source_type` above. | Always present. |
-| `token_id` | Token ID for the balance change. | Always present. |
-| `amount` | Balance change amount, truncated to two decimal places. | Always present. |
-| `amount_raw` | Balance change amount in token precision. | Always present. |
-| `balance_before` | Account balance before the change, truncated to two decimal places. | Always present. |
-| `balance_before_raw` | Account balance before the change in token precision. | Always present. |
-| `balance_after` | Account balance after the change, truncated to two decimal places. | Always present. |
-| `balance_after_raw` | Account balance after the change in token precision. | Always present. |
-| `flow_direction` | Direction of the balance movement relative to the `source_account`. See `flow_direction` above. | Always present. |
-| `created_timestamp` | Time when the balance change record was created, in Unix timestamp seconds. | Always present for the balance change object. |
-| `source_account` | Merchant ID or `developer` account whose balance changed. | Present when the export includes account ownership context. |
-| `update_time` | Time when the balance update event was emitted, in Unix timestamp seconds. | Present when the export uses the account-balance update event representation. |
+| Column | Description |
+| --- | --- |
+| `balance_type` | Type of balance affected by the change. |
+| `merchant_name` | Display name of the merchant whose balance changed. |
+| `merchant_id` | ID of the merchant whose balance changed. |
+| `token` | Token of the balance that changed. |
+| `network` | Blockchain network associated with the balance. |
+| `amount_raw` | Balance change amount. |
+| `balance_change_type` | Business reason for the balance change. |
+| `source` | Source record that triggered the balance change. |
+| `amount_change` | Signed amount by which the balance changed. |
+| `updated_balance` | Resulting balance after the change. |
+| `business_date` | Business date of the balance change. |
 
 ### `Summary`
 
-Each row represents one aggregate summary entry across pay-ins, payouts, and commission fees.
+Each `Summary` report aggregates activity across pay-ins, payouts, and commission fees.
 
-The local source files in this repo confirm the business scope of `Summary`, but they do not expose an authoritative export-column list for its CSV/XLSX output. To avoid documenting unverified columns, this page currently records only the verified scope for this `report_type`.
+The `Summary` report is always exported as an XLSX file containing four sheets: `pay-in`, `pay-out`, `commission-fee`, and `cobo-bill`. Each sheet aggregates the corresponding activity for the selected time range.
 
 ### `BulkSend`
 
-Each row represents one Bulk Send batch record.
+Each row represents one item within a Bulk Send batch.
 
-| Field | Description | When present |
-| --- | --- | --- |
-| `bulk_send_id` | Unique ID of the Bulk Send batch. | Always present. |
-| `request_id` | Client-provided request ID for the Bulk Send batch. | Present when the batch was created with `request_id`. |
-| `source_account` | Merchant ID or `developer` account that funds the batch. | Always present. |
-| `description` | Batch-level note describing the Bulk Send purpose. | Present when a description was supplied for the batch. |
-| `execution_mode` | Batch execution mode. Common values include `Strict` and `Partial`. `Strict` enforces all-or-nothing validation, while `Partial` allows partial success. | Always present. |
-| `status` | Bulk Send batch status, indicating whether the batch is still processing, completed, partially completed, or failed. | Always present. |
-| `created_timestamp` | Time when the Bulk Send batch was created, in Unix timestamp seconds. | Always present. |
-| `updated_timestamp` | Time when the Bulk Send batch was last updated, in Unix timestamp seconds. | Always present. |
-| `commission_fee` | Commission fee charged for the Bulk Send batch. | Present when a commission fee was incurred for the batch. |
+| Column | Description |
+| --- | --- |
+| `created_time` | When the item was created; exported under the `Created Time(UTC+8)` column header. |
+| `bulk_send_id` | Unique ID of the Bulk Send batch the item belongs to. |
+| `item_id` | ID of the individual item within the batch. |
+| `transaction_id` | Transaction ID generated for the item. |
+| `payment_type` | Business payment type recorded for the item. |
+| `bulk_send_execution_mode` | Execution mode applied to the Bulk Send batch. |
+| `bulk_send_item_status` | Status of the individual Bulk Send item. |
+| `balance_source` | Account funding the item. |
+| `network` | Blockchain network used for the item. |
+| `token` | Token sent for the item. |
+| `to_address` | Recipient address for the item. |
+| `total_payout_amount` | Amount requested for the item. |
+| `actual_payout_amount` | Amount actually delivered for the item. |
+| `merchant_names` | Names of the merchants whose balances funded the item. |
+| `merchant_ids` | IDs of the merchants whose balances funded the item. |
+| `updated_time` | When the item was last updated; exported under the `Updated Time(UTC+8)` column header. |
 
 After you confirm the fields you need, use the related API operations below to generate reports or list generated reports.
 
