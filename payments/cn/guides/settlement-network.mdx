@@ -1,0 +1,78 @@
+---
+title: "结算网络"
+sidebarTitle: "结算网络"
+lang: "zh-hans"
+---
+
+结算网络（Settlement Network）是 Cobo Payment 的一项能力，支持 Client 与流动性提供方（LP）通过结算室完成资金结算。结算执行使用自动 DVP（delivery-versus-payment），因此已确认的结算可完成并反映到您的 Payment 账户中，无需单独的转出流程。
+
+您可以使用结算网络在一个 Portal 工作流中协同处理结算询价、RFQ 沟通、结算合约、审批和最终结算结果。
+
+## 角色
+
+- **Client**：发起结算询价、加入结算室、查看结算条款，并完成所需的 Cobo Guard 审批或签名。
+- **LP（Liquidity Provider）**：响应 RFQ 沟通、创建结算合约，并参与结算室流程，直至交易完成或终止。
+
+仅**支付管理员**和**管理员**角色可以操作结算网络工作流。**支付成员**仅有浏览权限。角色详情请参见[角色与权限](/payments/cn/guides/roles-and-permissions)。
+
+## 前提条件
+
+使用结算网络前，请确保：
+
+- 您的组织已开通结算网络。
+- 您拥有**支付管理员**或**管理员**角色以执行操作，或拥有**支付成员**角色以进行浏览。
+- 相关 Payment 账户中有用于本次结算的资金。
+
+## Portal 操作路径
+
+1. 登录 Cobo Portal [开发环境](https://portal.dev.cobo.com/login)或[生产环境](https://portal.cobo.com/login)。
+2. 在左侧导航栏中点击 **Apps**，然后点击 **Payments** 卡片，启动 App。
+3. 在 App 的左侧导航栏中点击 **Settlement Network**。
+
+Settlement Network 包含以下子区域：
+
+- **Network Members**：查看网络中的 Client 和 LP。
+- **Settlement Rooms**：跟踪结算询价、RFQ 沟通、结算室和结算室结果。
+- **Contract Management**：查看 LP 创建的结算合约，并完成所需的 Cobo Guard 审批或签名。
+
+## 结算工作流
+
+1. **Client 发起询价**：Client 从 Settlement Network 发起结算询价。
+2. **Client 与 LP 完成 RFQ 沟通**：Client 与 LP 通过 Telegram RFQ 流程协商 request-for-quote（RFQ）详情。
+3. **创建结算室**：RFQ 沟通后，结算室会跟踪 Client 与 LP 的交易生命周期。
+4. **LP 创建结算合约**：LP 在 **Contract Management** 中为已确认的结算创建结算合约。
+5. **Client 使用 Cobo Guard 审批或签名**：Client 查看合约，并完成所需的 Cobo Guard 审批或签名。
+6. **自动 DVP 执行结算**：所需的审批或签名完成后，Settlement Network 会为该交易执行自动 DVP。
+7. **结算室产生结果**：结算成功时，结算室标记为 **Completed**；结算未继续时，结算室标记为 **Terminated**。
+
+结算室是该交易的操作记录。您可以通过结算室跟踪询价、RFQ 结果、合约状态、审批进度、DVP 执行和最终结果。
+
+## 余额和报表影响
+
+当结算网络交易在您的 Payment 账户中完成资金结算时，会产生一条 `source_type` 为 `SettlementNetwork` 的余额变动。
+
+如需查看这些余额变动，可生成 `BalanceChange` 报表并按 `SettlementNetwork` 这一 `source_type` 筛选。导出字段与完整 `source_type` 说明请参考[报表](/payments/cn/guides/reports)，Payment 余额结构请参考[账户与资金分配](/payments/cn/guides/amounts-and-balances)。
+
+## Webhook 触点
+
+Cobo 会针对结算网络交易推送以下 Webhook 事件：
+
+- `payment.transaction.settlement_network.created`：结算网络交易创建时触发。
+- `payment.transaction.settlement_network.completed`：结算网络交易完成时触发。交易完成后，结算资金会以 `SettlementNetwork` 这一 `source_type` 反映到您的 Payment 账户余额中。
+
+上述两个事件均携带交易级负载字段。负载结构与推送行为请参考 [事件与状态](/payments/cn/guides/status-and-events)。
+
+## 故障排查
+
+- **结算室正在等待 LP 合约**：打开 **Settlement Network** > **Settlement Rooms** 确认结算室，然后使用 **Contract Management** 检查 LP 是否已创建结算合约。
+- **Cobo Guard 审批或签名待完成**：打开 **Settlement Network** > **Contract Management**，由授权操作人员完成所需的 Cobo Guard 操作。
+- **结算尚未反映到余额中**：检查结算室是否已达到 **Completed**。完成后，生成 `BalanceChange` 报表并按 `SettlementNetwork` 筛选。
+- **结算室已终止**：打开 **Settlement Network** > **Settlement Rooms** 查看结算室结果；如需继续与 LP 结算，请发起新的询价。
+
+## 相关页面
+
+- [账户与资金分配](/payments/cn/guides/amounts-and-balances)
+- [加密货币转账](/payments/cn/guides/crypto-payouts)
+- [转出目的地](/payments/cn/guides/destinations)
+- [报表](/payments/cn/guides/reports)
+- [事件与状态](/payments/cn/guides/status-and-events)

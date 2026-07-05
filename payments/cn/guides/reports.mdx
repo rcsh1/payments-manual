@@ -94,7 +94,7 @@ lang: "zh-hans"
 | `Payout` | 转出导致的余额变动。 |
 | `UnexceptedOut` | 非预期出账导致的余额变动。 |
 | `Allocation` | 资金分配导致的余额变动。 |
-| `SettlementNetwork` | 结算网络相关操作导致的余额变动。 |
+| `SettlementNetwork` | 结算网络（Settlement Network）活动导致的余额变动，例如结算网络交易完成后在您的 Payment 账户中完成资金结算时。 |
 | `BulkSend` | Bulk Send 导致的余额变动。 |
 
 ### 支付订单 `status`
@@ -449,6 +449,8 @@ lang: "zh-hans"
 | `amount_change` | 本次余额变动的有符号金额。 |
 | `updated_balance` | 变动后的余额。 |
 | `business_date` | 余额变动的业务日期。 |
+
+`source_type` 为 `SettlementNetwork` 的余额变动来自结算网络活动。详情请参考 [结算网络](/payments/cn/guides/settlement-network) 指南。
 
 ### `Summary`
 
