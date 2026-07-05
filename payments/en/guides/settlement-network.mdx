@@ -1,0 +1,78 @@
+---
+title: "Settlement Network"
+sidebarTitle: "Settlement Network"
+lang: "en"
+---
+
+Settlement Network is a Cobo Payment capability that lets a Client settle funds with Liquidity Providers (LPs) through settlement rooms. Settlement execution uses automatic DVP (delivery-versus-payment), so the agreed settlement can be completed and reflected in your Payment account without a separate payout workflow.
+
+Use Settlement Network to coordinate settlement inquiries, RFQ communication, settlement contracts, approvals, and final settlement results in one Portal workflow.
+
+## Roles
+
+- **Client**: Initiates settlement inquiries, joins settlement rooms, reviews settlement terms, and completes the required Cobo Guard approval or signature.
+- **LP (Liquidity Provider)**: Responds to RFQ discussions, creates settlement contracts, and participates in the settlement room until the transaction is completed or terminated.
+
+Only **Payment Admin** and **Admin** roles can operate Settlement Network workflows. **Payment Member** has view-only access. For role details, see [Roles and permissions](/payments/en/guides/roles-and-permissions).
+
+## Prerequisites
+
+Before using Settlement Network, make sure:
+
+- Your organization is onboarded to Settlement Network.
+- You have a **Payment Admin** or **Admin** role for operations, or **Payment Member** for view-only access.
+- The relevant Payment account is funded for the intended settlement.
+
+## Portal operation paths
+
+1. Log in to Cobo Portal [development environment](https://portal.dev.cobo.com/login) or [production environment](https://portal.cobo.com/login).
+2. In the left navigation bar, click **Apps**, then click the **Payments** card to launch the App.
+3. In the App's left navigation bar, click **Settlement Network**.
+
+Settlement Network contains the following sub-areas:
+
+- **Network Members**: View Clients and LPs that are available in the network.
+- **Settlement Rooms**: Track settlement inquiries, RFQ communication, settlement rooms, and room outcomes.
+- **Contract Management**: Review settlement contracts created by LPs and complete the required Cobo Guard approval or signature.
+
+## Settlement workflow
+
+1. **Client starts an inquiry**: A Client starts a settlement inquiry from Settlement Network.
+2. **Client and LP complete the RFQ discussion**: The Client and LP coordinate request-for-quote (RFQ) details through the Telegram RFQ flow.
+3. **Settlement room is created**: After the RFQ discussion, a settlement room tracks the transaction lifecycle for the Client and LP.
+4. **LP creates the settlement contract**: The LP creates the settlement contract in **Contract Management** for the agreed settlement.
+5. **Client approves or signs with Cobo Guard**: The Client reviews the contract and completes the required Cobo Guard approval or signature.
+6. **Automatic DVP executes settlement**: After the required approval or signature is complete, Settlement Network executes automatic DVP for the transaction.
+7. **Room reaches an outcome**: The room is marked **Completed** when settlement succeeds, or **Terminated** when the settlement does not proceed.
+
+The settlement room is the operational record for the transaction. Use it to follow the inquiry, RFQ result, contract status, approval progress, DVP execution, and final outcome.
+
+## Balance and report impact
+
+When a Settlement Network transaction settles funds in your Payment account, it produces a balance change with the `source_type` value `SettlementNetwork`.
+
+To review these balance changes, generate a `BalanceChange` report and filter on the `SettlementNetwork` `source_type`. See [Reports](/payments/en/guides/reports) for exported fields and the full `source_type` reference, and [Amounts and balances](/payments/en/guides/amounts-and-balances) for how Payment balances are structured.
+
+## Webhook touchpoints
+
+Cobo emits the following webhook events for Settlement Network transactions:
+
+- `payment.transaction.settlement_network.created`: emitted when a Settlement Network transaction is created.
+- `payment.transaction.settlement_network.completed`: emitted when a Settlement Network transaction is completed. On completion, the settled funds are reflected in your Payment account balance with the `SettlementNetwork` `source_type`.
+
+Both events carry transaction-level payload fields. For the shared payload structure and delivery behavior, see [Events and status](/payments/en/guides/status-and-events).
+
+## Troubleshooting
+
+- **Settlement room is waiting for the LP contract**: Open **Settlement Network** > **Settlement Rooms** to confirm the room, then use **Contract Management** to check whether the LP has created the settlement contract.
+- **Cobo Guard approval or signature is pending**: Open **Settlement Network** > **Contract Management** and complete the required Cobo Guard action with an authorized operator.
+- **Settlement is not reflected in the balance yet**: Check whether the settlement room has reached **Completed**. After completion, generate a `BalanceChange` report and filter on `SettlementNetwork`.
+- **Room is terminated**: Open **Settlement Network** > **Settlement Rooms** to review the room outcome and start a new inquiry if you need to continue settlement with an LP.
+
+## Related pages
+
+- [Amounts and balances](/payments/en/guides/amounts-and-balances)
+- [Crypto payouts](/payments/en/guides/crypto-payouts)
+- [Destinations](/payments/en/guides/destinations)
+- [Reports](/payments/en/guides/reports)
+- [Events and status](/payments/en/guides/status-and-events)

@@ -73,6 +73,7 @@
                   "payments/en/guides/crypto-payouts",
                   "payments/en/guides/bulk-send",
                   "payments/en/guides/destinations",
+                  "payments/en/guides/settlement-network",
                   "payments/en/guides/reports"
                 ]
               },
@@ -360,6 +361,7 @@
                   "payments/cn/guides/crypto-payouts",
                   "payments/cn/guides/bulk-send",
                   "payments/cn/guides/destinations",
+                  "payments/cn/guides/settlement-network",
                   "payments/cn/guides/reports"
                 ]
               },

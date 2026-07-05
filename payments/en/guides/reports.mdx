@@ -94,7 +94,7 @@ The following enum values come from the Payments OpenAPI definitions and help ex
 | `Payout` | Balance change caused by a payout. |
 | `UnexceptedOut` | Balance change caused by an unexpected outgoing payment. |
 | `Allocation` | Balance change caused by an allocation. |
-| `SettlementNetwork` | Balance change caused by settlement-network-related activity. |
+| `SettlementNetwork` | Balance change caused by Settlement Network activity, such as when a Settlement Network transaction settles funds in your Payment account. |
 | `BulkSend` | Balance change caused by a Bulk Send batch. |
 
 ### Pay-in order `status`
@@ -449,6 +449,8 @@ Each row represents one balance change record for a Payments account.
 | `amount_change` | Signed amount by which the balance changed. |
 | `updated_balance` | Resulting balance after the change. |
 | `business_date` | Business date of the balance change. |
+
+Balance changes with the `SettlementNetwork` `source_type` come from Settlement Network activity. See the [Settlement Network](/payments/en/guides/settlement-network) guide.
 
 ### `Summary`
 
