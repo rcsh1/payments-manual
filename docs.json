@@ -112,7 +112,6 @@
                       "payments/en/api-references/payment/batch-create-top-up-addresses",
                       "payments/en/api-references/payment/update-top-up-address",
                       "payments/en/api-references/payment/list-payers",
-                      "payments/en/api-references/payment/list-top-up-payer-accounts",
                       "payments/en/api-references/payment/list-payer-transactions"
                     ]
                   },
@@ -285,8 +284,7 @@
                 "group": "Webhooks",
                 "pages": [
                   "payments/en/developer-tools/webhook",
-                  "payments/en/developer-tools/set-up-endpoint",
-                  "payments/en/api-references/payment/trigger-test-payments-webhook-event"
+                  "payments/en/developer-tools/set-up-endpoint"
                 ]
               },
               {
