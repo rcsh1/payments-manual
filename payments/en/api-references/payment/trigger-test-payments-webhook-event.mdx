@@ -1,12 +1,15 @@
 ---
-openapi: get /payments/topup/payer_accounts
+openapi: post /payments/webhooks/trigger
 ---
 
 <RequestExample>
 ```python Python
 import cobo_waas2
-from cobo_waas2.models.list_top_up_payer_accounts200_response import (
-    ListTopUpPayerAccounts200Response,
+from cobo_waas2.models.trigger_test_payment_webhook_event_response import (
+    TriggerTestPaymentWebhookEventResponse,
+)
+from cobo_waas2.models.trigger_test_payments_webhook_event_request import (
+    TriggerTestPaymentsWebhookEventRequest,
 )
 from cobo_waas2.rest import ApiException
 from pprint import pprint
@@ -22,25 +25,30 @@ configuration = cobo_waas2.Configuration(
 with cobo_waas2.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = cobo_waas2.PaymentApi(api_client)
-    limit = 10
-    before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
-    after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-    merchant_id = "M1001"
-    payer_id = "P20250619T0310056d7aa"
+    trigger_test_payments_webhook_event_request = (
+        cobo_waas2.TriggerTestPaymentsWebhookEventRequest(
+            event_type="payment.order.status.updated",
+            override_data={
+                "chain_id": "ETH",
+                "transaction_id": "Test-transaction-id",
+            },
+        )
+    )
 
     try:
-        # List top-up payer accounts
-        api_response = api_instance.list_top_up_payer_accounts(
-            limit=limit,
-            before=before,
-            after=after,
-            merchant_id=merchant_id,
-            payer_id=payer_id,
+        # Trigger test Payments webhook event
+        api_response = api_instance.trigger_test_payments_webhook_event(
+            trigger_test_payments_webhook_event_request=trigger_test_payments_webhook_event_request
         )
-        print("The response of PaymentApi->list_top_up_payer_accounts:\n")
+        print(
+            "The response of PaymentApi->trigger_test_payments_webhook_event:\n"
+        )
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling PaymentApi->list_top_up_payer_accounts: %s\n" % e)
+        print(
+            "Exception when calling PaymentApi->trigger_test_payments_webhook_event: %s\n"
+            % e
+        )
 
 ```
 ```java Java
@@ -62,17 +70,17 @@ public class Example {
     // Replace `<YOUR_PRIVATE_KEY>` with your private key
     defaultClient.setPrivKey("<YOUR_PRIVATE_KEY>");
     PaymentApi apiInstance = new PaymentApi();
-    Integer limit = 10;
-    String before = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1";
-    String after = "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk";
-    String merchantId = "M1001";
-    String payerId = "P20250619T0310056d7aa";
+    TriggerTestPaymentsWebhookEventRequest triggerTestPaymentsWebhookEventRequest =
+        new TriggerTestPaymentsWebhookEventRequest()
+            .eventType(WebhookEventType.PAYMENT_ORDER_STATUS_UPDATED);
     try {
-      ListTopUpPayerAccounts200Response result =
-          apiInstance.listTopUpPayerAccounts(limit, before, after, merchantId, payerId);
+      TriggerTestPaymentWebhookEventResponse result =
+          apiInstance.triggerTestPaymentsWebhookEvent(
+              triggerTestPaymentsWebhookEventRequest);
       System.out.println(result);
     } catch (ApiException e) {
-      System.err.println("Exception when calling PaymentApi#listTopUpPayerAccounts");
+      System.err.println(
+          "Exception when calling PaymentApi#triggerTestPaymentsWebhookEvent");
       System.err.println("Status code: " + e.getCode());
       System.err.println("Reason: " + e.getResponseBody());
       System.err.println("Response headers: " + e.getResponseHeaders());
@@ -94,11 +102,9 @@ import (
 )
 
 func main() {
-	limit := int32(10)
-	before := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1"
-	after := "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk"
-	merchantId := "M1001"
-	payerId := "P20250619T0310056d7aa"
+	triggerTestPaymentsWebhookEventRequest := *coboWaas2.NewTriggerTestPaymentsWebhookEventRequest(
+		coboWaas2.WebhookEventType("payment.order.status.updated"),
+	)
 
 	configuration := coboWaas2.NewConfiguration()
 	// Initialize the API client
@@ -111,19 +117,23 @@ func main() {
 	ctx = context.WithValue(ctx, coboWaas2.ContextPortalSigner, crypto.Ed25519Signer{
 		Secret: "<YOUR_PRIVATE_KEY>",
 	})
-	resp, r, err := apiClient.PaymentAPI.ListTopUpPayerAccounts(ctx).
-		Limit(limit).
-		Before(before).
-		After(after).
-		MerchantId(merchantId).
-		PayerId(payerId).
+	resp, r, err := apiClient.PaymentAPI.TriggerTestPaymentsWebhookEvent(ctx).
+		TriggerTestPaymentsWebhookEventRequest(triggerTestPaymentsWebhookEventRequest).
 		Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `PaymentAPI.ListTopUpPayerAccounts``: %v\n", err)
+		fmt.Fprintf(
+			os.Stderr,
+			"Error when calling `PaymentAPI.TriggerTestPaymentsWebhookEvent``: %v\n",
+			err,
+		)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
-	// response from `ListTopUpPayerAccounts`: ListTopUpPayerAccounts200Response
-	fmt.Fprintf(os.Stdout, "Response from `PaymentAPI.ListTopUpPayerAccounts`: %v\n", resp)
+	// response from `TriggerTestPaymentsWebhookEvent`: TriggerTestPaymentWebhookEventResponse
+	fmt.Fprintf(
+		os.Stdout,
+		"Response from `PaymentAPI.TriggerTestPaymentsWebhookEvent`: %v\n",
+		resp,
+	)
 }
 
 ```
@@ -138,13 +148,16 @@ apiClient.setPrivateKey("<YOUR_PRIVATE_KEY>");
 // Call the API
 const apiInstance = new CoboWaas2.PaymentApi();
 const opts = {
-  limit: 10,
-  before: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGmk1",
-  after: "RqeEoTkgKG5rpzqYzg2Hd3szmPoj2cE7w5jWwShz3C1vyGSAk",
-  merchant_id: "M1001",
-  payer_id: "P20250619T0310056d7aa",
+  TriggerTestPaymentsWebhookEventRequest:
+    CoboWaas2.TriggerTestPaymentsWebhookEventRequest.constructFromObject({
+      event_type: "payment.order.status.updated",
+      override_data: {
+        chain_id: "ETH",
+        transaction_id: "Test-transaction-id",
+      },
+    }),
 };
-apiInstance.listTopUpPayerAccounts(opts).then(
+apiInstance.triggerTestPaymentsWebhookEvent(opts).then(
   (data) => {
     console.log("API called successfully. Returned data: " + data);
   },
