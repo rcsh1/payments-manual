@@ -6,11 +6,21 @@ lang: "en"
 This document records all major updates and upcoming features for the Cobo Payments solution, helping you stay informed about product developments and upgrades.
 
 
+## July 2026
+
+| Feature | Description | Release Date |
+| ----- | ----- | ----- |
+| **Funds Management** | (SDK v1.39.0) Bulk Send: `PaymentBulkSendItemValidationStatus` schema added `NotExecuted` enum value. Returned as `validation_status` in [List bulk send items](/payments/en/api-references/payment/list-bulk-send-items), indicating that item validation was not executed (for example, when other items fail validation in `Strict` mode and the entire batch is rejected at the validation stage). | 2026-07-01 |
+
+
 ## June 2026
 
 | Feature | Description | Release Date |
 | ----- | ----- | ----- |
+| **Reports** | (SDK v1.39.0) [Generate reports](/payments/en/api-references/payment/generate-reports) and [List all reports](/payments/en/api-references/payment/list-all-reports): added links to [Reports](/payments/en/guides/reports) for `report_types`, report scope, exported field differences, and report-specific usage notes. | 2026-06-30 |
 | **Webhook** | (SDK v1.38.0) Added a new webhook event `payment.account.balance.updated` (`PaymentAccountBalanceUpdate`), triggered when the available balance of a Payments account changes for a specific token. The payload includes the account information (`source_account`, `source_id`, `source_type`), `token_id`, the change `amount`, `balance_before` / `balance_after`, `flow_direction`, and `update_time`. See [Status and events](/payments/en/guides/status-and-events).<br />Added the `merchant_id` field to the `payment.address.updated` webhook payload. | 2026-06-25 |
+| **Funds Management** | (SDK v1.39.0) Allocation status tracking:<br />・[List all batch allocations](/payments/en/api-references/payment/list-all-batch-allocations) and [Create batch allocation](/payments/en/api-references/payment/create-batch-allocation): response now includes `status` field (`Pending`, `Processing`, `Completed`, `PartiallyCompleted`, `Failed`).<br />・[Get batch allocation information](/payments/en/api-references/payment/get-batch-allocation-information): response now includes `status` field.<br />・[List all allocation items](/payments/en/api-references/payment/list-all-allocation-items): response items now include `status` field (`Pending`, `Transferring`, `Completed`, `Failed`). | 2026-06-24 |
+| **Funds Management** | (SDK v1.39.0) Bulk Send updates:<br />・[Create bulk send](/payments/en/api-references/payment/create-bulk-send): `description` (batch-level) and `payout_params[].description` (item-level) are limited to a maximum of 255 characters.<br />・Clarified `Strict` execution mode: all-or-nothing applies at the validation stage only; after validation passes, individual items may still fail during execution, potentially resulting in `PartiallyCompleted` bulk send status. | 2026-06-23 |
 | **Funds Management** | (SDK v1.37.0) Added [List balance changes](/payments/en/api-references/payment/list-balance-changes) operation for retrieving balance changes of a specified source account.<br /><br />Bulk Send enhancements:<br />・[List bulk send items](/payments/en/api-references/payment/list-bulk-send-items): response now includes `tx_hash` field, returning the on-chain transaction hash for each bulk send item.<br />・[List all bulk sends](/payments/en/api-references/payment/list-bulk-sends), [Get bulk send information](/payments/en/api-references/payment/get-bulk-send-information), and the `payment.bulk_send.status.updated` webhook notification data now include `commission_fee` field, returning the commission fee charged for the bulk send. | 2026-06-09 |
 
 
