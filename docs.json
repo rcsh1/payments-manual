@@ -257,6 +257,12 @@
                   "payments/en/api-references/payment/generate-reports",
                   "payments/en/api-references/payment/list-all-reports"
                 ]
+              },
+              {
+                "group": "Webhooks",
+                "pages": [
+                  "payments/en/api-references/payment/trigger-test-webhook-event"
+                ]
               }
             ]
           },
