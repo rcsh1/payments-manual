@@ -72,9 +72,9 @@ You can create crypto payout requests through Payments App or Payments API.
 
     **Parameter description:**
 
-    - `amount`: Cryptocurrency amount
-    - `token_id`: Cryptocurrency ID (such as `ETH_USDT`, `TRON_USDT`). When the `token_id` in **payout_params** and **recipient_info** have the same tokens but different chains, Cobo will automatically execute a cross-chain operation.
-    - `address`: Target cryptocurrency address
+    - `amount`: Cryptocurrency amount, provided as a decimal string. Trailing zeros in the fractional part do not count toward the limit, but once removed, no more than two digits may remain after the decimal point. For example, `100.500` is accepted (equivalent to `100.5`), while `100.567` is rejected rather than rounded, because three fractional digits remain once trailing zeros are removed.
+    - `token_id`: Cryptocurrency ID (such as `ETH_USDT`, `TRON_USDT`). When the `token_id` in **payout_params** and **recipient_info** have the same tokens but different chains, Cobo will automatically execute a cross-chain operation. You can retrieve the full list of supported token IDs by calling [List supported tokens](/payments/en/api-references/payment/list-supported-tokens).
+    - `address`: The recipient cryptocurrency address. Use an address you have registered as a destination and that has been approved for payouts; call [List destination entries](/payments/en/api-references/payment/list-destination-entries) with `entry_type` set to `Address` to retrieve your registered wallet addresses and their `chain_id`. A destination entry returns the address and its `chain_id`, not a `token_id`; obtain the `token_id` value separately by calling [List supported tokens](/payments/en/api-references/payment/list-supported-tokens).
   </Tab>
 </Tabs>
 
@@ -106,4 +106,3 @@ You can also actively query transfer request status through Payments App or Paym
     - [List all payouts](/payments/en/api-references/payment/list-all-payouts) - Query detailed information about all transfer requests
   </Tab>
 </Tabs>
-
