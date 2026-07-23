@@ -59,12 +59,14 @@ lang: "zh-hans"
     | **payout_params**  | `amount`、`token_id`          |
     | **recipient_info** | `currency`、`bank_account_id` |
 
+    法币出金要求 **recipient_info** 中同时提供 `bank_account_id` 和 `currency`。
+
     **参数说明：**
 
     - `amount`：加密货币金额，以十进制字符串形式提供。忽略小数末尾的零后，小数部分最多保留两位；例如 `100.500`（等同于 `100.5`）可以接受，但 `100.567` 在忽略末尾零后仍有三位小数，会导致请求失败，且系统不会对金额进行四舍五入。
     - `token_id`：加密货币 ID（如 `ETH_USDT`、`TRON_USDT`）
     - `currency`：与您在 `bank_account_id` 中选择的银行账户相对应的法币币种，两者必须一致。该出金接口目前仅接受 `USD`。
-    - `bank_account_id`：您为本次出金选择的目标银行账户 ID。使用前，您需要先将该银行账户注册为转出目的地，并通过 Cobo 运营团队的审核；注册和审核步骤请参考[转出目的地](/payments/cn/guides/destinations)。您可以调用 [List destination entries](/payments/en/api-references/payment/list-destination-entries) 并将 `entry_type` 设置为 `BankAccount` 获取已注册的银行账户。
+    - `bank_account_id`：您为本次出金选择的目标银行账户 ID。
   </Tab>
 </Tabs>
 
